@@ -51,6 +51,9 @@ namespace SudokuToolsSharp
             if (!File.Exists(benchmark.File))
                 throw new Exception();
 
+            double totalCalls = 0;
+            TimeSpan totalTime = TimeSpan.Zero;
+
             var lines = File.ReadAllLines(benchmark.File);
             int count = 1;
             foreach (var line in lines)
@@ -69,8 +72,12 @@ namespace SudokuToolsSharp
                 var result = solver.Solve(board);
                 if (result == null)
                     throw new Exception("Unsolvable");
+                totalCalls += solver.Calls;
+                totalTime += solver.SearchTime;
             }
-
+            Console.WriteLine();
+            Console.WriteLine($"\tAvr calls: {Math.Round(totalCalls / lines.Length, 2)}, Avr time: {totalTime / lines.Length}");
+            Console.WriteLine();
         }
     }
 }

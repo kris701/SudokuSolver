@@ -60,12 +60,14 @@ namespace SudokuToolsSharp.Solvers.BacktrackSolvers
             logTimer.Stop();
             timeoutTimer.Stop();
             SearchTime = _watch.Elapsed;
+            if (Options.EnableLog)
+                Console.WriteLine($"Took {Calls} calls and {SearchTime} time to solve.");
             return result;
         }
 
         private void LogUpdate(object? sender, ElapsedEventArgs e)
         {
-            Console.WriteLine($"[t={Math.Round(_watch.Elapsed.TotalSeconds,0)}s] Calls: {Calls} [{Calls - _lastCalls}/s], Invalids {Invalids}");
+            Console.WriteLine($"[t={Math.Round(_watch!.Elapsed.TotalSeconds,0)}s] Calls: {Calls} [{Calls - _lastCalls}/s], Invalids {Invalids}");
             _lastCalls = Calls;
         }
 
