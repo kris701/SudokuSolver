@@ -1,4 +1,4 @@
-﻿namespace SudokuToolsSharp.Solvers.BacktrackSolvers
+﻿namespace SudokuSolver.Solvers.BacktrackSolvers
 {
     public class SearchOptions
     {

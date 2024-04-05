@@ -1,14 +1,12 @@
-﻿using SudokuToolsSharp.Helpers;
-using System.Data.Common;
-using System.Drawing;
+﻿using SudokuSolver.Helpers;
 using System.Text;
 
-namespace SudokuToolsSharp.Models
+namespace SudokuSolver.Models
 {
     public class SudokuBoard
     {
         public int CellSize { get; }
-        private unsafe int[] _values;
+        private readonly unsafe int[] _values;
         public int this[int x, int y]
         {
             get => this._values[x + y * _size];
@@ -50,7 +48,7 @@ namespace SudokuToolsSharp.Models
         private bool UniqueOnly(int[] data)
         {
             var set = new HashSet<int>();
-            for(int i = 0; i < data.Length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
                 if (set.Contains(data[i]))
                     return false;

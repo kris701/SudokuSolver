@@ -1,6 +1,6 @@
-﻿using SudokuToolsSharp.Models;
+﻿using SudokuSolver.Models;
 
-namespace SudokuToolsSharp.Solvers
+namespace SudokuSolver.Solvers
 {
     public class PossibleAssignment
     {

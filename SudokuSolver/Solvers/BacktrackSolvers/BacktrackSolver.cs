@@ -1,9 +1,8 @@
-﻿using SudokuToolsSharp.Models;
-using System;
+﻿using SudokuSolver.Models;
 using System.Diagnostics;
 using System.Timers;
 
-namespace SudokuToolsSharp.Solvers.BacktrackSolvers
+namespace SudokuSolver.Solvers.BacktrackSolvers
 {
     public class BacktrackSolver : ISolver
     {
@@ -12,10 +11,11 @@ namespace SudokuToolsSharp.Solvers.BacktrackSolvers
         public int Invalids { get; private set; }
         public TimeSpan SearchTime { get; private set; }
         public TimeSpan Timeout { get; set; }
+        public bool TimedOut { get; private set; }
         public SearchOptions Options { get; set; } = new SearchOptions();
 
-        private int _size = 0;
-        private Preprocessor _preprocessor;
+        private readonly int _size = 0;
+        private readonly Preprocessor _preprocessor;
         private Stopwatch? _watch;
         private bool _stop = false;
 
@@ -28,7 +28,7 @@ namespace SudokuToolsSharp.Solvers.BacktrackSolvers
         public SudokuBoard? Solve(SudokuBoard board)
         {
             if (board.CellSize * board.CellSize != _size)
-                throw new Exception("Board size did not match the input!");
+                throw new BacktrackSolverException("Board size did not match the input!");
 
             _watch = new Stopwatch();
             var timeoutTimer = new System.Timers.Timer();
@@ -36,6 +36,7 @@ namespace SudokuToolsSharp.Solvers.BacktrackSolvers
             {
                 if (Options.EnableLog)
                     Console.WriteLine("Timed out!");
+                TimedOut = true;
                 _stop = true;
             };
             timeoutTimer.AutoReset = false;
@@ -67,7 +68,7 @@ namespace SudokuToolsSharp.Solvers.BacktrackSolvers
 
         private void LogUpdate(object? sender, ElapsedEventArgs e)
         {
-            Console.WriteLine($"[t={Math.Round(_watch!.Elapsed.TotalSeconds,0)}s] Calls: {Calls} [{Calls - _lastCalls}/s], Invalids {Invalids}");
+            Console.WriteLine($"[t={Math.Round(_watch!.Elapsed.TotalSeconds, 0)}s] Calls: {Calls} [{Calls - _lastCalls}/s], Invalids {Invalids}");
             _lastCalls = Calls;
         }
 
@@ -99,10 +100,10 @@ namespace SudokuToolsSharp.Solvers.BacktrackSolvers
 
         private Position? GetBestLocation(SudokuBoard board, int bestOffset)
         {
-            for(int i = bestOffset; i < _preprocessor.Cardinalities.Count; i++)
+            for (int i = bestOffset; i < _preprocessor.Cardinalities.Count; i++)
                 if (board[_preprocessor.Cardinalities[i].X, _preprocessor.Cardinalities[i].Y] == board.BlankNumber)
                     return _preprocessor.Cardinalities[i];
-            return null; 
+            return null;
         }
     }
 }

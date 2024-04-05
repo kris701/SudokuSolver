@@ -1,11 +1,6 @@
-﻿using SudokuToolsSharp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SudokuSolver.Models;
 
-namespace SudokuToolsSharp.Solvers.BacktrackSolvers
+namespace SudokuSolver.Solvers.BacktrackSolvers
 {
     public class Preprocessor
     {
@@ -14,7 +9,7 @@ namespace SudokuToolsSharp.Solvers.BacktrackSolvers
         public List<PossibleAssignment>[,] Candidates { get; internal set; }
         public bool Failed { get; internal set; } = false;
 
-        private int _size = 0;
+        private readonly int _size = 0;
 
         public Preprocessor(SearchOptions options, int boardSize)
         {
