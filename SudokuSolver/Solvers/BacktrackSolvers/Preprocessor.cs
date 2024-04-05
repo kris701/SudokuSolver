@@ -69,6 +69,60 @@ namespace SudokuToolsSharp.Solvers.BacktrackSolvers
             }
 
             // Prune hidden pairs
+            if (Options.PruneHiddenPairs)
+            {
+                var pruned = 0;
+                bool any = true;
+                while (any)
+                {
+                    any = false;
+                    for (int cellX = 0; cellX < board.Cells; cellX++)
+                    {
+                        for (int cellY = 0; cellY < board.Cells; cellY++)
+                        {
+                            var fromX = cellX * board.Cells;
+                            var toX = (cellX + 1) * board.Cells;
+                            var fromY = cellY * board.Cells;
+                            var toY = (cellY + 1) * board.Cells;
+                            var cellPossibilities = new List<PossibleAssignment>();
+                            for (int x = fromX; x < toX; x++)
+                                for (int y = fromY; y < toY; y++)
+                                    cellPossibilities.AddRange(Candidates[x, y]);
+
+                            for (int i = 1; i < board.CellSize * board.CellSize; i++)
+                            {
+                                if (cellPossibilities.Count(x => x.Value == i) == 2)
+                                {
+                                    for (int j = 1; j < board.CellSize * board.CellSize; j++)
+                                    {
+                                        if (i == j)
+                                            continue;
+                                        if (cellPossibilities.Count(x => x.Value == j) == 2)
+                                        {
+                                            if (cellPossibilities.Where(x => x.Value == i).All(
+                                                x => cellPossibilities.Where(x => x.Value == j).Any(
+                                                    y => y.X == x.X && y.Y == x.Y)))
+                                            {
+                                                foreach(var possibility in cellPossibilities.Where(x => x.Value == i))
+                                                {
+                                                    var preCount = Candidates[possibility.X, possibility.Y].Count;
+                                                    Candidates[possibility.X, possibility.Y].RemoveAll(x => x.Value != i && x.Value != j);
+                                                    var change = preCount - Candidates[possibility.X, possibility.Y].Count;
+                                                    pruned += change;
+                                                    if (change > 0)
+                                                        any = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Options.EnableLog)
+                    Console.WriteLine($"Removed {pruned} candidates because of hidden pairs");
+            }
 
             // Reduces hidden pairs
             //if (Options.ReduceHiddenPairs)
@@ -121,7 +175,7 @@ namespace SudokuToolsSharp.Solvers.BacktrackSolvers
             {
                 for (int y = 0; y < board.CellSize * board.CellSize; y++)
                 {
-                    if (board.Values[x, y] != board.BlankNumber)
+                    if (board[x, y] != board.BlankNumber)
                         continue;
                     total += Candidates[x, y].Count;
                     Cardinalities.Add(new Position(x, y, Candidates[x, y].Count));
@@ -145,7 +199,7 @@ namespace SudokuToolsSharp.Solvers.BacktrackSolvers
                 for (int y = 0; y < _size; y++)
                 {
                     actions[x, y] = new List<PossibleAssignment>();
-                    if (board.Values[x, y] != board.BlankNumber)
+                    if (board[x, y] != board.BlankNumber)
                         continue;
 
                     var row = board.GetRow(y);

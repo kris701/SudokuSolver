@@ -80,7 +80,7 @@ namespace SudokuToolsSharp.Solvers.BacktrackSolvers
             if (loc == null && board.IsComplete())
                 return board;
 
-            foreach (var possible in _preprocessor.Candidates?[loc.X, loc.Y]!)
+            foreach (var possible in _preprocessor.Candidates[loc.X, loc.Y])
             {
                 if (possible.IsLegal(board))
                 {
@@ -98,7 +98,7 @@ namespace SudokuToolsSharp.Solvers.BacktrackSolvers
         private Position? GetBestLocation(SudokuBoard board, int bestOffset)
         {
             for(int i = bestOffset; i < _preprocessor.Cardinalities.Count; i++)
-                if (board.Values[_preprocessor.Cardinalities[i].X, _preprocessor.Cardinalities[i].Y] == board.BlankNumber)
+                if (board[_preprocessor.Cardinalities[i].X, _preprocessor.Cardinalities[i].Y] == board.BlankNumber)
                     return _preprocessor.Cardinalities[i];
             return null; 
         }

@@ -17,7 +17,7 @@ namespace SudokuToolsSharp.Solvers
 
         public bool IsLegal(SudokuBoard board)
         {
-            if (board.Values[X, Y] != board.BlankNumber ||
+            if (board[X, Y] != board.BlankNumber ||
                 board.ColumnContains(X, Value) ||
                 board.RowContains(Y, Value) ||
                 board.CellContains(board.CellX(X), board.CellY(Y), Value)
@@ -26,20 +26,11 @@ namespace SudokuToolsSharp.Solvers
             return true;
         }
 
-        public void Apply(SudokuBoard on)
-        {
-            on.Values[X, Y] = Value;
-        }
+        public void Apply(SudokuBoard on) => on[X, Y] = Value;
 
-        public override string ToString()
-        {
-            return $"[{X},{Y}:{Value}]";
-        }
+        public override string ToString() => $"[{X},{Y}:{Value}]";
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(X, Y, Value);
-        }
+        public override int GetHashCode() => HashCode.Combine(X, Y, Value);
 
         public override bool Equals(object? obj)
         {

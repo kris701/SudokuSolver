@@ -8,11 +8,11 @@ namespace SudokuToolsSharp
     {
         private static List<Benchmark> _benchmarks = new List<Benchmark>()
         {
-            new Benchmark("../../../../Benchmarks/95puzzles.txt", 3),
             new Benchmark("../../../../Benchmarks/11puzzles.txt", 3),
             new Benchmark("../../../../Benchmarks/timan.txt", 3),
             new Benchmark("../../../../Benchmarks/mypuzzles.txt", 3),
             new Benchmark("../../../../Benchmarks/2x2.txt", 2),
+            new Benchmark("../../../../Benchmarks/95puzzles.txt", 3),
         };
 
         static void Main(string[] args)

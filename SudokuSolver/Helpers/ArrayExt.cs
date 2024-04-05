@@ -10,30 +10,19 @@ namespace SudokuToolsSharp.Helpers
 {
     public static class ArrayExt
     {
-        public static T[] GetRow<T>(this T[,] array, int row)
+        public static T[] GetRow<T>(this T[] array, int row, int size)
         {
-            int size = array.GetLength(0);
             var result = new T[size];
-            for (int x = 0; x < size; x++)
-                result[x] = array[x, row];
+            var dataSize = Marshal.SizeOf<T>();
+            Buffer.BlockCopy(array, row * size * dataSize, result, 0, size * dataSize);
             return result;
         }
 
-        public static T[] GetColumn<T>(this T[,] array, int column)
+        public static T[] GetColumn<T>(this T[] array, int column, int size)
         {
-            //int size = array.GetLength(0);
-            //var result = new T[size];
-            //for (int y = 0; y < size; y++)
-            //    result[y] = array[column, y];
-            //return result;
-
-            int cols = array.GetUpperBound(1) + 1;
-            T[] result = new T[cols];
-
-            int size = Marshal.SizeOf<T>();
-
-            Buffer.BlockCopy(array, column * cols * size, result, 0, cols * size);
-
+            var result = new T[size];
+            for (int y = 0; y < size; y++)
+                result[y] = array[y * size + column];
             return result;
         }
     }

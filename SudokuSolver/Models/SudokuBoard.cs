@@ -8,7 +8,12 @@ namespace SudokuToolsSharp.Models
     public class SudokuBoard
     {
         public int CellSize { get; }
-        public int[,] Values { get; }
+        private unsafe int[] _values;
+        public int this[int x, int y]
+        {
+            get => this._values[x + y * _size];
+            set => this._values[x + y * _size] = value;
+        }
         public int BlankNumber { get; set; } = 0;
         public int Cells { get; private set; }
 
@@ -18,46 +23,15 @@ namespace SudokuToolsSharp.Models
         {
             CellSize = cellSize;
             _size = values.Length / (cellSize * cellSize);
-            Values = new int[_size, _size];
-            int y = 0;
-            for (int i = 0; i < values.Length; i++)
-            {
-                var x = i % _size;
-                if (x == 0 && i>0)
-                    y++;
-                Values[x, y] = values[i];
-            }
-
-            Cells = _size / cellSize;
-        }
-
-        public SudokuBoard(int[,] values, int cellSize, bool flip = false)
-        {
-            CellSize = cellSize;
-            if (flip)
-            {
-                var size = values.GetLength(0);
-                Values = new int[size, size];
-                for (int x = 0; x < size; x++)
-                    for (int y = 0; y < size; y++)
-                        Values[x, y] = values[y, x];
-            }
-            else
-                Values = values;
-
-            if (values.GetLength(0) % cellSize != 0)
-                throw new Exception("Invalid cell size!");
-
-            _size = values.GetLength(0);
+            _values = values;
             Cells = _size / cellSize;
         }
 
         public bool IsComplete()
         {
-            for (int x = 0; x < _size; x++)
-                for (int y = 0; y < _size; y++)
-                    if (Values[x, y] == BlankNumber)
-                        return false;
+            for (int i = 0; i < _size * _size; i++)
+                if (_values[i] == BlankNumber)
+                    return false;
             return IsLegal();
         }
 
@@ -86,20 +60,20 @@ namespace SudokuToolsSharp.Models
             return true;
         }
 
-        public int[] GetRow(int row) => Values.GetRow(row);
-        public int[] GetColumn(int column) => Values.GetColumn(column);
+        public int[] GetRow(int row) => _values.GetRow(row, _size);
+        public int[] GetColumn(int column) => _values.GetColumn(column, _size);
 
         public bool RowContains(int row, int value)
         {
             for (int x = 0; x < _size; x++)
-                if (Values[x, row] == value)
+                if (_values[row * _size + x] == value)
                     return true;
             return false;
         }
         public bool ColumnContains(int column, int value)
         {
             for (int y = 0; y < _size; y++)
-                if (Values[column, y] == value)
+                if (_values[y * _size + column] == value)
                     return true;
             return false;
         }
@@ -116,7 +90,7 @@ namespace SudokuToolsSharp.Models
 
             for (int x = fromX; x < toX; x++)
                 for (int y = fromY; y < toY; y++)
-                    if (Values[x, y] == value)
+                    if (_values[y * _size + x] == value)
                         return true;
             return false;
         }
@@ -131,16 +105,15 @@ namespace SudokuToolsSharp.Models
 
             for (int x = fromX; x < toX; x++)
                 for (int y = fromY; y < toY; y++)
-                    if (Values[x, y] != BlankNumber)
-                        returnList.Add(Values[x, y]);
+                    if (_values[y * _size + x] != BlankNumber)
+                        returnList.Add(_values[y * _size + x]);
             return returnList;
         }
 
         public SudokuBoard Copy()
         {
-            var cpyCells = new int[_size, _size];
-            //Array.Copy(Values, cpyCells, _size * _size);
-            Buffer.BlockCopy(Values, 0, cpyCells, 0, _size * _size * sizeof(int));
+            var cpyCells = new int[_size * _size];
+            Buffer.BlockCopy(_values, 0, cpyCells, 0, _size * _size * sizeof(int));
             return new SudokuBoard(cpyCells, CellSize)
             {
                 BlankNumber = BlankNumber
@@ -155,10 +128,10 @@ namespace SudokuToolsSharp.Models
             {
                 for (int x = 0; x < _size; x++)
                 {
-                    if (Values[x, y] == BlankNumber)
+                    if (_values[y * _size + x] == BlankNumber)
                         sb.Append("_");
                     else
-                        sb.Append($"{Values[x, y]}");
+                        sb.Append($"{_values[y * _size + x]}");
                     if ((x + 1) % CellSize == 0)
                         sb.Append(" ");
                 }
