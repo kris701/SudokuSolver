@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SudokuSolver": {
+      "commandName": "Project",
+      "commandLineArgs": "--board 850002400720000009004000000000107002305000900040000000000080070017000000000036040 --solver BackTrack"
+    }
+  }
+}

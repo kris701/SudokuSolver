@@ -6,29 +6,50 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
 {
     public class BacktrackSolver : ISolver
     {
-        private int _lastCalls = 0;
+        private static readonly Dictionary<string, SearchOptions> _configurations = new Dictionary<string, SearchOptions>()
+        {
+            { "Default", new SearchOptions() },
+            { "NonOptimised", new SearchOptions(){
+                GroundLegalCandidatesOnly = false,
+                PruneCertains = false,
+                PruneHiddenPairs = false,
+                PruneNakedPairs = false
+            } }
+        };
+
         public int Calls { get; private set; }
         public int Invalids { get; private set; }
         public TimeSpan SearchTime { get; private set; }
         public TimeSpan Timeout { get; set; }
         public bool TimedOut { get; private set; }
         public SearchOptions Options { get; set; } = new SearchOptions();
+        private string _configuration = "Default";
+        public string Configuration {
+            get { return _configuration; } 
+            set {
+                if (!_configurations.ContainsKey(value))
+                    throw new BacktrackSolverException($"'{value}' is an invalid configuration for this solver! Options are: {string.Join(",", Configurations())}");
+                Options = _configurations[value];
+                _configuration = value;
+            } 
+        }
 
-        private readonly int _size = 0;
-        private readonly Preprocessor _preprocessor;
+        private int _size = 0;
+        private Preprocessor _preprocessor;
         private Stopwatch? _watch;
         private bool _stop = false;
+        private int _lastCalls = 0;
 
-        public BacktrackSolver(int boardSize)
-        {
-            _size = boardSize;
-            _preprocessor = new Preprocessor(Options, boardSize);
-        }
+        public List<string> Configurations() => _configurations.Keys.ToList();
 
         public SudokuBoard? Solve(SudokuBoard board)
         {
-            if (board.CellSize * board.CellSize != _size)
-                throw new BacktrackSolverException("Board size did not match the input!");
+            _stop = false;
+            TimedOut = false;
+            Calls = 0;
+            Invalids = 0;
+            _size = board.CellSize * board.CellSize;
+            _preprocessor = new Preprocessor(Options, _size);
 
             _watch = new Stopwatch();
             var timeoutTimer = new System.Timers.Timer();

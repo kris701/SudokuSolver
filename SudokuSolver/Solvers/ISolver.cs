@@ -8,6 +8,9 @@ namespace SudokuSolver.Solvers
         public TimeSpan SearchTime { get; }
         public bool TimedOut { get; }
         public TimeSpan Timeout { get; set; }
+        public string Configuration { get; set; }
+        public List<string> Configurations();
+
         public SudokuBoard? Solve(SudokuBoard from);
     }
 }
