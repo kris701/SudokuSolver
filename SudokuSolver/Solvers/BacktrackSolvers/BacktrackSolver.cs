@@ -18,7 +18,6 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
         };
 
         public int Calls { get; private set; }
-        public int Invalids { get; private set; }
         public TimeSpan SearchTime { get; private set; }
         public TimeSpan Timeout { get; set; }
         public bool TimedOut { get; private set; }
@@ -47,7 +46,6 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             _stop = false;
             TimedOut = false;
             Calls = 0;
-            Invalids = 0;
             _size = (byte)(board.BlockSize * board.BlockSize);
             _preprocessor = new Preprocessor(Options, _size);
 
@@ -97,7 +95,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
 
         private void LogUpdate(object? sender, ElapsedEventArgs e)
         {
-            Console.WriteLine($"[t={Math.Round(_watch!.Elapsed.TotalSeconds, 0)}s] Calls: {Calls} [{Calls - _lastCalls}/s], Invalids {Invalids}");
+            Console.WriteLine($"[t={Math.Round(_watch!.Elapsed.TotalSeconds, 0)}s] Calls: {Calls} [{Calls - _lastCalls}/s]");
             _lastCalls = Calls;
         }
 
@@ -108,16 +106,16 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
 
             Calls++;
 
-            var loc = GetBestCell(board, bestOffset);
-            if (loc == null)
+            if (bestOffset >= _preprocessor.Cardinalities.Count)
             {
                 if (board.IsComplete())
                     return board;
                 return null;
             }
 
+            var loc = _preprocessor.Cardinalities[bestOffset];
             var possibilities = _preprocessor.Candidates[loc.X, loc.Y];
-            for(int i = 0; i < possibilities.Count; i++)
+            for (int i = 0; i < possibilities.Count; i++)
             {
                 if (possibilities[i].IsLegal(board))
                 {
@@ -128,17 +126,6 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
                         return result;
                 }
             }
-            Invalids++;
-            return null;
-        }
-
-        private CellPosition? GetBestCell(SudokuBoard board, int bestOffset)
-        {
-            var cardinalities = _preprocessor.Cardinalities;
-            var count = cardinalities.Count;
-            for (int i = bestOffset; i < count; i++)
-                if (board[cardinalities[i].X, cardinalities[i].Y] == board.BlankNumber)
-                    return cardinalities[i];
             return null;
         }
     }

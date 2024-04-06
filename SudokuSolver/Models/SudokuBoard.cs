@@ -1,30 +1,33 @@
 ﻿using SudokuSolver.Helpers;
 using System.Collections;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 
 namespace SudokuSolver.Models
 {
     public class SudokuBoard
     {
-        public byte BlockSize { get; }
-        private readonly unsafe byte[] _values;
-        private readonly unsafe bool[] _blocks;
-        private readonly unsafe bool[] _rows;
-        private readonly unsafe bool[] _columns;
-        private readonly unsafe byte[] _blockRefs;
+        public byte BlockSize;
+        public byte BlankNumber = 0;
+        public byte Blocks;
         public byte this[byte x, byte y]
         {
             get => _values[x + y * _size];
-            set {
+            set
+            {
                 _values[x + y * _size] = value;
                 _blocks[_blockRefs[x + y * _size] * (_size + 1) + value] = true;
                 _rows[y * (_size + 1) + value] = true;
                 _columns[x * (_size + 1) + value] = true;
             }
         }
-        public byte BlankNumber { get; set; } = 0;
-        public byte Blocks { get; private set; }
 
+        private readonly unsafe byte[] _values;
+        private readonly unsafe bool[] _blocks;
+        private readonly unsafe bool[] _rows;
+        private readonly unsafe bool[] _columns;
+        private readonly unsafe byte[] _blockRefs;
         private readonly byte _size;
 
         public SudokuBoard(byte[] values, byte blockSize)
@@ -72,27 +75,27 @@ namespace SudokuSolver.Models
         public bool IsLegal()
         {
             for (byte x = 0; x < _size; x++)
-                if (!GetColumn(x).IsUnique())
+                if (!GetColumn(ref x).IsUnique())
                     return false;
             for (byte y = 0; y < _size; y++)
-                if (GetRow(y).IsUnique())
+                if (!GetRow(ref y).IsUnique())
                     return false;
 
             return true;
         }
 
-        public byte[] GetRow(byte row) => _values.GetRow(row, _size);
-        public byte[] GetColumn(byte column) => _values.GetColumn(column, _size);
+        public byte[] GetRow(ref byte row) => _values.GetRow(row, _size);
+        public byte[] GetColumn(ref byte column) => _values.GetColumn(column, _size);
 
-        public bool RowContains(byte row, byte value) => _rows[row * (_size + 1) + value];
-        public bool ColumnContains(byte column, byte value) => _columns[column * (_size + 1) + value];
+        public bool RowContains(ref byte row, ref byte value) => _rows[row * (_size + 1) + value];
+        public bool ColumnContains(ref byte column, ref byte value) => _columns[column * (_size + 1) + value];
 
-        public int BlockX(int x) => (int)Math.Floor((double)x / Blocks);
-        public int BlockY(int y) => (int)Math.Floor((double)y / Blocks);
+        public int BlockX(ref byte x) => (int)Math.Floor((double)x / Blocks);
+        public int BlockY(ref byte y) => (int)Math.Floor((double)y / Blocks);
 
-        public bool BlockContains(byte x, byte y, byte value) => _blocks[_blockRefs[x + y * _size] * (_size + 1) + value];
+        public bool BlockContains(ref byte x, ref byte y, ref byte value) => _blocks[_blockRefs[x + y * _size] * (_size + 1) + value];
 
-        public HashSet<int> GetBlockValues(int cellX, int cellY)
+        public HashSet<int> GetBlockValues(ref int cellX, ref int cellY)
         {
             var returnList = new HashSet<int>();
             var fromX = cellX * Blocks;
@@ -107,7 +110,7 @@ namespace SudokuSolver.Models
             return returnList;
         }
 
-        public SudokuBoard Copy()
+        public unsafe SudokuBoard Copy()
         {
             var cpyCells = new byte[_size * _size];
             Buffer.BlockCopy(_values, 0, cpyCells, 0, _size * _size * sizeof(byte));

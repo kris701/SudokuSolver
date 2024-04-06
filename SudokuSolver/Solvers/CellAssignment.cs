@@ -5,9 +5,9 @@ namespace SudokuSolver.Solvers
 {
     public class CellAssignment
     {
-        public byte X { get; set; }
-        public byte Y { get; set; }
-        public byte Value { get; set; }
+        public byte X;
+        public byte Y;
+        public byte Value;
 
         public CellAssignment(byte x, byte y, byte value)
         {
@@ -18,11 +18,11 @@ namespace SudokuSolver.Solvers
 
         public bool IsLegal(SudokuBoard board)
         {
-            if (board.ColumnContains(X, Value) ||
-                board.RowContains(Y, Value))
+            if (board.ColumnContains(ref X, ref Value) ||
+                board.RowContains(ref Y, ref Value))
                 return false;
 
-            if (board.BlockContains(X,Y,Value))
+            if (board.BlockContains(ref X, ref Y, ref Value))
                 return false;
             return true;
         }

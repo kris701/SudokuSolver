@@ -60,18 +60,18 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
 
             for (byte x = 0; x < _size; x++)
             {
-                var column = board.GetColumn(x);
+                var column = board.GetColumn(ref x);
                 for (byte y = 0; y < _size; y++)
                 {
                     actions[x, y] = new List<CellAssignment>();
                     if (board[x, y] != board.BlankNumber)
                         continue;
 
-                    var row = board.GetRow(y);
+                    var row = board.GetRow(ref y);
 
-                    var cellX = board.BlockX(x);
-                    var cellY = board.BlockY(y);
-                    var cellValues = board.GetBlockValues(cellX, cellY);
+                    var cellX = board.BlockX(ref x);
+                    var cellY = board.BlockY(ref y);
+                    var cellValues = board.GetBlockValues(ref cellX, ref cellY);
                     for (byte i = 1; i <= _size; i++)
                     {
                         if (cellValues.Contains(i))
