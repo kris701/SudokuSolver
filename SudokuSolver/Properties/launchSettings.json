@@ -2,7 +2,7 @@
   "profiles": {
     "SudokuSolver": {
       "commandName": "Project",
-      "commandLineArgs": "--board 850002400720000009004000000000107002305000900040000000000080070017000000000036040 --size 3 --solver BackTrack"
+      "commandLineArgs": "--board 306070000000000051800000000010405000700000600000200000020000040000080300000500000 --size 3 --solver BackTrack --configuration NonOptimised"
     }
   }
 }

@@ -11,10 +11,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmarks", "Benchmarks", 
 		Benchmarks\2x2.txt = Benchmarks\2x2.txt
 		Benchmarks\95puzzles.txt = Benchmarks\95puzzles.txt
 		Benchmarks\mypuzzles.txt = Benchmarks\mypuzzles.txt
+		Benchmarks\README.md = Benchmarks\README.md
 		Benchmarks\timan.txt = Benchmarks\timan.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuSolver.Tests", "SudokuSolver.Tests\SudokuSolver.Tests.csproj", "{561BB1DE-4F85-445A-B602-224AD537377B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SudokuSolver.Tests", "SudokuSolver.Tests\SudokuSolver.Tests.csproj", "{561BB1DE-4F85-445A-B602-224AD537377B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F497AFC9-36B8-4A2D-B70F-E47E34EC254F}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
