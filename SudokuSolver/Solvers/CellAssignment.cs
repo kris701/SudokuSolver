@@ -1,14 +1,15 @@
 ﻿using SudokuSolver.Models;
+using System.Data.Common;
 
 namespace SudokuSolver.Solvers
 {
     public class CellAssignment
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Value { get; set; }
+        public byte X { get; set; }
+        public byte Y { get; set; }
+        public byte Value { get; set; }
 
-        public CellAssignment(int x, int y, int value)
+        public CellAssignment(byte x, byte y, byte value)
         {
             X = x;
             Y = y;
@@ -17,11 +18,11 @@ namespace SudokuSolver.Solvers
 
         public bool IsLegal(SudokuBoard board)
         {
-            if (board[X, Y] != board.BlankNumber ||
-                board.ColumnContains(X, Value) ||
-                board.RowContains(Y, Value) ||
-                board.BlockContains(board.BlockX(X), board.BlockY(Y), Value)
-                )
+            if (board.ColumnContains(X, Value) ||
+                board.RowContains(Y, Value))
+                return false;
+
+            if (board.BlockContains(X,Y,Value))
                 return false;
             return true;
         }

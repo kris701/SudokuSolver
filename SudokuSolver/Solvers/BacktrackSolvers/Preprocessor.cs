@@ -9,9 +9,9 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
         public List<CellAssignment>[,] Candidates { get; internal set; }
         public bool Failed { get; internal set; } = false;
 
-        private readonly int _size = 0;
+        private readonly byte _size = 0;
 
-        public Preprocessor(SearchOptions options, int boardSize)
+        public Preprocessor(SearchOptions options, byte boardSize)
         {
             Options = options;
             Cardinalities = new List<CellPosition>();
@@ -36,9 +36,9 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
                 PruneNakedPairs(board);
 
             int total = 0;
-            for (int x = 0; x < _size; x++)
+            for (byte x = 0; x < _size; x++)
             {
-                for (int y = 0; y < _size; y++)
+                for (byte y = 0; y < _size; y++)
                 {
                     if (board[x, y] != board.BlankNumber)
                         continue;
@@ -58,10 +58,10 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
         {
             var actions = new List<CellAssignment>[_size, _size];
 
-            for (int x = 0; x < _size; x++)
+            for (byte x = 0; x < _size; x++)
             {
                 var column = board.GetColumn(x);
-                for (int y = 0; y < _size; y++)
+                for (byte y = 0; y < _size; y++)
                 {
                     actions[x, y] = new List<CellAssignment>();
                     if (board[x, y] != board.BlankNumber)
@@ -72,7 +72,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
                     var cellX = board.BlockX(x);
                     var cellY = board.BlockY(y);
                     var cellValues = board.GetBlockValues(cellX, cellY);
-                    for (int i = 1; i <= _size; i++)
+                    for (byte i = 1; i <= _size; i++)
                     {
                         if (cellValues.Contains(i))
                             continue;

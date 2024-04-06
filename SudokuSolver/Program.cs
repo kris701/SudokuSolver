@@ -17,14 +17,14 @@ namespace SudokuSolver
 
         public static void Run(Options opts)
         {
-            var values = new List<int>();
+            var values = new List<byte>();
             foreach (var c in opts.Board)
-                values.Add(int.Parse($"{c}"));
+                values.Add(byte.Parse($"{c}"));
 
             if (values.Count % opts.BlockSize != 0)
                 throw new Exception("Blocksize is not divisible with the board values!");
 
-            var board = new SudokuBoard(values.ToArray(), opts.BlockSize);
+            var board = new SudokuBoard(values.ToArray(), (byte)opts.BlockSize);
 
             Console.WriteLine("Initial board:");
             Console.WriteLine(board.ToString());

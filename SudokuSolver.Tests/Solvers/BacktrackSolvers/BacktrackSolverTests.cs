@@ -25,12 +25,12 @@ namespace SudokuSolver.Tests.Solvers.BacktrackSolvers
             {
                 foreach (var line in File.ReadAllLines(benchmark.File))
                 {
-                    var values = new List<int>();
+                    var values = new List<byte>();
                     foreach (var c in line)
-                        values.Add(int.Parse($"{c}"));
+                        values.Add(byte.Parse($"{c}"));
                     yield return new object[] {
                         values,
-                        benchmark.CellSize
+                        benchmark.BlockSize
                     };
                 }
             }
@@ -38,10 +38,10 @@ namespace SudokuSolver.Tests.Solvers.BacktrackSolvers
 
         [TestMethod]
         [DynamicData(nameof(TestCases), DynamicDataSourceType.Method)]
-        public void Can_Solve(List<int> boardValues, int cellSize)
+        public void Can_Solve(List<byte> boardValues, byte blockSize)
         {
             // ARRANGE
-            var board = new SudokuBoard(boardValues.ToArray(), cellSize);
+            var board = new SudokuBoard(boardValues.ToArray(), blockSize);
             var solver = new BacktrackSolver();
             solver.Timeout = _timeout;
 

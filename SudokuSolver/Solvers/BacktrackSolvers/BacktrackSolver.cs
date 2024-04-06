@@ -34,7 +34,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             } 
         }
 
-        private int _size = 0;
+        private byte _size = 0;
         private Preprocessor _preprocessor;
         private Stopwatch? _watch;
         private bool _stop = false;
@@ -48,7 +48,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             TimedOut = false;
             Calls = 0;
             Invalids = 0;
-            _size = board.BlockSize * board.BlockSize;
+            _size = (byte)(board.BlockSize * board.BlockSize);
             _preprocessor = new Preprocessor(Options, _size);
 
             _watch = new Stopwatch();
@@ -112,12 +112,13 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             if (loc == null && board.IsComplete())
                 return board;
 
-            foreach (var possible in _preprocessor.Candidates[loc.X, loc.Y])
+            var possibilities = _preprocessor.Candidates[loc.X, loc.Y];
+            for(int i = 0; i < possibilities.Count; i++)
             {
-                if (possible.IsLegal(board))
+                if (possibilities[i].IsLegal(board))
                 {
                     var copy = board.Copy();
-                    possible.Apply(copy);
+                    possibilities[i].Apply(copy);
                     var result = SolveInner(copy, bestOffset + 1);
                     if (result != null)
                         return result;
@@ -129,9 +130,10 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
 
         private CellPosition? GetBestCell(SudokuBoard board, int bestOffset)
         {
-            for (int i = bestOffset; i < _preprocessor.Cardinalities.Count; i++)
-                if (board[_preprocessor.Cardinalities[i].X, _preprocessor.Cardinalities[i].Y] == board.BlankNumber)
-                    return _preprocessor.Cardinalities[i];
+            var cardinalities = _preprocessor.Cardinalities;
+            for (int i = bestOffset; i < cardinalities.Count; i++)
+                if (board[cardinalities[i].X, cardinalities[i].Y] == board.BlankNumber)
+                    return cardinalities[i];
             return null;
         }
     }
