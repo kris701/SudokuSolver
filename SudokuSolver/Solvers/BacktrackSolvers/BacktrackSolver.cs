@@ -48,7 +48,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             TimedOut = false;
             Calls = 0;
             Invalids = 0;
-            _size = board.CellSize * board.CellSize;
+            _size = board.BlockSize * board.BlockSize;
             _preprocessor = new Preprocessor(Options, _size);
 
             _watch = new Stopwatch();
@@ -75,9 +75,17 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
                 logTimer.Start();
             _watch.Start();
             SudokuBoard? result = null;
+            if (Options.EnableLog)
+                Console.WriteLine($"Preprocessing...");
             var processed = _preprocessor.Preprocess(board);
+            if (Options.EnableLog)
+                Console.WriteLine($"Preprocess complete!");
             if (!_preprocessor.Failed)
+            {
+                if (Options.EnableLog)
+                    Console.WriteLine($"Solving...");
                 result = SolveInner(processed);
+            }
             _watch.Stop();
             logTimer.Stop();
             timeoutTimer.Stop();
@@ -100,7 +108,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
 
             Calls++;
 
-            var loc = GetBestLocation(board, bestOffset);
+            var loc = GetBestCell(board, bestOffset);
             if (loc == null && board.IsComplete())
                 return board;
 
@@ -119,7 +127,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             return null;
         }
 
-        private Position? GetBestLocation(SudokuBoard board, int bestOffset)
+        private CellPosition? GetBestCell(SudokuBoard board, int bestOffset)
         {
             for (int i = bestOffset; i < _preprocessor.Cardinalities.Count; i++)
                 if (board[_preprocessor.Cardinalities[i].X, _preprocessor.Cardinalities[i].Y] == board.BlankNumber)

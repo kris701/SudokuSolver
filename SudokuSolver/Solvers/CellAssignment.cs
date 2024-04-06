@@ -2,13 +2,13 @@
 
 namespace SudokuSolver.Solvers
 {
-    public class PossibleAssignment
+    public class CellAssignment
     {
         public int X { get; set; }
         public int Y { get; set; }
         public int Value { get; set; }
 
-        public PossibleAssignment(int x, int y, int value)
+        public CellAssignment(int x, int y, int value)
         {
             X = x;
             Y = y;
@@ -20,7 +20,7 @@ namespace SudokuSolver.Solvers
             if (board[X, Y] != board.BlankNumber ||
                 board.ColumnContains(X, Value) ||
                 board.RowContains(Y, Value) ||
-                board.CellContains(board.CellX(X), board.CellY(Y), Value)
+                board.BlockContains(board.BlockX(X), board.BlockY(Y), Value)
                 )
                 return false;
             return true;
@@ -34,7 +34,7 @@ namespace SudokuSolver.Solvers
 
         public override bool Equals(object? obj)
         {
-            if (obj is PossibleAssignment other)
+            if (obj is CellAssignment other)
             {
                 if (other.X != X) return false;
                 if (other.Y != Y) return false;

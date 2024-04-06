@@ -5,7 +5,7 @@ namespace SudokuSolver.Models
 {
     public class SudokuBoard
     {
-        public int CellSize { get; }
+        public int BlockSize { get; }
         private readonly unsafe int[] _values;
         public int this[int x, int y]
         {
@@ -13,16 +13,16 @@ namespace SudokuSolver.Models
             set => this._values[x + y * _size] = value;
         }
         public int BlankNumber { get; set; } = 0;
-        public int Cells { get; private set; }
+        public int Blocks { get; private set; }
 
         private readonly int _size;
 
-        public SudokuBoard(int[] values, int cellSize)
+        public SudokuBoard(int[] values, int blockSize)
         {
-            CellSize = cellSize;
-            _size = values.Length / (cellSize * cellSize);
+            BlockSize = blockSize;
+            _size = values.Length / (blockSize * blockSize);
             _values = values;
-            Cells = _size / cellSize;
+            Blocks = _size / blockSize;
         }
 
         public bool IsComplete()
@@ -76,15 +76,15 @@ namespace SudokuSolver.Models
             return false;
         }
 
-        public int CellX(int x) => (int)Math.Floor((double)x / Cells);
-        public int CellY(int y) => (int)Math.Floor((double)y / Cells);
+        public int BlockX(int x) => (int)Math.Floor((double)x / Blocks);
+        public int BlockY(int y) => (int)Math.Floor((double)y / Blocks);
 
-        public bool CellContains(int cellX, int cellY, int value)
+        public bool BlockContains(int cellX, int cellY, int value)
         {
-            var fromX = cellX * Cells;
-            var toX = (cellX + 1) * Cells;
-            var fromY = cellY * Cells;
-            var toY = (cellY + 1) * Cells;
+            var fromX = cellX * Blocks;
+            var toX = (cellX + 1) * Blocks;
+            var fromY = cellY * Blocks;
+            var toY = (cellY + 1) * Blocks;
 
             for (int x = fromX; x < toX; x++)
                 for (int y = fromY; y < toY; y++)
@@ -93,13 +93,13 @@ namespace SudokuSolver.Models
             return false;
         }
 
-        public HashSet<int> GetCellValues(int cellX, int cellY)
+        public HashSet<int> GetBlockValues(int cellX, int cellY)
         {
             var returnList = new HashSet<int>();
-            var fromX = cellX * Cells;
-            var toX = (cellX + 1) * Cells;
-            var fromY = cellY * Cells;
-            var toY = (cellY + 1) * Cells;
+            var fromX = cellX * Blocks;
+            var toX = (cellX + 1) * Blocks;
+            var fromY = cellY * Blocks;
+            var toY = (cellY + 1) * Blocks;
 
             for (int x = fromX; x < toX; x++)
                 for (int y = fromY; y < toY; y++)
@@ -112,7 +112,7 @@ namespace SudokuSolver.Models
         {
             var cpyCells = new int[_size * _size];
             Buffer.BlockCopy(_values, 0, cpyCells, 0, _size * _size * sizeof(int));
-            return new SudokuBoard(cpyCells, CellSize)
+            return new SudokuBoard(cpyCells, BlockSize)
             {
                 BlankNumber = BlankNumber
             };
@@ -130,12 +130,15 @@ namespace SudokuSolver.Models
                         sb.Append("_");
                     else
                         sb.Append($"{_values[y * _size + x]}");
-                    if ((x + 1) % CellSize == 0)
+                    if ((x + 1) % BlockSize == 0)
                         sb.Append(" ");
                 }
-                sb.AppendLine();
-                if ((y + 1) % CellSize == 0)
+                if (y != _size - 1)
+                {
                     sb.AppendLine();
+                    if ((y + 1) % BlockSize == 0)
+                        sb.AppendLine();
+                }
             }
 
             return sb.ToString();

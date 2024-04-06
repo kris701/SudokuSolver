@@ -5,8 +5,8 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
     public class Preprocessor
     {
         public SearchOptions Options { get; set; }
-        public List<Position> Cardinalities { get; internal set; }
-        public List<PossibleAssignment>[,] Candidates { get; internal set; }
+        public List<CellPosition> Cardinalities { get; internal set; }
+        public List<CellAssignment>[,] Candidates { get; internal set; }
         public bool Failed { get; internal set; } = false;
 
         private readonly int _size = 0;
@@ -14,8 +14,8 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
         public Preprocessor(SearchOptions options, int boardSize)
         {
             Options = options;
-            Cardinalities = new List<Position>();
-            Candidates = new List<PossibleAssignment>[boardSize, boardSize];
+            Cardinalities = new List<CellPosition>();
+            Candidates = new List<CellAssignment>[boardSize, boardSize];
             _size = boardSize;
         }
 
@@ -43,7 +43,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
                     if (board[x, y] != board.BlankNumber)
                         continue;
                     total += Candidates[x, y].Count;
-                    Cardinalities.Add(new Position(x, y, Candidates[x, y].Count));
+                    Cardinalities.Add(new CellPosition(x, y, Candidates[x, y].Count));
                 }
             }
             Cardinalities = Cardinalities.OrderBy(x => x.Possibilities).ToList();
@@ -54,30 +54,30 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             return board;
         }
 
-        private List<PossibleAssignment>[,] Ground(SudokuBoard board, bool legalOnly)
+        private List<CellAssignment>[,] Ground(SudokuBoard board, bool legalOnly)
         {
-            var actions = new List<PossibleAssignment>[_size, _size];
+            var actions = new List<CellAssignment>[_size, _size];
 
             for (int x = 0; x < _size; x++)
             {
                 var column = board.GetColumn(x);
                 for (int y = 0; y < _size; y++)
                 {
-                    actions[x, y] = new List<PossibleAssignment>();
+                    actions[x, y] = new List<CellAssignment>();
                     if (board[x, y] != board.BlankNumber)
                         continue;
 
                     var row = board.GetRow(y);
 
-                    var cellX = board.CellX(x);
-                    var cellY = board.CellY(y);
-                    var cellValues = board.GetCellValues(cellX, cellY);
+                    var cellX = board.BlockX(x);
+                    var cellY = board.BlockY(y);
+                    var cellValues = board.GetBlockValues(cellX, cellY);
                     for (int i = 1; i <= _size; i++)
                     {
                         if (cellValues.Contains(i))
                             continue;
                         if (!legalOnly || (!row.Contains(i) && !column.Contains(i)))
-                            actions[x, y].Add(new PossibleAssignment(x, y, i));
+                            actions[x, y].Add(new CellAssignment(x, y, i));
                     }
                 }
             }
@@ -92,20 +92,20 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             while (any)
             {
                 any = false;
-                for (int cellX = 0; cellX < board.Cells; cellX++)
+                for (int cellX = 0; cellX < board.Blocks; cellX++)
                 {
-                    for (int cellY = 0; cellY < board.Cells; cellY++)
+                    for (int cellY = 0; cellY < board.Blocks; cellY++)
                     {
-                        var fromX = cellX * board.Cells;
-                        var toX = (cellX + 1) * board.Cells;
-                        var fromY = cellY * board.Cells;
-                        var toY = (cellY + 1) * board.Cells;
-                        var cellPossibilities = new List<PossibleAssignment>();
+                        var fromX = cellX * board.Blocks;
+                        var toX = (cellX + 1) * board.Blocks;
+                        var fromY = cellY * board.Blocks;
+                        var toY = (cellY + 1) * board.Blocks;
+                        var cellPossibilities = new List<CellAssignment>();
                         for (int x = fromX; x < toX; x++)
                             for (int y = fromY; y < toY; y++)
                                 cellPossibilities.AddRange(Candidates[x, y]);
 
-                        for (int i = 1; i < board.CellSize * board.CellSize; i++)
+                        for (int i = 1; i < board.BlockSize * board.BlockSize; i++)
                         {
                             if (cellPossibilities.Count(x => x.Value == i) == 1)
                             {
@@ -131,24 +131,24 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             while (any)
             {
                 any = false;
-                for (int cellX = 0; cellX < board.Cells; cellX++)
+                for (int cellX = 0; cellX < board.Blocks; cellX++)
                 {
-                    for (int cellY = 0; cellY < board.Cells; cellY++)
+                    for (int cellY = 0; cellY < board.Blocks; cellY++)
                     {
-                        var fromX = cellX * board.Cells;
-                        var toX = (cellX + 1) * board.Cells;
-                        var fromY = cellY * board.Cells;
-                        var toY = (cellY + 1) * board.Cells;
-                        var cellPossibilities = new List<PossibleAssignment>();
+                        var fromX = cellX * board.Blocks;
+                        var toX = (cellX + 1) * board.Blocks;
+                        var fromY = cellY * board.Blocks;
+                        var toY = (cellY + 1) * board.Blocks;
+                        var cellPossibilities = new List<CellAssignment>();
                         for (int x = fromX; x < toX; x++)
                             for (int y = fromY; y < toY; y++)
                                 cellPossibilities.AddRange(Candidates[x, y]);
 
-                        for (int i = 1; i < board.CellSize * board.CellSize; i++)
+                        for (int i = 1; i < board.BlockSize * board.BlockSize; i++)
                         {
                             if (cellPossibilities.Count(x => x.Value == i) == 2)
                             {
-                                for (int j = 1; j < board.CellSize * board.CellSize; j++)
+                                for (int j = 1; j < board.BlockSize * board.BlockSize; j++)
                                 {
                                     if (i == j)
                                         continue;
@@ -188,7 +188,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
                 any = false;
                 for (int column = 0; column < _size; column++)
                 {
-                    var cellPossibilities = new List<List<PossibleAssignment>>();
+                    var cellPossibilities = new List<List<CellAssignment>>();
                     for (int row = 0; row < _size; row++)
                         cellPossibilities.Add(GetBinaryAssignments(column, row));
 
@@ -226,7 +226,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
 
                 for (int row = 0; row < _size; row++)
                 {
-                    var cellPossibilities = new List<List<PossibleAssignment>>();
+                    var cellPossibilities = new List<List<CellAssignment>>();
                     for (int column = 0; column < _size; column++)
                         cellPossibilities.Add(GetBinaryAssignments(column, row));
 
@@ -266,15 +266,15 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
                 Console.WriteLine($"Removed {pruned} candidates because of naked pairs");
         }
 
-        private List<PossibleAssignment> GetBinaryAssignments(int column, int row)
+        private List<CellAssignment> GetBinaryAssignments(int column, int row)
         {
-            var result = new List<PossibleAssignment>();
+            var result = new List<CellAssignment>();
             if (Candidates[column, row].Count == 2)
                 result.AddRange(Candidates[column, row]);
             return result;
         }
 
-        private List<List<PossibleAssignment>> RemoveUnpaired(List<List<PossibleAssignment>> cellPossibilities)
+        private List<List<CellAssignment>> RemoveUnpaired(List<List<CellAssignment>> cellPossibilities)
         {
             for (int i = 0; i < _size; i++)
             {

@@ -12,6 +12,8 @@ namespace SudokuSolver
     {
         [Option("board", Required = true, HelpText = "The soduko board in a one dimentional array, row after row.")]
         public string Board { get; set; } = "";
+        [Option("size", Required = true, HelpText = "The size of the blocks in the puzzle.")]
+        public int BlockSize { get; set; }
         [Option("solver", Required = true, HelpText = "What solver to use.")]
         public Solvers.Solvers Solver { get; set; }
 

@@ -42,7 +42,7 @@ namespace SudokuSolver.Tests.Solvers.BacktrackSolvers
         {
             // ARRANGE
             var board = new SudokuBoard(boardValues.ToArray(), cellSize);
-            var solver = new BacktrackSolver(cellSize * cellSize);
+            var solver = new BacktrackSolver();
             solver.Timeout = _timeout;
 
             // ACT

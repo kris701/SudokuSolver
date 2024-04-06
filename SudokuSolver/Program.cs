@@ -21,7 +21,10 @@ namespace SudokuSolver
             foreach (var c in opts.Board)
                 values.Add(int.Parse($"{c}"));
 
-            var board = new SudokuBoard(values.ToArray(), (int)Math.Sqrt((int)Math.Sqrt(values.Count)));
+            if (values.Count % opts.BlockSize != 0)
+                throw new Exception("Blocksize is not divisible with the board values!");
+
+            var board = new SudokuBoard(values.ToArray(), opts.BlockSize);
 
             Console.WriteLine("Initial board:");
             Console.WriteLine(board.ToString());
@@ -39,7 +42,9 @@ namespace SudokuSolver
                 solver.Timeout = TimeSpan.FromSeconds(opts.TimeOutS);
             }
             Console.WriteLine("Starting...");
+            Console.WriteLine();
             var result = solver.Solve(board);
+            Console.WriteLine();
             if (solver.TimedOut)
             {
                 Console.WriteLine("Solver timed out...");
@@ -47,8 +52,6 @@ namespace SudokuSolver
             else if (result != null)
             {
                 Console.WriteLine("Board solved!");
-                Console.WriteLine($"Took {solver.Calls} calls");
-                Console.WriteLine($"Search time: {solver.SearchTime}");
                 Console.WriteLine("Solved board:");
                 Console.WriteLine(result.ToString());
             }
