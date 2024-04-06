@@ -72,24 +72,11 @@ namespace SudokuSolver.Models
         public bool IsLegal()
         {
             for (byte x = 0; x < _size; x++)
-                if (!UniqueOnly(GetColumn(x)))
+                if (!GetColumn(x).IsUnique())
                     return false;
             for (byte y = 0; y < _size; y++)
-                if (!UniqueOnly(GetRow(y)))
+                if (GetRow(y).IsUnique())
                     return false;
-
-            return true;
-        }
-
-        private bool UniqueOnly(byte[] data)
-        {
-            var set = new HashSet<byte>();
-            for (byte i = 0; i < data.Length; i++)
-            {
-                if (set.Contains(data[i]))
-                    return false;
-                set.Add(data[i]);
-            }
 
             return true;
         }

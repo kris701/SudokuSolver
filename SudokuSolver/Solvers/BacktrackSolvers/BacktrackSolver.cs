@@ -109,8 +109,12 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             Calls++;
 
             var loc = GetBestCell(board, bestOffset);
-            if (loc == null && board.IsComplete())
-                return board;
+            if (loc == null)
+            {
+                if (board.IsComplete())
+                    return board;
+                return null;
+            }
 
             var possibilities = _preprocessor.Candidates[loc.X, loc.Y];
             for(int i = 0; i < possibilities.Count; i++)
@@ -131,7 +135,8 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
         private CellPosition? GetBestCell(SudokuBoard board, int bestOffset)
         {
             var cardinalities = _preprocessor.Cardinalities;
-            for (int i = bestOffset; i < cardinalities.Count; i++)
+            var count = cardinalities.Count;
+            for (int i = bestOffset; i < count; i++)
                 if (board[cardinalities[i].X, cardinalities[i].Y] == board.BlankNumber)
                     return cardinalities[i];
             return null;

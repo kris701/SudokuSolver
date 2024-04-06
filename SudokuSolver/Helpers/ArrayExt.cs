@@ -19,5 +19,18 @@ namespace SudokuSolver.Helpers
                 result[y] = array[y * size + column];
             return result;
         }
+
+        public static bool IsUnique<T>(this T[] array)
+        {
+            var set = new HashSet<T>();
+            for (byte i = 0; i < array.Length; i++)
+            {
+                if (set.Contains(array[i]))
+                    return false;
+                set.Add(array[i]);
+            }
+
+            return true;
+        }
     }
 }
