@@ -115,15 +115,16 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
 
             var loc = _preprocessor.Cardinalities[bestOffset];
             var possibilities = _preprocessor.Candidates[loc.X, loc.Y];
-            for (int i = 0; i < possibilities.Count; i++)
+            var count = possibilities.Count;
+            for (int i = 0; i < count; i++)
             {
                 if (possibilities[i].IsLegal(board))
                 {
-                    var copy = board.Copy();
-                    possibilities[i].Apply(copy);
-                    var result = SolveInner(copy, bestOffset + 1);
+                    possibilities[i].Apply(board);
+                    var result = SolveInner(board, bestOffset + 1);
                     if (result != null)
                         return result;
+                    possibilities[i].UnApply(board);
                 }
             }
             return null;

@@ -28,6 +28,7 @@ namespace SudokuSolver.Solvers
         }
 
         public void Apply(SudokuBoard on) => on[X, Y] = Value;
+        public void UnApply(SudokuBoard on) => on[X, Y] = on.BlankNumber;
 
         public override string ToString() => $"[{X},{Y}:{Value}]";
 

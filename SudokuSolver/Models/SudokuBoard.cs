@@ -16,6 +16,11 @@ namespace SudokuSolver.Models
             get => _values[x + y * _size];
             set
             {
+                var current = _values[x + y * _size];
+                _blocks[_blockRefs[x + y * _size] * (_size + 1) + current] = false;
+                _rows[y * (_size + 1) + current] = false;
+                _columns[x * (_size + 1) + current] = false;
+
                 _values[x + y * _size] = value;
                 _blocks[_blockRefs[x + y * _size] * (_size + 1) + value] = true;
                 _rows[y * (_size + 1) + value] = true;
