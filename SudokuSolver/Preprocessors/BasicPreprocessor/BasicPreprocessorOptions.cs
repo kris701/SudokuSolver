@@ -1,6 +1,6 @@
-﻿namespace SudokuSolver.Solvers.BacktrackSolvers
+﻿namespace SudokuSolver.Preprocessors.BasicPreprocessor
 {
-    public class SearchOptions
+    public class BasicPreprocessorOptions
     {
         public bool GroundLegalCandidatesOnly { get; set; } = true;
         public bool PruneCertains { get; set; } = true;

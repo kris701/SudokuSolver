@@ -1,7 +1,4 @@
-﻿using SudokuSolver.Models;
-using System.Data.Common;
-
-namespace SudokuSolver.Solvers
+﻿namespace SudokuSolver.Models
 {
     public class CellAssignment
     {

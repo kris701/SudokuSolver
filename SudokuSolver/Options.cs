@@ -1,10 +1,6 @@
 ﻿using CommandLine;
+using SudokuSolver.Preprocessors;
 using SudokuSolver.Solvers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SudokuSolver
 {
@@ -15,10 +11,12 @@ namespace SudokuSolver
         [Option("size", Required = true, HelpText = "The size of the blocks in the puzzle.")]
         public int BlockSize { get; set; }
         [Option("solver", Required = true, HelpText = "What solver to use.")]
-        public Solvers.Solvers Solver { get; set; }
+        public SolverOptions Solver { get; set; }
 
         [Option("configuration", Required = false, HelpText = "Configuration to set the solver to.")]
         public string Configuration { get; set; } = "";
+        [Option("preprocessor", Required = false, HelpText = "What preprocessor to use.")]
+        public PreprocessorOptions Preprocessor { get; set; } = PreprocessorOptions.Full;
         [Option("timeout", Required = false, HelpText = "How many seconds should the search be allowed to use.")]
         public int TimeOutS { get; set; } = -1;
     }

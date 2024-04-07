@@ -1,10 +1,10 @@
-﻿namespace SudokuSolver.Solvers.BacktrackSolvers
+﻿namespace SudokuSolver.Models
 {
     public class CellPosition
     {
-        public byte X { get; set; }
-        public byte Y { get; set; }
-        public int Possibilities { get; set; }
+        public byte X;
+        public byte Y;
+        public int Possibilities;
 
         public CellPosition(byte x, byte y, int possibilities)
         {

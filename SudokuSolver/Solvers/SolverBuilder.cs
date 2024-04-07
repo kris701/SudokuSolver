@@ -1,22 +1,20 @@
-﻿using SudokuSolver.Solvers.BacktrackSolvers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SudokuSolver.Preprocessors;
+using SudokuSolver.Solvers.BacktrackSolvers;
+using SudokuSolver.Solvers.GuidedBacktrackSolvers;
 
 namespace SudokuSolver.Solvers
 {
     [Flags]
-    public enum Solvers { None, BackTrack }
+    public enum SolverOptions { None, BackTrack, GuidedBackTrack }
 
     public static class SolverBuilder
     {
-        private static Dictionary<Solvers, Func<ISolver>> _solvers = new Dictionary<Solvers, Func<ISolver>>()
+        private static readonly Dictionary<SolverOptions, Func<IPreprocessor, ISolver>> _solvers = new Dictionary<SolverOptions, Func<IPreprocessor, ISolver>>()
         {
-            { Solvers.BackTrack, () => new BacktrackSolver() }
+            { SolverOptions.BackTrack, (p) => new BacktrackSolver(p) },
+            { SolverOptions.GuidedBackTrack, (p) => new GuidedBacktrackSolver(p) },
         };
 
-        public static ISolver GetSolver(Solvers solver) => _solvers[solver]();
+        public static ISolver GetSolver(SolverOptions solver, IPreprocessor preprocessor) => _solvers[solver](preprocessor);
     }
 }

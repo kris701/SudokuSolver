@@ -1,11 +1,11 @@
 ﻿using SudokuSolver.Models;
 using SudokuSolver.Preprocessors;
 
-namespace SudokuSolver.Solvers.BacktrackSolvers
+namespace SudokuSolver.Solvers.GuidedBacktrackSolvers
 {
-    public class BacktrackSolver : BaseSolver
+    public class GuidedBacktrackSolver : BaseSolver
     {
-        public BacktrackSolver(IPreprocessor preprocessor) : base(preprocessor)
+        public GuidedBacktrackSolver(IPreprocessor preprocessor) : base(preprocessor)
         {
         }
 

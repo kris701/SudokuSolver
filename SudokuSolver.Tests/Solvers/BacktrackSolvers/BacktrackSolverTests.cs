@@ -1,4 +1,5 @@
 ﻿using SudokuSolver.Models;
+using SudokuSolver.Preprocessors;
 using SudokuSolver.Solvers.BacktrackSolvers;
 using SudokuSolver.Tests.Models;
 
@@ -42,7 +43,7 @@ namespace SudokuSolver.Tests.Solvers.BacktrackSolvers
         {
             // ARRANGE
             var board = new SudokuBoard(boardValues.ToArray(), blockSize);
-            var solver = new BacktrackSolver();
+            var solver = new BacktrackSolver(PreprocessorBuilder.GetPreprocessor(PreprocessorOptions.Full, board.BoardSize));
             solver.Timeout = _timeout;
 
             // ACT

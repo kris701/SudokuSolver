@@ -1,6 +1,7 @@
 ﻿using CommandLine;
 using CommandLine.Text;
 using SudokuSolver.Models;
+using SudokuSolver.Preprocessors;
 using SudokuSolver.Solvers;
 
 namespace SudokuSolver
@@ -29,8 +30,8 @@ namespace SudokuSolver
             Console.WriteLine("Initial board:");
             Console.WriteLine(board.ToString());
             Console.WriteLine();
-            Console.WriteLine($"Solving with '{Enum.GetName(typeof(Solvers.Solvers), opts.Solver)}' solver");
-            var solver = SolverBuilder.GetSolver(opts.Solver);
+            Console.WriteLine($"Solving with '{Enum.GetName(typeof(Solvers.SolverOptions), opts.Solver)}' solver");
+            var solver = SolverBuilder.GetSolver(opts.Solver, PreprocessorBuilder.GetPreprocessor(opts.Preprocessor, board.BoardSize));
             if (opts.Configuration != "")
             {
                 Console.WriteLine($"\tConfiguration set to '{opts.Configuration}'");
