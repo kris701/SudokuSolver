@@ -2,7 +2,7 @@
 This is a simple project about making automatic Sudoku solvers.
 It can be run as a CLI tool, by running:
 
-`dotnet run --project SudokuSolver --board {BOARD} --size {BOARDCELLSIZE} --solver {SOLVER} --configuration {CONFIGURATION}`
+`dotnet run --project SudokuSolver --configuration Release -- --board {BOARD} --size {BOARDCELLSIZE} --solver {SOLVER} --configuration {CONFIGURATION}`
 
 Where:
 * `BOARD` has to be a string of rows in the sudoku, where 0 represents a blank space
