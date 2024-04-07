@@ -7,6 +7,7 @@ namespace SudokuSolver.Preprocessors.BasicPreprocessor
         public byte BoardSize { get; }
         public List<CellPosition> Cardinalities { get; internal set; }
         public List<CellAssignment>[,] Candidates { get; internal set; }
+        public Dictionary<int, int>[,] CandidatesPrValue { get; internal set; }
         public BasicPreprocessorOptions Options { get; set; }
 
         public Preprocessor(BasicPreprocessorOptions options, byte boardSize)
@@ -14,6 +15,7 @@ namespace SudokuSolver.Preprocessors.BasicPreprocessor
             Options = options;
             Cardinalities = new List<CellPosition>();
             Candidates = new List<CellAssignment>[boardSize, boardSize];
+            CandidatesPrValue = new Dictionary<int, int>[boardSize, boardSize];
             BoardSize = boardSize;
         }
 
@@ -21,6 +23,18 @@ namespace SudokuSolver.Preprocessors.BasicPreprocessor
         {
             Cardinalities.Clear();
             Candidates = Ground(board, Options.GroundLegalCandidatesOnly);
+            for (byte x = 0; x < BoardSize; x++)
+            {
+                for (byte y = 0; y < BoardSize; y++)
+                {
+                    CandidatesPrValue[x, y] = new Dictionary<int, int>();
+                    for (int i = 1; i <= board.BlockSize * board.BlockSize; i++)
+                        CandidatesPrValue[x, y].Add(i, 0);
+
+                    foreach (var option in Candidates[x, y])
+                        CandidatesPrValue[x, y][option.Value]++;
+                }
+            }
 
             // Prune certains (and add them to the board)
             if (Options.PruneCertains)

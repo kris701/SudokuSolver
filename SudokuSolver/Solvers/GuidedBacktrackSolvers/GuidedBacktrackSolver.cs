@@ -9,7 +9,13 @@ namespace SudokuSolver.Solvers.GuidedBacktrackSolvers
         public override List<string> Configurations() => _configurations.Keys.ToList();
         private Dictionary<string, IHeuristic> _configurations = new Dictionary<string, IHeuristic>()
         {
-            { "Default", new hMinimumBlockAssignments() }
+            { "Default", new hSum(new List<IHeuristic>()
+            {
+                //new hCompletedColumns(),
+                //new hCompletedRows(),
+                new hMinimumBlockAssignments(),
+                //new hCompletedValues()
+            }) }
         };
 
         public GuidedBacktrackSolver(IPreprocessor preprocessor) : base(preprocessor)

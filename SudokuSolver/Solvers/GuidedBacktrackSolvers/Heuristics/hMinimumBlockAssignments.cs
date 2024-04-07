@@ -30,10 +30,7 @@ namespace SudokuSolver.Solvers.GuidedBacktrackSolvers.Heuristics
                     if (board[x, y] == board.BlankNumber)
                         continue;
 
-                    foreach (var possible in preprocessor.Candidates[x, y])
-                        if (possible.Value == assignment.Value)
-                            totals++;
-
+                    totals += preprocessor.CandidatesPrValue[x, y][assignment.Value];
                 }
             }
 
