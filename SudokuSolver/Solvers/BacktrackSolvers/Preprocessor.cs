@@ -48,8 +48,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             }
             Cardinalities = Cardinalities.OrderBy(x => x.Possibilities).ToList();
 
-            if (Options.EnableLog)
-                Console.WriteLine($"Total Possibilities: {total}");
+            Console.WriteLine($"Total Possibilities: {total}");
 
             return board;
         }
@@ -120,8 +119,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
                 }
                 Candidates = Ground(board, Options.GroundLegalCandidatesOnly);
             }
-            if (Options.EnableLog)
-                Console.WriteLine($"Removed {pruned} certains");
+            Console.WriteLine($"Removed {pruned} certains");
         }
 
         private void PruneHiddenPairs(SudokuBoard board)
@@ -175,8 +173,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
                     }
                 }
             }
-            if (Options.EnableLog)
-                Console.WriteLine($"Removed {pruned} candidates because of hidden pairs");
+            Console.WriteLine($"Removed {pruned} candidates because of hidden pairs");
         }
 
         private void PruneNakedPairs(SudokuBoard board)
@@ -262,8 +259,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
                     }
                 }
             }
-            if (Options.EnableLog)
-                Console.WriteLine($"Removed {pruned} candidates because of naked pairs");
+            Console.WriteLine($"Removed {pruned} candidates because of naked pairs");
         }
 
         private List<CellAssignment> GetBinaryAssignments(int column, int row)
