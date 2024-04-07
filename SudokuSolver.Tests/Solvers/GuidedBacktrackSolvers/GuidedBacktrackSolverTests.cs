@@ -1,12 +1,13 @@
 ﻿using SudokuSolver.Models;
 using SudokuSolver.Preprocessors;
 using SudokuSolver.Solvers.BacktrackSolvers;
+using SudokuSolver.Solvers.GuidedBacktrackSolvers;
 using SudokuSolver.Tests.Models;
 
 namespace SudokuSolver.Tests.Solvers.BacktrackSolvers
 {
     [TestClass]
-    public class BacktrackSolverTests
+    public class GuidedBacktrackSolverTests
     {
         public static IEnumerable<object[]> Data() => BaseTests.TestCases();
 
@@ -16,7 +17,8 @@ namespace SudokuSolver.Tests.Solvers.BacktrackSolvers
         {
             // ARRANGE
             var board = new SudokuBoard(boardValues.ToArray(), blockSize);
-            var solver = new BacktrackSolver(PreprocessorBuilder.GetPreprocessor(PreprocessorOptions.Full, board.BoardSize));
+            var solver = new GuidedBacktrackSolver(PreprocessorBuilder.GetPreprocessor(PreprocessorOptions.Full, board.BoardSize));
+            solver.Configuration = "Default";
             solver.Timeout = BaseTests.Timeout;
 
             // ACT

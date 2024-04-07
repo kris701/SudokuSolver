@@ -1,17 +1,28 @@
 ﻿using SudokuSolver.Models;
 using SudokuSolver.Preprocessors;
+using SudokuSolver.Solvers.GuidedBacktrackSolvers.Heuristics;
 
 namespace SudokuSolver.Solvers.GuidedBacktrackSolvers
 {
     public class GuidedBacktrackSolver : BaseSolver
     {
+        public override List<string> Configurations() => _configurations.Keys.ToList();
+        private Dictionary<string, IHeuristic> _configurations = new Dictionary<string, IHeuristic>()
+        {
+            { "Default", new hMinimumBlockAssignments() }
+        };
+
         public GuidedBacktrackSolver(IPreprocessor preprocessor) : base(preprocessor)
         {
         }
 
-        public override SudokuBoard? Run(SudokuBoard board, IPreprocessor preprocessor) => SolveInner(board, preprocessor);
+        public override SudokuBoard? Run(SudokuBoard board, IPreprocessor preprocessor)
+        {
+            var heuristic = _configurations[Configuration];
+            return SolveInner(board, preprocessor, heuristic);
+        }
 
-        internal SudokuBoard? SolveInner(SudokuBoard board, IPreprocessor preprocessor, int bestOffset = 0)
+        internal SudokuBoard? SolveInner(SudokuBoard board, IPreprocessor preprocessor, IHeuristic heuristic, int bestOffset = 0)
         {
             if (_stop)
                 return null;
@@ -28,17 +39,23 @@ namespace SudokuSolver.Solvers.GuidedBacktrackSolvers
             var loc = preprocessor.Cardinalities[bestOffset];
             var possibilities = preprocessor.Candidates[loc.X, loc.Y];
             var count = possibilities.Count;
+
+            var openList = new PriorityQueue<CellAssignment, int>();
+
             for (int i = 0; i < count; i++)
-            {
                 if (possibilities[i].IsLegal(board))
-                {
-                    possibilities[i].Apply(board);
-                    var result = SolveInner(board, preprocessor, bestOffset + 1);
-                    if (result != null)
-                        return result;
-                    possibilities[i].UnApply(board);
-                }
+                    openList.Enqueue(possibilities[i], heuristic.Value(board, preprocessor, possibilities[i]));
+
+            while(openList.Count > 0)
+            {
+                var possible = openList.Dequeue();
+                possible.Apply(board);
+                var result = SolveInner(board, preprocessor, heuristic, bestOffset + 1);
+                if (result != null)
+                    return result;
+                possible.UnApply(board);
             }
+
             return null;
         }
     }

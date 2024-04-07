@@ -97,13 +97,13 @@ namespace SudokuSolver.Models
 
         public bool BlockContains(ref byte x, ref byte y, ref byte value) => _blocks[_blockRefs[x + y * BoardSize] * (BoardSize + 1) + value];
 
-        public HashSet<int> GetBlockValues(ref int cellX, ref int cellY)
+        public HashSet<int> GetBlockValues(ref int blockX, ref int blockY)
         {
             var returnList = new HashSet<int>();
-            var fromX = cellX * Blocks;
-            var toX = (cellX + 1) * Blocks;
-            var fromY = cellY * Blocks;
-            var toY = (cellY + 1) * Blocks;
+            var fromX = blockX * Blocks;
+            var toX = (blockX + 1) * Blocks;
+            var fromY = blockY * Blocks;
+            var toY = (blockY + 1) * Blocks;
 
             for (int x = fromX; x < toX; x++)
                 for (int y = fromY; y < toY; y++)

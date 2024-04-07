@@ -11,7 +11,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
 
         public override SudokuBoard? Run(SudokuBoard board, IPreprocessor preprocessor) => SolveInner(board, preprocessor);
 
-        internal SudokuBoard? SolveInner(SudokuBoard board, IPreprocessor preprocessor, int bestOffset = 0)
+        private SudokuBoard? SolveInner(SudokuBoard board, IPreprocessor preprocessor, int bestOffset = 0)
         {
             if (_stop)
                 return null;
