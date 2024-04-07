@@ -54,13 +54,20 @@ namespace SudokuSolver.Solvers
             _watch.Start();
 
             var preprocessed = Preprocessor.Preprocess(board);
+            if (Preprocessor.Cardinalities.Count == 0)
+            {
+                if (!preprocessed.IsComplete())
+                    preprocessed = null;
+            }
 
             _watch.Stop();
             PreprocessTime = _watch.Elapsed;
             _watch.Reset();
             _watch.Start();
 
-            var result = Run(preprocessed, Preprocessor);
+            var result = preprocessed;
+            if (preprocessed != null)
+                result = Run(preprocessed, Preprocessor);
 
             _watch.Stop();
             logTimer.Stop();

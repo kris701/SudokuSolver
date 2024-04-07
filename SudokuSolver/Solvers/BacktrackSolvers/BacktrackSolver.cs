@@ -16,14 +16,14 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             if (_stop)
                 return null;
 
-            Calls++;
-
             if (bestOffset >= preprocessor.Cardinalities.Count)
             {
                 if (board.IsComplete())
                     return board;
                 return null;
             }
+
+            Calls++;
 
             var loc = preprocessor.Cardinalities[bestOffset];
             var possibilities = preprocessor.Candidates[loc.X, loc.Y];
