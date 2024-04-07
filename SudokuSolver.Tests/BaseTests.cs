@@ -1,9 +1,4 @@
 ﻿using SudokuSolver.Tests.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 [assembly: Parallelize(Workers = 12, Scope = ExecutionScope.MethodLevel)]
 

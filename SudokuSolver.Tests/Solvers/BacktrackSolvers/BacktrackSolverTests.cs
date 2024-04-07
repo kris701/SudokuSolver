@@ -1,7 +1,6 @@
 ﻿using SudokuSolver.Models;
 using SudokuSolver.Preprocessors;
 using SudokuSolver.Solvers.BacktrackSolvers;
-using SudokuSolver.Tests.Models;
 
 namespace SudokuSolver.Tests.Solvers.BacktrackSolvers
 {

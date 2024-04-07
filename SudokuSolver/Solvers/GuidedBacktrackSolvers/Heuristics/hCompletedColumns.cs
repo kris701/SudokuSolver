@@ -1,11 +1,5 @@
-﻿using SudokuSolver.Helpers;
-using SudokuSolver.Models;
+﻿using SudokuSolver.Models;
 using SudokuSolver.Preprocessors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SudokuSolver.Solvers.GuidedBacktrackSolvers.Heuristics
 {
@@ -18,7 +12,7 @@ namespace SudokuSolver.Solvers.GuidedBacktrackSolvers.Heuristics
             {
                 var column = board.GetColumn(ref x);
                 var full = true;
-                for (byte y = 0; y < column.Length; y++) 
+                for (byte y = 0; y < column.Length; y++)
                 {
                     if (column[y] == board.BlankNumber)
                     {

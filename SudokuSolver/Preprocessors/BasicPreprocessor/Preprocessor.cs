@@ -1,6 +1,4 @@
 ﻿using SudokuSolver.Models;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SudokuSolver.Preprocessors.BasicPreprocessor
 {
@@ -118,7 +116,7 @@ namespace SudokuSolver.Preprocessors.BasicPreprocessor
         private bool PruneCertains(SudokuBoard board)
         {
             var pruned = 0;
-            for (byte x = 0; x < board.BoardSize; x++) 
+            for (byte x = 0; x < board.BoardSize; x++)
                 for (byte y = 0; y < board.BoardSize; y++)
                     if (Candidates[x, y].Count == 1)
                         pruned += RemoveCandidate(board, Candidates[x, y][0]);
@@ -165,7 +163,7 @@ namespace SudokuSolver.Preprocessors.BasicPreprocessor
             var fromY = blockY * board.Blocks;
             var toY = (blockY + 1) * board.Blocks;
 
-            for (byte x = (byte)fromX; x < toX; x++) 
+            for (byte x = (byte)fromX; x < toX; x++)
                 for (byte y = (byte)fromY; y < toY; y++)
                     pruned += Candidates[x, y].RemoveAll(z => z.Value == cell.Value);
             return pruned;

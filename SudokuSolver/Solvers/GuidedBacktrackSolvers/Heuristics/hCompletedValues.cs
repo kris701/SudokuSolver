@@ -1,10 +1,5 @@
 ﻿using SudokuSolver.Models;
 using SudokuSolver.Preprocessors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SudokuSolver.Solvers.GuidedBacktrackSolvers.Heuristics
 {
@@ -14,10 +9,10 @@ namespace SudokuSolver.Solvers.GuidedBacktrackSolvers.Heuristics
         {
             var values = board.BlockSize * board.BlockSize;
 
-            for(byte i = 1; i <= board.BlockSize * board.BlockSize; i++)
+            for (byte i = 1; i <= board.BlockSize * board.BlockSize; i++)
             {
                 bool exists = true;
-                for(byte y = 0; y < board.BlockSize * board.BlockSize; y++)
+                for (byte y = 0; y < board.BlockSize * board.BlockSize; y++)
                 {
                     if (!board.RowContains(ref y, ref i))
                     {

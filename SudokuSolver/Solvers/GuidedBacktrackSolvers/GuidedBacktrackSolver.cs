@@ -7,14 +7,14 @@ namespace SudokuSolver.Solvers.GuidedBacktrackSolvers
     public class GuidedBacktrackSolver : BaseSolver
     {
         public override List<string> Configurations() => _configurations.Keys.ToList();
-        private Dictionary<string, IHeuristic> _configurations = new Dictionary<string, IHeuristic>()
+        private readonly Dictionary<string, IHeuristic> _configurations = new Dictionary<string, IHeuristic>()
         {
             { "Default", new hSum(new List<IHeuristic>()
             {
                 //new hCompletedColumns(),
                 //new hCompletedRows(),
                 new hMinimumBlockAssignments(),
-                //new hCompletedValues()
+                new hCompletedValues()
             }) }
         };
 
@@ -52,7 +52,7 @@ namespace SudokuSolver.Solvers.GuidedBacktrackSolvers
                 if (possibilities[i].IsLegal(board))
                     openList.Enqueue(possibilities[i], heuristic.Value(board, preprocessor, possibilities[i]));
 
-            while(openList.Count > 0)
+            while (openList.Count > 0)
             {
                 var possible = openList.Dequeue();
                 possible.Apply(board);

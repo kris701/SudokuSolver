@@ -1,10 +1,8 @@
 ﻿using SudokuSolver.Models;
 using SudokuSolver.Preprocessors;
-using SudokuSolver.Solvers.BacktrackSolvers;
 using SudokuSolver.Solvers.GuidedBacktrackSolvers;
-using SudokuSolver.Tests.Models;
 
-namespace SudokuSolver.Tests.Solvers.BacktrackSolvers
+namespace SudokuSolver.Tests.Solvers.GuidedBacktrackSolvers
 {
     [TestClass]
     public class GuidedBacktrackSolverTests
