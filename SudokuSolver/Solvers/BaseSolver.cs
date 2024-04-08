@@ -1,5 +1,5 @@
 ﻿using SudokuSolver.Models;
-using SudokuSolver.Preprocessors;
+using SudokuSolver.Solvers.Preprocessors;
 using System.Diagnostics;
 using System.Timers;
 
@@ -8,11 +8,9 @@ namespace SudokuSolver.Solvers
     public abstract class BaseSolver : ISolver
     {
         public int Calls { get; internal set; }
-        public TimeSpan PreprocessTime { get; internal set; }
         public TimeSpan SearchTime { get; internal set; }
         public TimeSpan Timeout { get; set; } = TimeSpan.Zero;
         public bool TimedOut { get; internal set; }
-        public IPreprocessor Preprocessor { get; internal set; }
         public string Configuration { get; set; } = "";
         public virtual List<string> Configurations() => new List<string>() { "" };
 
@@ -20,11 +18,6 @@ namespace SudokuSolver.Solvers
 
         private int _lastCalls = 0;
         private Stopwatch? _watch;
-
-        public BaseSolver(IPreprocessor preprocessor)
-        {
-            Preprocessor = preprocessor;
-        }
 
         public SudokuBoard? Solve(SudokuBoard board)
         {
@@ -54,31 +47,18 @@ namespace SudokuSolver.Solvers
             _watch.Start();
 
             var preprocessed = Preprocessor.Preprocess(board);
-            if (Preprocessor.Cardinalities.Count == 0)
-            {
-                if (!preprocessed.IsComplete())
-                    preprocessed = null;
-            }
-
-            _watch.Stop();
-            PreprocessTime = _watch.Elapsed;
-            _watch.Reset();
-            _watch.Start();
-
-            var result = preprocessed;
-            if (preprocessed != null)
-                result = Run(preprocessed, Preprocessor);
+            var result = Run(preprocessed);
 
             _watch.Stop();
             logTimer.Stop();
             timeoutTimer.Stop();
 
             SearchTime = _watch.Elapsed;
-            Console.WriteLine($"Took {Calls} calls and {SearchTime} time to solve with {PreprocessTime} preprocessing time.");
+            Console.WriteLine($"Took {Calls} calls and {SearchTime} time to solve");
             return result;
         }
 
-        public abstract SudokuBoard? Run(SudokuBoard board, IPreprocessor preprocessor);
+        public abstract SudokuBoard? Run(SearchContext context);
 
         private void OnTimeout(object? sender, ElapsedEventArgs e)
         {

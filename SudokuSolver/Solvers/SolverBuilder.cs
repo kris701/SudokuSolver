@@ -1,5 +1,4 @@
-﻿using SudokuSolver.Preprocessors;
-using SudokuSolver.Solvers.BacktrackSolvers;
+﻿using SudokuSolver.Solvers.BacktrackSolvers;
 
 namespace SudokuSolver.Solvers
 {
@@ -8,11 +7,11 @@ namespace SudokuSolver.Solvers
 
     public static class SolverBuilder
     {
-        private static readonly Dictionary<SolverOptions, Func<IPreprocessor, ISolver>> _solvers = new Dictionary<SolverOptions, Func<IPreprocessor, ISolver>>()
+        private static readonly Dictionary<SolverOptions, Func<ISolver>> _solvers = new Dictionary<SolverOptions, Func<ISolver>>()
         {
-            { SolverOptions.BackTrack, (p) => new BacktrackSolver(p) },
+            { SolverOptions.BackTrack, () => new BacktrackSolver() },
         };
 
-        public static ISolver GetSolver(SolverOptions solver, IPreprocessor preprocessor) => _solvers[solver](preprocessor);
+        public static ISolver GetSolver(SolverOptions solver) => _solvers[solver]();
     }
 }

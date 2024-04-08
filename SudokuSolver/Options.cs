@@ -1,5 +1,4 @@
 ﻿using CommandLine;
-using SudokuSolver.Preprocessors;
 using SudokuSolver.Solvers;
 
 namespace SudokuSolver
@@ -15,8 +14,6 @@ namespace SudokuSolver
 
         [Option("configuration", Required = false, HelpText = "Configuration to set the solver to.")]
         public string Configuration { get; set; } = "";
-        [Option("preprocessor", Required = false, HelpText = "What preprocessor to use.")]
-        public PreprocessorOptions Preprocessor { get; set; } = PreprocessorOptions.Full;
         [Option("timeout", Required = false, HelpText = "How many seconds should the search be allowed to use.")]
         public int TimeOutS { get; set; } = -1;
     }

@@ -1,42 +1,61 @@
 ﻿using SudokuSolver.Models;
-using SudokuSolver.Preprocessors;
+using SudokuSolver.Solvers.BacktrackSolvers.Pruners;
+using SudokuSolver.Solvers.BacktrackSolvers.Reducers;
+using SudokuSolver.Solvers.Preprocessors;
 
 namespace SudokuSolver.Solvers.BacktrackSolvers
 {
     public class BacktrackSolver : BaseSolver
     {
-        public BacktrackSolver(IPreprocessor preprocessor) : base(preprocessor)
+        public List<IPruner> Pruners { get; } = new List<IPruner>()
         {
+            new CertainsPruner(),
+            new NakedPairPruner(),
+            new HiddenPairPruner(),
+            new PointingPairsPruner()
+        };
+
+        public override SudokuBoard? Run(SearchContext context) 
+        {
+            bool any = true;
+            while (any)
+            {
+                any = false;
+                foreach (var pruner in Pruners)
+                    if (pruner.Prune(context))
+                        any = true;
+            }
+            context.Cardinalities = Preprocessor.GenerateCardinalities(context.Board, context.Candidates);
+            Console.WriteLine($"Total possible cell assignments: {context.Cardinalities.Sum(x => x.Possibilities)}");
+            return BacktrackSolve(context);
         }
 
-        public override SudokuBoard? Run(SudokuBoard board, IPreprocessor preprocessor) => SolveInner(board, preprocessor);
-
-        private SudokuBoard? SolveInner(SudokuBoard board, IPreprocessor preprocessor, int bestOffset = 0)
+        private SudokuBoard? BacktrackSolve(SearchContext context, int bestOffset = 0)
         {
             if (_stop)
                 return null;
 
-            if (bestOffset >= preprocessor.Cardinalities.Count)
+            if (bestOffset >= context.Cardinalities.Count)
             {
-                if (board.IsComplete())
-                    return board;
+                if (context.Board.IsComplete())
+                    return context.Board;
                 return null;
             }
 
             Calls++;
 
-            var loc = preprocessor.Cardinalities[bestOffset];
-            var possibilities = preprocessor.Candidates[loc.X, loc.Y];
+            var loc = context.Cardinalities[bestOffset];
+            var possibilities = context.Candidates[loc.X, loc.Y];
             var count = possibilities.Count;
             for (int i = 0; i < count; i++)
             {
-                if (possibilities[i].IsLegal(board))
+                if (possibilities[i].IsLegal(context.Board))
                 {
-                    possibilities[i].Apply(board);
-                    var result = SolveInner(board, preprocessor, bestOffset + 1);
+                    possibilities[i].Apply(context.Board);
+                    var result = BacktrackSolve(context, bestOffset + 1);
                     if (result != null)
                         return result;
-                    possibilities[i].UnApply(board);
+                    possibilities[i].UnApply(context.Board);
                 }
             }
             return null;
