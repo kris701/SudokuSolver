@@ -42,5 +42,43 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
                     pruned += context.Candidates[ignore[0].X, y].RemoveAll(v => v.Value == value);
             return pruned;
         }
+
+        internal int PruneValueCandidatesFromBlock(SearchContext context, byte blockX, byte blockY, List<CellAssignment> ignore, byte value)
+        {
+            var pruned = 0;
+            var fromX = blockX * context.Board.Blocks;
+            var toX = (blockX + 1) * context.Board.Blocks;
+            var fromY = blockY * context.Board.Blocks;
+            var toY = (blockY + 1) * context.Board.Blocks;
+            for (int x = fromX; x < toX; x++)
+                for (int y = fromY; y < toY; y++)
+                    if (!ignore.Any(z => z.X == x && z.Y == y))
+                        pruned += context.Candidates[x, y].RemoveAll(z => z.Value == value);
+            return pruned;
+        }
+
+        internal bool IsRowAlligned(List<CellAssignment> assignments)
+        {
+            if (assignments.Count == 0)
+                return false;
+            var x = assignments[0].X;
+            foreach (var assignment in assignments.Skip(1))
+                if (assignment.X != x)
+                    return false;
+
+            return true;
+        }
+
+        internal bool IsColumnAlligned(List<CellAssignment> assignments)
+        {
+            if (assignments.Count == 0)
+                return false;
+            var y = assignments[0].Y;
+            foreach (var assignment in assignments.Skip(1))
+                if (assignment.Y != y)
+                    return false;
+
+            return true;
+        }
     }
 }

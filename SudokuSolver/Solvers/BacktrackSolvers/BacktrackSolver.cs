@@ -11,6 +11,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
         {
             new CertainsPruner(),
             new NakedPairPruner(),
+            new NakedTripplePruner(),
             new HiddenPairPruner(),
             new PointingPairsPruner()
         };
@@ -26,7 +27,14 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
                         any = true;
             }
             context.Cardinalities = Preprocessor.GenerateCardinalities(context.Board, context.Candidates);
+            if (context.Cardinalities.Count == 0)
+            {
+                if (context.Board.IsComplete())
+                    return context.Board;
+                return null;
+            }
             Console.WriteLine($"Total possible cell assignments: {context.Cardinalities.Sum(x => x.Possibilities)}");
+            Console.WriteLine("No more pruning possible, starting backtrack search...");
             return BacktrackSolve(context);
         }
 

@@ -11,8 +11,6 @@ namespace SudokuSolver.Solvers
         public TimeSpan SearchTime { get; internal set; }
         public TimeSpan Timeout { get; set; } = TimeSpan.Zero;
         public bool TimedOut { get; internal set; }
-        public string Configuration { get; set; } = "";
-        public virtual List<string> Configurations() => new List<string>() { "" };
 
         internal bool _stop = false;
 
@@ -21,9 +19,6 @@ namespace SudokuSolver.Solvers
 
         public SudokuBoard? Solve(SudokuBoard board)
         {
-            if (!Configurations().Contains(Configuration))
-                throw new Exception($"Unknown configuration for solver! Options are '{string.Join(',', Configurations())}'");
-
             _stop = false;
             TimedOut = false;
             Calls = 0;

@@ -92,12 +92,12 @@ namespace SudokuSolver.Models
         public bool RowContains(ref byte row, ref byte value) => _rows[row * (BoardSize + 1) + value];
         public bool ColumnContains(ref byte column, ref byte value) => _columns[column * (BoardSize + 1) + value];
 
-        public int BlockX(ref byte x) => (int)Math.Floor((double)x / Blocks);
-        public int BlockY(ref byte y) => (int)Math.Floor((double)y / Blocks);
+        public byte BlockX(ref byte x) => (byte)Math.Floor((double)x / Blocks);
+        public byte BlockY(ref byte y) => (byte)Math.Floor((double)y / Blocks);
 
         public bool BlockContains(ref byte x, ref byte y, ref byte value) => _blocks[_blockRefs[x + y * BoardSize] * (BoardSize + 1) + value];
 
-        public HashSet<int> GetBlockValues(ref int blockX, ref int blockY)
+        public HashSet<int> GetBlockValues(ref byte blockX, ref byte blockY)
         {
             var returnList = new HashSet<int>();
             var fromX = blockX * Blocks;

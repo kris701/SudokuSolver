@@ -41,29 +41,5 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
                 Console.WriteLine($"Removed {pruned} candidates because of pointing pairs");
             return pruned > 0;
         }
-
-        private bool IsRowAlligned(List<CellAssignment> assignments)
-        {
-            if (assignments.Count == 0)
-                return false;
-            var x = assignments[0].X;
-            foreach (var assignment in assignments.Skip(1))
-                if (assignment.X != x)
-                    return false;
-
-            return true;
-        }
-
-        private bool IsColumnAlligned(List<CellAssignment> assignments)
-        {
-            if (assignments.Count == 0)
-                return false;
-            var y = assignments[0].Y;
-            foreach (var assignment in assignments.Skip(1))
-                if (assignment.Y != y)
-                    return false;
-
-            return true;
-        }
     }
 }

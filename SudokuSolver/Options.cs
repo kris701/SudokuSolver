@@ -12,8 +12,6 @@ namespace SudokuSolver
         [Option("solver", Required = true, HelpText = "What solver to use.")]
         public SolverOptions Solver { get; set; }
 
-        [Option("configuration", Required = false, HelpText = "Configuration to set the solver to.")]
-        public string Configuration { get; set; } = "";
         [Option("timeout", Required = false, HelpText = "How many seconds should the search be allowed to use.")]
         public int TimeOutS { get; set; } = -1;
     }

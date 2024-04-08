@@ -31,11 +31,6 @@ namespace SudokuSolver
             Console.WriteLine();
             Console.WriteLine($"Solving with '{Enum.GetName(typeof(SolverOptions), opts.Solver)}' solver");
             var solver = SolverBuilder.GetSolver(opts.Solver);
-            if (opts.Configuration != "")
-            {
-                Console.WriteLine($"\tConfiguration set to '{opts.Configuration}'");
-                solver.Configuration = opts.Configuration;
-            }
             if (opts.TimeOutS != -1)
             {
                 Console.WriteLine($"\tTimeout set to {opts.TimeOutS}s");

@@ -94,16 +94,12 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
                     if (cellPossibilities.Any(x => x.Count > 0))
                     {
                         var all = new List<CellAssignment>();
-                        foreach (var values in cellPossibilities)
-                            all.AddRange(values);
+                        foreach (var possibles in cellPossibilities)
+                            all.AddRange(possibles);
 
-                        foreach (var value in all)
-                        {
-                            for (int x = fromX; x < toX; x++)
-                                for (int y = fromY; y < toY; y++)
-                                    if (!all.Any(z => z.X == x && z.Y == y))
-                                        pruned += context.Candidates[x, y].RemoveAll(z => z.Value == value.Value);
-                        }
+                        var values = all.Select(x => x.Value).Distinct();
+                        foreach (var value in values)
+                            PruneValueCandidatesFromBlock(context, (byte)blockX, (byte)blockY, all, value);
                     }
                 }
             }
