@@ -1,3 +1,5 @@
+[![Build and Test](https://github.com/kris701/SudokuSolver/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/kris701/SudokuSolver/actions/workflows/dotnet-desktop.yml)
+
 # Sudoku Solver
 This is a simple project about making an automatic Sudoku solver.
 It can be run as a CLI tool, by running:
