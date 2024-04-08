@@ -26,6 +26,7 @@ namespace SudokuSolver.Tests
                     foreach (var c in line)
                         values.Add(byte.Parse($"{c}"));
                     yield return new object[] {
+                        line,
                         values,
                         benchmark.BlockSize
                     };

@@ -29,15 +29,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
             {
                 for (byte blockY = 0; blockY < context.Board.Blocks; blockY++)
                 {
-                    var fromX = blockX * context.Board.Blocks;
-                    var toX = (blockX + 1) * context.Board.Blocks;
-                    var fromY = blockY * context.Board.Blocks;
-                    var toY = (blockY + 1) * context.Board.Blocks;
-                    var cellPossibilities = new List<CellAssignment>();
-                    for (byte x = (byte)fromX; x < toX; x++)
-                        for (byte y = (byte)fromY; y < toY; y++)
-                            cellPossibilities.AddRange(context.Candidates[x, y]);
-
+                    var cellPossibilities = GetAssignmentsFromBlock(context, blockX, blockY);
                     for (byte i = 1; i <= context.Board.BoardSize; i++)
                         if (cellPossibilities.Count(x => x.Value == i) == 1)
                             pruned += RemoveCandidate(context, cellPossibilities.First(x => x.Value == i));

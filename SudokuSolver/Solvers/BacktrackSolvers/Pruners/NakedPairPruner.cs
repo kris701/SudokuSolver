@@ -19,6 +19,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
         private bool PruneNakedPairs(SearchContext context)
         {
             var pruned = 0;
+            // Prune from columns
             for (int column = 0; column < context.Board.BoardSize; column++)
             {
                 var cellPossibilities = new List<List<CellAssignment>>();
@@ -31,28 +32,17 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
 
                     if (cellPossibilities.Any(x => x.Count > 0))
                     {
-                        var removeValues = new HashSet<int>();
-                        var protectedRows = new List<int>();
-                        for (int row = 0; row < context.Board.BoardSize; row++)
-                        {
-                            if (cellPossibilities[row].Count > 0)
-                            {
-                                protectedRows.Add(row);
-                                foreach (var value in cellPossibilities[row])
-                                    removeValues.Add(value.Value);
-                            }
-                        }
-                        if (removeValues.Count > 0)
-                        {
-                            foreach (var value in removeValues)
-                                for (int row = 0; row < context.Board.BoardSize; row++)
-                                    if (!protectedRows.Contains(row))
-                                        pruned += context.Candidates[column, row].RemoveAll(x => x.Value == value);
-                        }
+                        var all = new List<CellAssignment>();
+                        foreach (var values in cellPossibilities)
+                            all.AddRange(values);
+
+                        foreach (var value in all)
+                            pruned += PruneValueCandidatesFromColumn(context, all, value.Value);
                     }
                 }
             }
 
+            // Prune from rows
             for (int row = 0; row < context.Board.BoardSize; row++)
             {
                 var cellPossibilities = new List<List<CellAssignment>>();
@@ -65,27 +55,59 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
 
                     if (cellPossibilities.Any(x => x.Count > 0))
                     {
-                        var removeValues = new HashSet<int>();
-                        var protectedColumn = new List<int>();
-                        for (int column = 0; column < context.Board.BoardSize; column++)
+                        var all = new List<CellAssignment>();
+                        foreach (var values in cellPossibilities)
+                            all.AddRange(values);
+
+                        foreach (var value in all)
+                            pruned += PruneValueCandidatesFromRow(context, all, value.Value);
+                    }
+                }
+            }
+
+            // Prune from blocks
+            for(int blockX = 0; blockX < context.Board.Blocks; blockX++)
+            {
+                for (int blockY = 0; blockY < context.Board.Blocks; blockY++)
+                {
+                    var fromX = blockX * context.Board.Blocks;
+                    var toX = (blockX + 1) * context.Board.Blocks;
+                    var fromY = blockY * context.Board.Blocks;
+                    var toY = (blockY + 1) * context.Board.Blocks;
+                    var cellPossibilities = new List<List<CellAssignment>>();
+                    for (int i = 0; i < context.Board.BlockSize * context.Board.BlockSize; i++)
+                        cellPossibilities.Add(new List<CellAssignment>());
+
+                    int offset = 0;
+                    for (int x = fromX; x < toX; x++)
+                    {
+                        for (int y = fromY; y < toY; y++)
                         {
-                            if (cellPossibilities[column].Count > 0)
-                            {
-                                protectedColumn.Add(column);
-                                foreach (var value in cellPossibilities[column])
-                                    removeValues.Add(value.Value);
-                            }
+                            if (context.Candidates[x, y].Count == 2)
+                                cellPossibilities[offset] = new List<CellAssignment>(context.Candidates[x, y]);
+                            offset++;
                         }
-                        if (removeValues.Count > 0)
+                    }
+
+                    cellPossibilities = RemoveUnpaired(cellPossibilities, context.Board.BoardSize);
+
+                    if (cellPossibilities.Any(x => x.Count > 0))
+                    {
+                        var all = new List<CellAssignment>();
+                        foreach (var values in cellPossibilities)
+                            all.AddRange(values);
+
+                        foreach (var value in all)
                         {
-                            foreach (var value in removeValues)
-                                for (int column = 0; column < context.Board.BoardSize; column++)
-                                    if (!protectedColumn.Contains(column))
-                                        pruned += context.Candidates[column, row].RemoveAll(x => x.Value == value);
+                            for (int x = fromX; x < toX; x++)
+                                for (int y = fromY; y < toY; y++)
+                                    if (!all.Any(z => z.X == x && z.Y == y))
+                                        pruned += context.Candidates[x, y].RemoveAll(z => z.Value == value.Value);
                         }
                     }
                 }
             }
+
             if (pruned > 0)
                 Console.WriteLine($"Removed {pruned} candidates because of naked pairs");
             return pruned > 0;

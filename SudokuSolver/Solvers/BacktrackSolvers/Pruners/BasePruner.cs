@@ -24,5 +24,23 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
                     cellPossibilities.AddRange(context.Candidates[x, y]);
             return cellPossibilities;
         }
+
+        internal int PruneValueCandidatesFromRow(SearchContext context, List<CellAssignment> ignore, byte value)
+        {
+            var pruned = 0;
+            for (int x = 0; x < context.Board.BoardSize; x++)
+                if (!ignore.Any(z => z.X == x))
+                    pruned += context.Candidates[x, ignore[0].Y].RemoveAll(v => v.Value == value);
+            return pruned;
+        }
+
+        internal int PruneValueCandidatesFromColumn(SearchContext context, List<CellAssignment> ignore, byte value)
+        {
+            var pruned = 0;
+            for (int y = 0; y < context.Board.BoardSize; y++)
+                if (!ignore.Any(z => z.Y == y))
+                    pruned += context.Candidates[ignore[0].X, y].RemoveAll(v => v.Value == value);
+            return pruned;
+        }
     }
 }

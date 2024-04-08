@@ -30,18 +30,9 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
                     {
                         var valueAssignments = cellPossibilities.Where(x => x.Value == i).ToList();
                         if (IsRowAlligned(valueAssignments))
-                        {
-                            for (int y = 0; y < context.Board.BoardSize; y++)
-                                if (!valueAssignments.Any(z => z.Y == y))
-                                    pruned += context.Candidates[valueAssignments[0].X, y].RemoveAll(v => v.Value == i);
-
-                        }
+                            pruned += PruneValueCandidatesFromColumn(context, valueAssignments, i); 
                         else if (IsColumnAlligned(valueAssignments))
-                        {
-                            for (int x = 0; x < context.Board.BoardSize; x++)
-                                if (!valueAssignments.Any(z => z.X == x))
-                                    pruned += context.Candidates[x, valueAssignments[0].Y].RemoveAll(v => v.Value == i);
-                        }
+                            pruned += PruneValueCandidatesFromRow(context, valueAssignments, i);
                     }
                 }
             }
