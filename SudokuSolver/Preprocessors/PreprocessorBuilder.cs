@@ -16,7 +16,8 @@
                     GroundLegalCandidatesOnly = false,
                     PruneCertains = false,
                     PruneHiddenPairs = false,
-                    PruneNakedPairs = false
+                    PruneNakedPairs = false,
+                    PrunePointingPairs = false
                 },
                 b) },
         };
