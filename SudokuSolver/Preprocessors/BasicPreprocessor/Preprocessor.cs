@@ -42,6 +42,10 @@ namespace SudokuSolver.Preprocessors.BasicPreprocessor
                 // Prune hidden pairs
                 if (Options.PruneHiddenPairs)
                     while (PruneHiddenPairs(board)) { any = true; }
+
+                // Prune pointing pairs
+                if (Options.PrunePointingPairs)
+                    while (PrunePointingPairs(board)) { any = true; }
             }
 
             Cardinalities = GenerateCardinalities(board);
@@ -172,25 +176,17 @@ namespace SudokuSolver.Preprocessors.BasicPreprocessor
         private bool PruneHiddenPairs(SudokuBoard board)
         {
             var pruned = 0;
-            bool any = false;
-            for (int cellX = 0; cellX < board.Blocks; cellX++)
+            for (byte blockX = 0; blockX < board.Blocks; blockX++)
             {
-                for (int cellY = 0; cellY < board.Blocks; cellY++)
+                for (byte blockY = 0; blockY < board.Blocks; blockY++)
                 {
-                    var fromX = cellX * board.Blocks;
-                    var toX = (cellX + 1) * board.Blocks;
-                    var fromY = cellY * board.Blocks;
-                    var toY = (cellY + 1) * board.Blocks;
-                    var cellPossibilities = new List<CellAssignment>();
-                    for (int x = fromX; x < toX; x++)
-                        for (int y = fromY; y < toY; y++)
-                            cellPossibilities.AddRange(Candidates[x, y]);
+                    var cellPossibilities = GetAssignmentsFromBlock(blockX, blockY, board.Blocks);
 
-                    for (int i = 1; i < board.BlockSize * board.BlockSize; i++)
+                    for (byte i = 1; i <= board.BoardSize; i++)
                     {
                         if (cellPossibilities.Count(x => x.Value == i) == 2)
                         {
-                            for (int j = 1; j < board.BlockSize * board.BlockSize; j++)
+                            for (int j = 1; j <= board.BoardSize; j++)
                             {
                                 if (i == j)
                                     continue;
@@ -201,12 +197,7 @@ namespace SudokuSolver.Preprocessors.BasicPreprocessor
                                             y => y.X == x.X && y.Y == x.Y)))
                                     {
                                         foreach (var possibility in cellPossibilities.Where(x => x.Value == i))
-                                        {
-                                            var removed = Candidates[possibility.X, possibility.Y].RemoveAll(x => x.Value != i && x.Value != j);
-                                            pruned += removed;
-                                            if (removed > 0)
-                                                any = true;
-                                        }
+                                            pruned += Candidates[possibility.X, possibility.Y].RemoveAll(x => x.Value != i && x.Value != j);
                                     }
                                 }
                             }
@@ -216,13 +207,12 @@ namespace SudokuSolver.Preprocessors.BasicPreprocessor
             }
             if (pruned > 0)
                 Console.WriteLine($"Removed {pruned} candidates because of hidden pairs");
-            return any;
+            return pruned > 0;
         }
 
         private bool PruneNakedPairs(SudokuBoard board)
         {
             var pruned = 0;
-            bool any = false;
             for (int column = 0; column < BoardSize; column++)
             {
                 var cellPossibilities = new List<List<CellAssignment>>();
@@ -248,14 +238,10 @@ namespace SudokuSolver.Preprocessors.BasicPreprocessor
                         }
                         if (removeValues.Count > 0)
                         {
-                            var removed = 0;
                             foreach (var value in removeValues)
                                 for (int row = 0; row < BoardSize; row++)
                                     if (!protectedRows.Contains(row))
-                                        removed += Candidates[column, row].RemoveAll(x => x.Value == value);
-                            pruned += removed;
-                            if (removed > 0)
-                                any = true;
+                                        pruned += Candidates[column, row].RemoveAll(x => x.Value == value);
                         }
                     }
                 }
@@ -286,23 +272,17 @@ namespace SudokuSolver.Preprocessors.BasicPreprocessor
                         }
                         if (removeValues.Count > 0)
                         {
-                            var removed = 0;
                             foreach (var value in removeValues)
                                 for (int column = 0; column < BoardSize; column++)
                                     if (!protectedColumn.Contains(column))
-                                        removed += Candidates[column, row].RemoveAll(x => x.Value == value);
-                            pruned += removed;
-                            if (removed > 0)
-                            {
-                                any = true;
-                            }
+                                        pruned += Candidates[column, row].RemoveAll(x => x.Value == value);
                         }
                     }
                 }
             }
             if (pruned > 0)
                 Console.WriteLine($"Removed {pruned} candidates because of naked pairs");
-            return any;
+            return pruned > 0;
         }
 
         private List<CellAssignment> GetBinaryAssignments(int column, int row)
@@ -337,6 +317,77 @@ namespace SudokuSolver.Preprocessors.BasicPreprocessor
                 if (remove)
                     cellPossibilities[i].Clear();
             }
+            return cellPossibilities;
+        }
+
+        private bool PrunePointingPairs(SudokuBoard board)
+        {
+            var pruned = 0;
+
+            for (byte blockX = 0; blockX < board.Blocks; blockX++)
+            {
+                for (byte blockY = 0; blockY < board.Blocks; blockY++) 
+                {
+                    var cellPossibilities = GetAssignmentsFromBlock(blockX, blockY, board.Blocks);
+
+                    for (byte i = 1; i <= board.BoardSize; i++)
+                    {
+                        var valueAssignments = cellPossibilities.Where(x => x.Value == i).ToList();
+                        if (IsRowAlligned(valueAssignments))
+                        {
+                            for (int y = 0; y < board.BoardSize; y++)
+                                if (!valueAssignments.Any(z => z.Y == y))
+                                    pruned += Candidates[valueAssignments[0].X, y].RemoveAll(v => v.Value == i);
+
+                        } else if (IsColumnAlligned(valueAssignments))
+                        {
+                            for (int x = 0; x < board.BoardSize; x++)
+                                if (!valueAssignments.Any(z => z.X == x))
+                                    pruned += Candidates[x, valueAssignments[0].Y].RemoveAll(v => v.Value == i);
+                        }
+                    }
+                }
+            }
+
+            if (pruned > 0)
+                Console.WriteLine($"Removed {pruned} candidates because of pointing pairs");
+            return pruned > 0;
+        }
+
+        private bool IsRowAlligned(List<CellAssignment> assignments)
+        {
+            if (assignments.Count == 0)
+                return false;
+            var x = assignments[0].X;
+            foreach (var assignment in assignments.Skip(1))
+                if (assignment.X != x)
+                    return false;
+
+            return true;
+        }
+
+        private bool IsColumnAlligned(List<CellAssignment> assignments)
+        {
+            if (assignments.Count == 0)
+                return false;
+            var y = assignments[0].Y;
+            foreach (var assignment in assignments.Skip(1))
+                if (assignment.Y != y)
+                    return false;
+
+            return true;
+        }
+
+        private List<CellAssignment> GetAssignmentsFromBlock(byte blockX, byte blockY, byte blocks)
+        {
+            var fromX = blockX * blocks;
+            var toX = (blockX + 1) * blocks;
+            var fromY = blockY * blocks;
+            var toY = (blockY + 1) * blocks;
+            var cellPossibilities = new List<CellAssignment>();
+            for (int x = fromX; x < toX; x++)
+                for (int y = fromY; y < toY; y++)
+                    cellPossibilities.AddRange(Candidates[x, y]);
             return cellPossibilities;
         }
     }
