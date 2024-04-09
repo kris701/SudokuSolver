@@ -1,9 +1,4 @@
 ﻿using SudokuSolver.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
 {
@@ -66,7 +61,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
             }
 
             // Prune from blocks
-            for(int blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
+            for (int blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
             {
                 for (int blockY = 0; blockY < SudokuBoard.Blocks; blockY++)
                 {

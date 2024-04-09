@@ -1,9 +1,4 @@
 ﻿using SudokuSolver.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
 {
@@ -30,7 +25,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
                     {
                         var valueAssignments = cellPossibilities.Where(x => x.Value == i).ToList();
                         if (IsRowAlligned(valueAssignments))
-                            pruned += PruneValueCandidatesFromColumn(context, valueAssignments, i); 
+                            pruned += PruneValueCandidatesFromColumn(context, valueAssignments, i);
                         else if (IsColumnAlligned(valueAssignments))
                             pruned += PruneValueCandidatesFromRow(context, valueAssignments, i);
                     }

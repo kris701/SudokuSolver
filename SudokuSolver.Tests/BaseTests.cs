@@ -1,6 +1,4 @@
-﻿using SudokuSolver.Tests.Models;
-
-[assembly: Parallelize(Workers = 12, Scope = ExecutionScope.MethodLevel)]
+﻿[assembly: Parallelize(Workers = 12, Scope = ExecutionScope.MethodLevel)]
 
 namespace SudokuSolver.Tests
 {

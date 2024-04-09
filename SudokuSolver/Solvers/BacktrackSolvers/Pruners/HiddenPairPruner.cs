@@ -1,10 +1,4 @@
 ﻿using SudokuSolver.Models;
-using SudokuSolver.Solvers.BacktrackSolvers.Reducers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
 {

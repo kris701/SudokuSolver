@@ -1,12 +1,6 @@
 ﻿using SudokuSolver.Models;
 using SudokuSolver.Solvers.BacktrackSolvers.Pruners;
-using SudokuSolver.Solvers.BacktrackSolvers.Reducers;
 using SudokuSolver.Solvers.Preprocessors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SudokuSolver.Tests.Solvers.BacktrackSolvers.Pruners
 {
@@ -27,7 +21,7 @@ namespace SudokuSolver.Tests.Solvers.BacktrackSolvers.Pruners
             var preCount = context.Cardinalities.Sum(x => x.Possibilities);
 
             // ACT
-            while (pruner1.Prune(context)) {}
+            while (pruner1.Prune(context)) { }
             context.Cardinalities = Preprocessor.GenerateCardinalities(context.Board, context.Candidates);
 
             // ASSERT

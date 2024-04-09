@@ -1,6 +1,5 @@
 ﻿using SudokuSolver.Models;
 using SudokuSolver.Solvers.BacktrackSolvers.Pruners;
-using SudokuSolver.Solvers.BacktrackSolvers.Reducers;
 using SudokuSolver.Solvers.Preprocessors;
 
 namespace SudokuSolver.Solvers.BacktrackSolvers
@@ -16,16 +15,9 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             new PointingPairsPruner()
         };
 
-        public override SudokuBoard? Run(SearchContext context) 
+        public override SudokuBoard? Run(SearchContext context)
         {
-            bool any = true;
-            while (any)
-            {
-                any = false;
-                foreach (var pruner in Pruners)
-                    if (pruner.Prune(context))
-                        any = true;
-            }
+            Prune(context);
             context.Cardinalities = Preprocessor.GenerateCardinalities(context.Board, context.Candidates);
             if (context.Cardinalities.Count == 0)
             {
@@ -36,6 +28,23 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             Console.WriteLine($"Total possible cell assignments: {context.Cardinalities.Sum(x => x.Possibilities)}");
             Console.WriteLine("No more pruning possible, starting backtrack search...");
             return BacktrackSolve(context);
+        }
+
+        private void Prune(SearchContext context)
+        {
+            bool any = true;
+            while (any)
+            {
+                any = false;
+                foreach (var pruner in Pruners)
+                {
+                    if (pruner.Prune(context))
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+            }
         }
 
         private SudokuBoard? BacktrackSolve(SearchContext context, int bestOffset = 0)
