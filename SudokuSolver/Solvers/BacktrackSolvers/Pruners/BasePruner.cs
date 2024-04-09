@@ -19,6 +19,22 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
             return cellPossibilities;
         }
 
+        internal List<CellAssignment> GetAssignmentsFromRow(SearchContext context, byte row)
+        {
+            var cellPossibilities = new List<CellAssignment>();
+            for (int x = 0; x < SudokuBoard.BoardSize; x++)
+                    cellPossibilities.AddRange(context.Candidates[x, row]);
+            return cellPossibilities;
+        }
+
+        internal List<CellAssignment> GetAssignmentsFromColumn(SearchContext context, byte column)
+        {
+            var cellPossibilities = new List<CellAssignment>();
+            for (int y = 0; y < SudokuBoard.BoardSize; y++)
+                cellPossibilities.AddRange(context.Candidates[column, y]);
+            return cellPossibilities;
+        }
+
         internal int PruneValueCandidatesFromRow(SearchContext context, List<CellAssignment> ignore, byte value)
         {
             var pruned = 0;

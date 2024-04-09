@@ -6,13 +6,6 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
     {
         public override bool Prune(SearchContext context)
         {
-            var any = false;
-            while (PruneNakedTripples(context)) { any = true; }
-            return any;
-        }
-
-        private bool PruneNakedTripples(SearchContext context)
-        {
             var pruned = 0;
 
             // Prune from columns

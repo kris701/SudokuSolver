@@ -12,6 +12,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers
             new NakedPairPruner(),
             new NakedTripplePruner(),
             new HiddenPairPruner(),
+            new HiddenTripplePruner(),
             new PointingPairsPruner()
         };
 

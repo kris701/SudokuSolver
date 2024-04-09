@@ -6,13 +6,6 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
     {
         public override bool Prune(SearchContext context)
         {
-            var any = false;
-            while (PruneNakedPairs(context)) { any = true; }
-            return any;
-        }
-
-        private bool PruneNakedPairs(SearchContext context)
-        {
             var pruned = 0;
             // Prune from columns
             for (int column = 0; column < SudokuBoard.BoardSize; column++)
@@ -70,7 +63,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
                     var fromY = blockY * SudokuBoard.Blocks;
                     var toY = (blockY + 1) * SudokuBoard.Blocks;
                     var cellPossibilities = new List<List<CellAssignment>>();
-                    for (int i = 0; i <= SudokuBoard.BoardSize; i++)
+                    for (int i = 0; i < SudokuBoard.BoardSize; i++)
                         cellPossibilities.Add(new List<CellAssignment>());
 
                     int offset = 0;

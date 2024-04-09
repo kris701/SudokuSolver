@@ -6,13 +6,6 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
     {
         public override bool Prune(SearchContext context)
         {
-            bool any = false;
-            while (PruneHiddenPairs(context)) { any = true; }
-            return any;
-        }
-
-        private bool PruneHiddenPairs(SearchContext context)
-        {
             var pruned = 0;
             for (byte blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
             {

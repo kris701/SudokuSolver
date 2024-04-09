@@ -6,27 +6,25 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
     {
         public override bool Prune(SearchContext context)
         {
-            bool any = false;
-            while (PruneCertains(context)) { any = true; }
-            return any;
-        }
-
-        private bool PruneCertains(SearchContext context)
-        {
             var pruned = 0;
-            for (byte x = 0; x < SudokuBoard.BoardSize; x++)
-                for (byte y = 0; y < SudokuBoard.BoardSize; y++)
-                    if (context.Candidates[x, y].Count == 1)
-                        pruned += RemoveCandidate(context, context.Candidates[x, y][0]);
-
-            for (byte blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
+            var pre = 1;
+            while (pruned - pre != 0)
             {
-                for (byte blockY = 0; blockY < SudokuBoard.Blocks; blockY++)
+                pre = pruned;
+                for (byte x = 0; x < SudokuBoard.BoardSize; x++)
+                    for (byte y = 0; y < SudokuBoard.BoardSize; y++)
+                        if (context.Candidates[x, y].Count == 1)
+                            pruned += RemoveCandidate(context, context.Candidates[x, y][0]);
+
+                for (byte blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
                 {
-                    var cellPossibilities = GetAssignmentsFromBlock(context, blockX, blockY);
-                    for (byte i = 1; i <= SudokuBoard.BoardSize; i++)
-                        if (cellPossibilities.Count(x => x.Value == i) == 1)
-                            pruned += RemoveCandidate(context, cellPossibilities.First(x => x.Value == i));
+                    for (byte blockY = 0; blockY < SudokuBoard.Blocks; blockY++)
+                    {
+                        var cellPossibilities = GetAssignmentsFromBlock(context, blockX, blockY);
+                        for (byte i = 1; i <= SudokuBoard.BoardSize; i++)
+                            if (cellPossibilities.Count(x => x.Value == i) == 1)
+                                pruned += RemoveCandidate(context, cellPossibilities.First(x => x.Value == i));
+                    }
                 }
             }
             if (pruned > 0)

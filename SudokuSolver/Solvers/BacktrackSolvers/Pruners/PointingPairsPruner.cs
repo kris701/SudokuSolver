@@ -6,13 +6,6 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
     {
         public override bool Prune(SearchContext context)
         {
-            var any = false;
-            while (PrunePointingPairs(context)) { any = true; }
-            return any;
-        }
-
-        private bool PrunePointingPairs(SearchContext context)
-        {
             var pruned = 0;
 
             for (byte blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
