@@ -20,15 +20,15 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
         {
             var pruned = 0;
             // Prune from columns
-            for (int column = 0; column < context.Board.BoardSize; column++)
+            for (int column = 0; column < SudokuBoard.BoardSize; column++)
             {
                 var cellPossibilities = new List<List<CellAssignment>>();
-                for (int row = 0; row < context.Board.BoardSize; row++)
+                for (int row = 0; row < SudokuBoard.BoardSize; row++)
                     cellPossibilities.Add(GetBinaryAssignments(context, column, row));
 
                 if (cellPossibilities.Count(x => x.Count == 2) > 0)
                 {
-                    cellPossibilities = RemoveUnpaired(cellPossibilities, context.Board.BoardSize);
+                    cellPossibilities = RemoveUnpaired(cellPossibilities, SudokuBoard.BoardSize);
 
                     if (cellPossibilities.Any(x => x.Count > 0))
                     {
@@ -43,15 +43,15 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
             }
 
             // Prune from rows
-            for (int row = 0; row < context.Board.BoardSize; row++)
+            for (int row = 0; row < SudokuBoard.BoardSize; row++)
             {
                 var cellPossibilities = new List<List<CellAssignment>>();
-                for (int column = 0; column < context.Board.BoardSize; column++)
+                for (int column = 0; column < SudokuBoard.BoardSize; column++)
                     cellPossibilities.Add(GetBinaryAssignments(context, column, row));
 
                 if (cellPossibilities.Count(x => x.Count == 2) > 0)
                 {
-                    cellPossibilities = RemoveUnpaired(cellPossibilities, context.Board.BoardSize);
+                    cellPossibilities = RemoveUnpaired(cellPossibilities, SudokuBoard.BoardSize);
 
                     if (cellPossibilities.Any(x => x.Count > 0))
                     {
@@ -66,16 +66,16 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
             }
 
             // Prune from blocks
-            for(int blockX = 0; blockX < context.Board.Blocks; blockX++)
+            for(int blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
             {
-                for (int blockY = 0; blockY < context.Board.Blocks; blockY++)
+                for (int blockY = 0; blockY < SudokuBoard.Blocks; blockY++)
                 {
-                    var fromX = blockX * context.Board.Blocks;
-                    var toX = (blockX + 1) * context.Board.Blocks;
-                    var fromY = blockY * context.Board.Blocks;
-                    var toY = (blockY + 1) * context.Board.Blocks;
+                    var fromX = blockX * SudokuBoard.Blocks;
+                    var toX = (blockX + 1) * SudokuBoard.Blocks;
+                    var fromY = blockY * SudokuBoard.Blocks;
+                    var toY = (blockY + 1) * SudokuBoard.Blocks;
                     var cellPossibilities = new List<List<CellAssignment>>();
-                    for (int i = 0; i < context.Board.BlockSize * context.Board.BlockSize; i++)
+                    for (int i = 0; i <= SudokuBoard.BoardSize; i++)
                         cellPossibilities.Add(new List<CellAssignment>());
 
                     int offset = 0;
@@ -89,7 +89,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
                         }
                     }
 
-                    cellPossibilities = RemoveUnpaired(cellPossibilities, context.Board.BoardSize);
+                    cellPossibilities = RemoveUnpaired(cellPossibilities, SudokuBoard.BoardSize);
 
                     if (cellPossibilities.Any(x => x.Count > 0))
                     {

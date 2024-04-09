@@ -25,7 +25,7 @@
         }
 
         public void Apply(SudokuBoard on) => on[X, Y] = Value;
-        public void UnApply(SudokuBoard on) => on[X, Y] = on.BlankNumber;
+        public void UnApply(SudokuBoard on) => on[X, Y] = SudokuBoard.BlankNumber;
 
         public override string ToString() => $"[{X},{Y}:{Value}]";
 

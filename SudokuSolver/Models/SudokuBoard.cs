@@ -5,10 +5,10 @@ namespace SudokuSolver.Models
 {
     public class SudokuBoard
     {
-        public byte BlockSize;
-        public byte BlankNumber = 0;
-        public byte Blocks;
-        public byte BoardSize;
+        public static readonly byte BlockSize = 3;
+        public static readonly byte BlankNumber = 0;
+        public static readonly byte Blocks = 3;
+        public static readonly byte BoardSize = 9;
         public byte this[byte x, byte y]
         {
             get => _values[x + y * BoardSize];
@@ -32,13 +32,10 @@ namespace SudokuSolver.Models
         private readonly unsafe bool[] _columns;
         private readonly unsafe byte[] _blockRefs;
 
-        public SudokuBoard(byte[] values, byte blockSize)
+        public SudokuBoard(byte[] values)
         {
-            BlockSize = blockSize;
-            BoardSize = (byte)(values.Length / (blockSize * blockSize));
             _values = new byte[BoardSize * BoardSize];
             _blockRefs = new byte[BoardSize * BoardSize];
-            Blocks = (byte)(BoardSize / blockSize);
 
             _blocks = new bool[Blocks * Blocks * (BoardSize + 1)];
             _rows = new bool[(BoardSize + 1) * (BoardSize + 1)];
@@ -54,12 +51,9 @@ namespace SudokuSolver.Models
             }
         }
 
-        internal SudokuBoard(byte[] values, byte blockSize, byte size, byte blockCount, bool[] blocks, bool[] rows, bool[] columns, byte[] blockRefs)
+        internal SudokuBoard(byte[] values, bool[] blocks, bool[] rows, bool[] columns, byte[] blockRefs)
         {
             _values = values;
-            BlockSize = blockSize;
-            BoardSize = size;
-            Blocks = blockCount;
             _blocks = blocks;
             _rows = rows;
             _columns = columns;
@@ -122,10 +116,7 @@ namespace SudokuSolver.Models
             Buffer.BlockCopy(_rows, 0, cpyRows, 0, (BoardSize + 1) * (BoardSize + 1) * sizeof(bool));
             var cpyColumns = new bool[(BoardSize + 1) * (BoardSize + 1)];
             Buffer.BlockCopy(_columns, 0, cpyColumns, 0, (BoardSize + 1) * (BoardSize + 1) * sizeof(bool));
-            return new SudokuBoard(cpyCells, BlockSize, BoardSize, Blocks, cpyBlocks, cpyRows, cpyColumns, _blockRefs)
-            {
-                BlankNumber = BlankNumber
-            };
+            return new SudokuBoard(cpyCells, cpyBlocks, cpyRows, cpyColumns, _blockRefs);
         }
 
         public override string ToString()

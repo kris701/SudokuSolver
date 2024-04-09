@@ -20,13 +20,13 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
         {
             var pruned = 0;
 
-            for (byte blockX = 0; blockX < context.Board.Blocks; blockX++)
+            for (byte blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
             {
-                for (byte blockY = 0; blockY < context.Board.Blocks; blockY++)
+                for (byte blockY = 0; blockY < SudokuBoard.Blocks; blockY++)
                 {
                     var cellPossibilities = GetAssignmentsFromBlock(context, blockX, blockY);
 
-                    for (byte i = 1; i <= context.Board.BoardSize; i++)
+                    for (byte i = 1; i <= SudokuBoard.BoardSize; i++)
                     {
                         var valueAssignments = cellPossibilities.Where(x => x.Value == i).ToList();
                         if (IsRowAlligned(valueAssignments))

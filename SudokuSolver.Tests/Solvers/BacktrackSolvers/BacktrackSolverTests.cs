@@ -10,10 +10,10 @@ namespace SudokuSolver.Tests.Solvers.BacktrackSolvers
 
         [TestMethod]
         [DynamicData(nameof(Data), DynamicDataSourceType.Method)]
-        public void Can_Solve(string boardStr, List<byte> boardValues, byte blockSize)
+        public void Can_Solve(string boardStr, List<byte> boardValues)
         {
             // ARRANGE
-            var board = new SudokuBoard(boardValues.ToArray(), blockSize);
+            var board = new SudokuBoard(boardValues.ToArray());
             var solver = new BacktrackSolver();
             solver.Timeout = BaseTests.Timeout;
 

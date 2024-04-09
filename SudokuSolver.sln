@@ -8,7 +8,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmarks", "Benchmarks", "{069C67E9-B21A-4C20-9D18-562DA9326703}"
 	ProjectSection(SolutionItems) = preProject
 		Benchmarks\11puzzles.txt = Benchmarks\11puzzles.txt
-		Benchmarks\2x2.txt = Benchmarks\2x2.txt
 		Benchmarks\95puzzles.txt = Benchmarks\95puzzles.txt
 		Benchmarks\mypuzzles.txt = Benchmarks\mypuzzles.txt
 		Benchmarks\README.md = Benchmarks\README.md

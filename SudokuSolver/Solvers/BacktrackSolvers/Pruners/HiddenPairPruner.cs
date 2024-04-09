@@ -20,17 +20,17 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
         private bool PruneHiddenPairs(SearchContext context)
         {
             var pruned = 0;
-            for (byte blockX = 0; blockX < context.Board.Blocks; blockX++)
+            for (byte blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
             {
-                for (byte blockY = 0; blockY < context.Board.Blocks; blockY++)
+                for (byte blockY = 0; blockY < SudokuBoard.Blocks; blockY++)
                 {
                     var cellPossibilities = GetAssignmentsFromBlock(context, blockX, blockY);
 
-                    for (byte i = 1; i <= context.Board.BoardSize; i++)
+                    for (byte i = 1; i <= SudokuBoard.BoardSize; i++)
                     {
                         if (cellPossibilities.Count(x => x.Value == i) == 2)
                         {
-                            for (int j = 1; j <= context.Board.BoardSize; j++)
+                            for (int j = 1; j <= SudokuBoard.BoardSize; j++)
                             {
                                 if (i == j)
                                     continue;

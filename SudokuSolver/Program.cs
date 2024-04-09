@@ -21,10 +21,10 @@ namespace SudokuSolver
             foreach (var c in opts.Board)
                 values.Add(byte.Parse($"{c}"));
 
-            if (values.Count % opts.BlockSize != 0)
-                throw new Exception("Blocksize is not divisible with the board values!");
+            if (values.Count != 81)
+                throw new Exception("Board values must be exactly 81 characters long");
 
-            var board = new SudokuBoard(values.ToArray(), (byte)opts.BlockSize);
+            var board = new SudokuBoard(values.ToArray());
 
             Console.WriteLine("Initial board:");
             Console.WriteLine(board.ToString());

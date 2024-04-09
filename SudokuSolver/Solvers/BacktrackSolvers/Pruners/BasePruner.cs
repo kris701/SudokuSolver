@@ -14,10 +14,10 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
 
         internal List<CellAssignment> GetAssignmentsFromBlock(SearchContext context, byte blockX, byte blockY)
         {
-            var fromX = blockX * context.Board.Blocks;
-            var toX = (blockX + 1) * context.Board.Blocks;
-            var fromY = blockY * context.Board.Blocks;
-            var toY = (blockY + 1) * context.Board.Blocks;
+            var fromX = blockX * SudokuBoard.Blocks;
+            var toX = (blockX + 1) * SudokuBoard.Blocks;
+            var fromY = blockY * SudokuBoard.Blocks;
+            var toY = (blockY + 1) * SudokuBoard.Blocks;
             var cellPossibilities = new List<CellAssignment>();
             for (int x = fromX; x < toX; x++)
                 for (int y = fromY; y < toY; y++)
@@ -28,7 +28,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
         internal int PruneValueCandidatesFromRow(SearchContext context, List<CellAssignment> ignore, byte value)
         {
             var pruned = 0;
-            for (int x = 0; x < context.Board.BoardSize; x++)
+            for (int x = 0; x < SudokuBoard.BoardSize; x++)
                 if (!ignore.Any(z => z.X == x))
                     pruned += context.Candidates[x, ignore[0].Y].RemoveAll(v => v.Value == value);
             return pruned;
@@ -37,7 +37,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
         internal int PruneValueCandidatesFromColumn(SearchContext context, List<CellAssignment> ignore, byte value)
         {
             var pruned = 0;
-            for (int y = 0; y < context.Board.BoardSize; y++)
+            for (int y = 0; y < SudokuBoard.BoardSize; y++)
                 if (!ignore.Any(z => z.Y == y))
                     pruned += context.Candidates[ignore[0].X, y].RemoveAll(v => v.Value == value);
             return pruned;
@@ -46,10 +46,10 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
         internal int PruneValueCandidatesFromBlock(SearchContext context, byte blockX, byte blockY, List<CellAssignment> ignore, byte value)
         {
             var pruned = 0;
-            var fromX = blockX * context.Board.Blocks;
-            var toX = (blockX + 1) * context.Board.Blocks;
-            var fromY = blockY * context.Board.Blocks;
-            var toY = (blockY + 1) * context.Board.Blocks;
+            var fromX = blockX * SudokuBoard.Blocks;
+            var toX = (blockX + 1) * SudokuBoard.Blocks;
+            var fromY = blockY * SudokuBoard.Blocks;
+            var toY = (blockY + 1) * SudokuBoard.Blocks;
             for (int x = fromX; x < toX; x++)
                 for (int y = fromY; y < toY; y++)
                     if (!ignore.Any(z => z.X == x && z.Y == y))

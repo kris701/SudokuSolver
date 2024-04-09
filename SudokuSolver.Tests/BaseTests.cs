@@ -7,28 +7,26 @@ namespace SudokuSolver.Tests
     public static class BaseTests
     {
         public static readonly TimeSpan Timeout = TimeSpan.FromSeconds(10);
-        private static readonly List<Benchmark> _benchmarks = new List<Benchmark>()
+        private static readonly List<string> _benchmarks = new List<string>()
         {
-            new Benchmark("../../../../Benchmarks/11puzzles.txt", 3),
-            new Benchmark("../../../../Benchmarks/timan.txt", 3),
-            new Benchmark("../../../../Benchmarks/mypuzzles.txt", 3),
-            new Benchmark("../../../../Benchmarks/2x2.txt", 2),
-            new Benchmark("../../../../Benchmarks/95puzzles.txt", 3),
+            "../../../../Benchmarks/11puzzles.txt",
+            "../../../../Benchmarks/timan.txt",
+            "../../../../Benchmarks/mypuzzles.txt",
+            "../../../../Benchmarks/95puzzles.txt",
         };
 
         public static IEnumerable<object[]> TestCases()
         {
             foreach (var benchmark in _benchmarks)
             {
-                foreach (var line in File.ReadAllLines(benchmark.File))
+                foreach (var line in File.ReadAllLines(benchmark))
                 {
                     var values = new List<byte>();
                     foreach (var c in line)
                         values.Add(byte.Parse($"{c}"));
                     yield return new object[] {
                         line,
-                        values,
-                        benchmark.BlockSize
+                        values
                     };
                 }
             }

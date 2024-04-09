@@ -20,17 +20,17 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
         private bool PruneCertains(SearchContext context)
         {
             var pruned = 0;
-            for (byte x = 0; x < context.Board.BoardSize; x++)
-                for (byte y = 0; y < context.Board.BoardSize; y++)
+            for (byte x = 0; x < SudokuBoard.BoardSize; x++)
+                for (byte y = 0; y < SudokuBoard.BoardSize; y++)
                     if (context.Candidates[x, y].Count == 1)
                         pruned += RemoveCandidate(context, context.Candidates[x, y][0]);
 
-            for (byte blockX = 0; blockX < context.Board.Blocks; blockX++)
+            for (byte blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
             {
-                for (byte blockY = 0; blockY < context.Board.Blocks; blockY++)
+                for (byte blockY = 0; blockY < SudokuBoard.Blocks; blockY++)
                 {
                     var cellPossibilities = GetAssignmentsFromBlock(context, blockX, blockY);
-                    for (byte i = 1; i <= context.Board.BoardSize; i++)
+                    for (byte i = 1; i <= SudokuBoard.BoardSize; i++)
                         if (cellPossibilities.Count(x => x.Value == i) == 1)
                             pruned += RemoveCandidate(context, cellPossibilities.First(x => x.Value == i));
                 }
@@ -47,17 +47,17 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
             context.Candidates[cell.X, cell.Y].Clear();
             pruned++;
 
-            for (byte x2 = 0; x2 < context.Board.BoardSize; x2++)
+            for (byte x2 = 0; x2 < SudokuBoard.BoardSize; x2++)
                 pruned += context.Candidates[x2, cell.Y].RemoveAll(z => z.Value == cell.Value);
-            for (byte y2 = 0; y2 < context.Board.BoardSize; y2++)
+            for (byte y2 = 0; y2 < SudokuBoard.BoardSize; y2++)
                 pruned += context.Candidates[cell.X, y2].RemoveAll(z => z.Value == cell.Value);
 
             var blockX = context.Board.BlockX(ref cell.X);
             var blockY = context.Board.BlockY(ref cell.Y);
-            var fromX = blockX * context.Board.Blocks;
-            var toX = (blockX + 1) * context.Board.Blocks;
-            var fromY = blockY * context.Board.Blocks;
-            var toY = (blockY + 1) * context.Board.Blocks;
+            var fromX = blockX * SudokuBoard.Blocks;
+            var toX = (blockX + 1) * SudokuBoard.Blocks;
+            var fromY = blockY * SudokuBoard.Blocks;
+            var toY = (blockY + 1) * SudokuBoard.Blocks;
 
             for (byte x = (byte)fromX; x < toX; x++)
                 for (byte y = (byte)fromY; y < toY; y++)

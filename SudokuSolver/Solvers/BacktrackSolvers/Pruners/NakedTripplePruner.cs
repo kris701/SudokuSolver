@@ -22,10 +22,10 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
             var pruned = 0;
 
             // Prune from columns
-            for (int column = 0; column < context.Board.BoardSize; column++)
+            for (int column = 0; column < SudokuBoard.BoardSize; column++)
             {
                 var cellPossibilities = new List<CellAssignment>();
-                for (int row = 0; row < context.Board.BoardSize; row++)
+                for (int row = 0; row < SudokuBoard.BoardSize; row++)
                     cellPossibilities.AddRange(context.Candidates[column, row]);
 
                 if (cellPossibilities.DistinctBy(x => x.Value).Count() == 3)
@@ -47,10 +47,10 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
             }
 
             // Prune from rows
-            for (int row = 0; row < context.Board.BoardSize; row++)
+            for (int row = 0; row < SudokuBoard.BoardSize; row++)
             {
                 var cellPossibilities = new List<CellAssignment>();
-                for (int column = 0; column < context.Board.BoardSize; column++)
+                for (int column = 0; column < SudokuBoard.BoardSize; column++)
                     cellPossibilities.AddRange(context.Candidates[column, row]);
 
                 if (cellPossibilities.DistinctBy(x => x.Value).Count() == 3)
@@ -72,14 +72,14 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
             }
 
             // Prune from blocks
-            for (byte blockX = 0; blockX < context.Board.Blocks; blockX++)
+            for (byte blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
             {
-                for (byte blockY = 0; blockY < context.Board.Blocks; blockY++)
+                for (byte blockY = 0; blockY < SudokuBoard.Blocks; blockY++)
                 {
-                    if (context.Board.GetBlockValues(ref blockX, ref blockY).Count == context.Board.BlockSize * context.Board.BlockSize - 3)
+                    if (context.Board.GetBlockValues(ref blockX, ref blockY).Count == SudokuBoard.BlockSize * SudokuBoard.BlockSize - 3)
                     {
                         var cellPossibilities = GetAssignmentsFromBlock(context, blockX, blockY);
-                        for (byte i = 1; i <= context.Board.BoardSize; i++)
+                        for (byte i = 1; i <= SudokuBoard.BoardSize; i++)
                         {
                             var valueAssignments = cellPossibilities.Where(x => x.Value == i).ToList();
                             if (IsRowAlligned(valueAssignments))

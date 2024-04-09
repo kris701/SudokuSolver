@@ -22,15 +22,15 @@ namespace SudokuSolver.Solvers.Preprocessors
 
         public static List<CellAssignment>[,] GenerateCandidates(SudokuBoard board)
         {
-            var actions = new List<CellAssignment>[board.BoardSize, board.BoardSize];
+            var actions = new List<CellAssignment>[SudokuBoard.BoardSize, SudokuBoard.BoardSize];
 
-            for (byte x = 0; x < board.BoardSize; x++)
+            for (byte x = 0; x < SudokuBoard.BoardSize; x++)
             {
                 var column = board.GetColumn(ref x);
-                for (byte y = 0; y < board.BoardSize; y++)
+                for (byte y = 0; y < SudokuBoard.BoardSize; y++)
                 {
                     actions[x, y] = new List<CellAssignment>();
-                    if (board[x, y] != board.BlankNumber)
+                    if (board[x, y] != SudokuBoard.BlankNumber)
                         continue;
 
                     var row = board.GetRow(ref y);
@@ -38,7 +38,7 @@ namespace SudokuSolver.Solvers.Preprocessors
                     var blockX = board.BlockX(ref x);
                     var blockY = board.BlockY(ref y);
                     var cellValues = board.GetBlockValues(ref blockX, ref blockY);
-                    for (byte i = 1; i <= board.BoardSize; i++)
+                    for (byte i = 1; i <= SudokuBoard.BoardSize; i++)
                     {
                         if (cellValues.Contains(i))
                             continue;
@@ -54,11 +54,11 @@ namespace SudokuSolver.Solvers.Preprocessors
         public static List<CellPosition> GenerateCardinalities(SudokuBoard board, List<CellAssignment>[,] candidates)
         {
             var cardinalities = new List<CellPosition>();
-            for (byte x = 0; x < board.BoardSize; x++)
+            for (byte x = 0; x < SudokuBoard.BoardSize; x++)
             {
-                for (byte y = 0; y < board.BoardSize; y++)
+                for (byte y = 0; y < SudokuBoard.BoardSize; y++)
                 {
-                    if (board[x, y] != board.BlankNumber)
+                    if (board[x, y] != SudokuBoard.BlankNumber)
                         continue;
                     cardinalities.Add(new CellPosition(x, y, candidates[x, y].Count));
                 }
