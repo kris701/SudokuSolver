@@ -8,7 +8,7 @@ namespace SudokuSolver.Tests.Solvers
     [TestClass]
     public class SolverContainerTests
     {
-        public static List<SolverOptions> _solvers = new List<SolverOptions>() { 
+        public static List<SolverOptions> _solvers = new List<SolverOptions>() {
             SolverOptions.BruteForceBacktrack,
             SolverOptions.LogicalWithBruteForceBacktrack,
             SolverOptions.CardinalityBacktrack,
@@ -17,6 +17,7 @@ namespace SudokuSolver.Tests.Solvers
         };
         public static IEnumerable<object[]> Data() => BaseTests.TestCases(_solvers);
 
+        private static readonly Dictionary<SolverOptions, List<int>> _calls = new Dictionary<SolverOptions, List<int>>();
         private static readonly Dictionary<SolverOptions, List<double>> _searchTimes = new Dictionary<SolverOptions, List<double>>();
         private static readonly Dictionary<SolverOptions, int> _solved = new Dictionary<SolverOptions, int>();
         private static readonly string _readmeFile = "../../../../README.md";
@@ -36,6 +37,8 @@ namespace SudokuSolver.Tests.Solvers
                     _solved.Add(solverOption, 0);
                 if (!_searchTimes.ContainsKey(solverOption))
                     _searchTimes.Add(solverOption, new List<double>());
+                if (!_calls.ContainsKey(solverOption))
+                    _calls.Add(solverOption, new List<int>());
             }
         }
 
@@ -52,6 +55,7 @@ namespace SudokuSolver.Tests.Solvers
             var result = solver.Solve(board);
 
             // ASSERT
+            _calls[solverOption].Add(solver.Calls);
             if (solver.Stop)
                 Assert.Inconclusive();
 
@@ -86,6 +90,12 @@ namespace SudokuSolver.Tests.Solvers
                     result.MinTime = Math.Round(_searchTimes[key].Min(), 2);
                     result.AvgTime = Math.Round(_searchTimes[key].Average(), 2);
                 }
+                if (_calls[key].Count > 0)
+                {
+                    result.MaxCalls = _calls[key].Max();
+                    result.MinCalls = _calls[key].Min();
+                    result.AvgCalls = Math.Round(_calls[key].Average(), 2);
+                }
                 results.Add(result);
             }
 
@@ -98,7 +108,10 @@ namespace SudokuSolver.Tests.Solvers
                 "Sudokus Solved",
                 "Max Search Time (ms)",
                 "Min Search Time (ms)",
-                "Average Search Time (ms)"});
+                "Average Search Time (ms)",
+                "Max Calls",
+                "Min Calls",
+                "Average Calls"});
 
             _readme += Environment.NewLine + text;
 #if RELEASE
@@ -112,12 +125,20 @@ namespace SudokuSolver.Tests.Solvers
             public string Solver { get; set; } = "";
             [CSVColumn("solved")]
             public int Solved { get; set; } = 0;
+
             [CSVColumn("maxtime")]
             public double MaxTime { get; set; } = -1;
             [CSVColumn("mintime")]
             public double MinTime { get; set; } = -1;
             [CSVColumn("avgtime")]
             public double AvgTime { get; set; } = -1;
+
+            [CSVColumn("maxcall")]
+            public double MaxCalls { get; set; } = -1;
+            [CSVColumn("mincalls")]
+            public double MinCalls { get; set; } = -1;
+            [CSVColumn("avgcalls")]
+            public double AvgCalls { get; set; } = -1;
         }
     }
 }

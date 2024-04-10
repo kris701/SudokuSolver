@@ -17,10 +17,10 @@ The experiments can be run by writing `dotnet test --configuration Release`.
 Benchmark is run on 1971 different Sudoku boards with a 5s time limit.
 
 
-| Solver | Sudokus Solved | Max Search Time (ms) | Min Search Time (ms) | Average Search Time (ms) |
-| - | - | - | - | - |
-| BruteForceBacktrack | 1968 | 3386.55 | 0.02 | 29.17 |
-| LogicalWithBruteForceBacktrack | 1971 | 187.54 | 0.1 | 4.87 |
-| CardinalityBacktrack | 1953 | 4137.76 | 0.02 | 125.09 |
-| LogicalWithCardinalityBacktrack | 1966 | 4336.25 | 0.1 | 69.69 |
-| Logical | 913 | 4.88 | 0.1 | 0.72 |
+| Solver | Sudokus Solved | Max Search Time (ms) | Min Search Time (ms) | Average Search Time (ms) | Max Calls | Min Calls | Average Calls |
+| - | - | - | - | - | - | - | - |
+| BruteForceBacktrack | 1968 | 3202.37 | 0.02 | 27.84 | 82811709 | 43 | 483057.07 |
+| LogicalWithBruteForceBacktrack | 1971 | 175.8 | 0.1 | 4.76 | 3467757 | 2 | 56147.83 |
+| CardinalityBacktrack | 1953 | 4878.51 | 0.02 | 128.79 | 117278932 | 42 | 3516241.68 |
+| LogicalWithCardinalityBacktrack | 1966 | 4586.75 | 0.09 | 70.96 | 121007670 | 2 | 1835779.05 |
+| Logical | 906 | 17.58 | 0.22 | 2.01 | 21 | 0 | 1.97 |
