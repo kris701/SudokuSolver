@@ -19,17 +19,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dataset1", "dataset1", "{8699A9C1-A6E2-43B7-B034-F575AB4D2C0A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "David-Carmel", "David-Carmel", "{8699A9C1-A6E2-43B7-B034-F575AB4D2C0A}"
 	ProjectSection(SolutionItems) = preProject
-		Benchmarks\dataset1\11puzzles.txt = Benchmarks\dataset1\11puzzles.txt
-		Benchmarks\dataset1\95puzzles.txt = Benchmarks\dataset1\95puzzles.txt
-		Benchmarks\dataset1\mypuzzles.txt = Benchmarks\dataset1\mypuzzles.txt
-		Benchmarks\dataset1\timan.txt = Benchmarks\dataset1\timan.txt
+		Benchmarks\David-Carmel\11puzzles.txt = Benchmarks\David-Carmel\11puzzles.txt
+		Benchmarks\David-Carmel\95puzzles.txt = Benchmarks\David-Carmel\95puzzles.txt
+		Benchmarks\David-Carmel\mypuzzles.txt = Benchmarks\David-Carmel\mypuzzles.txt
+		Benchmarks\David-Carmel\timan.txt = Benchmarks\David-Carmel\timan.txt
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dataset2", "dataset2", "{A8AD45CF-BFB8-4F2E-B5B2-4B769E0B7862}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3M-Sudoku", "3M-Sudoku", "{A8AD45CF-BFB8-4F2E-B5B2-4B769E0B7862}"
 	ProjectSection(SolutionItems) = preProject
-		Benchmarks\dataset2\data.txt = Benchmarks\dataset2\data.txt
+		Benchmarks\3M-Sudoku\3m-sudoku.txt = Benchmarks\3M-Sudoku\3m-sudoku.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sudoku-Hard", "Sudoku-Hard", "{3D5FFF8D-498C-4D6A-90B3-976630D82915}"
+	ProjectSection(SolutionItems) = preProject
+		Benchmarks\Sudoku-Hard\sudoku-hard.txt = Benchmarks\Sudoku-Hard\sudoku-hard.txt
 	EndProjectSection
 EndProject
 Global
@@ -63,6 +68,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8699A9C1-A6E2-43B7-B034-F575AB4D2C0A} = {069C67E9-B21A-4C20-9D18-562DA9326703}
 		{A8AD45CF-BFB8-4F2E-B5B2-4B769E0B7862} = {069C67E9-B21A-4C20-9D18-562DA9326703}
+		{3D5FFF8D-498C-4D6A-90B3-976630D82915} = {069C67E9-B21A-4C20-9D18-562DA9326703}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {63F787CA-FC58-4CA0-AB55-E60192A099B9}
