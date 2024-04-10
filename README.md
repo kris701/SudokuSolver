@@ -18,4 +18,4 @@ The experiments can be run by writing `dotnet test --configuration Release`.
 # Performance
 | Sudokus Solved | Max Search Time (ms) | Min Search Time (ms) | Average Search Time (ms) |
 | - | - | - | - |
-| 5153 | 6392.02 | 0.27 | 12.84 |
+| 5157 | 719.58 | 0.13 | 2.19 |

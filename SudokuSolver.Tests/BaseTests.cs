@@ -1,4 +1,6 @@
-﻿[assembly: Parallelize(Workers = 12, Scope = ExecutionScope.MethodLevel)]
+﻿#if DEBUG
+[assembly: Parallelize(Workers = 12, Scope = ExecutionScope.MethodLevel)]
+#endif
 
 namespace SudokuSolver.Tests
 {

@@ -55,7 +55,9 @@ namespace SudokuSolver.Tests.Solvers.BacktrackSolvers
                 "Average Search Time (ms)"});
 
             _readme += Environment.NewLine + text;
+#if RELEASE
             File.WriteAllText(_readmeFile, _readme);
+#endif
         }
 
         private class ExperimentResults()
