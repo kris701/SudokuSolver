@@ -37,6 +37,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sudoku-Hard", "Sudoku-Hard"
 		Benchmarks\Sudoku-Hard\sudoku-hard.txt = Benchmarks\Sudoku-Hard\sudoku-hard.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mike", "Mike", "{F54E9389-73E7-408F-8AA1-619497AB5B85}"
+	ProjectSection(SolutionItems) = preProject
+		Benchmarks\Mike\mike.txt = Benchmarks\Mike\mike.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +74,7 @@ Global
 		{8699A9C1-A6E2-43B7-B034-F575AB4D2C0A} = {069C67E9-B21A-4C20-9D18-562DA9326703}
 		{A8AD45CF-BFB8-4F2E-B5B2-4B769E0B7862} = {069C67E9-B21A-4C20-9D18-562DA9326703}
 		{3D5FFF8D-498C-4D6A-90B3-976630D82915} = {069C67E9-B21A-4C20-9D18-562DA9326703}
+		{F54E9389-73E7-408F-8AA1-619497AB5B85} = {069C67E9-B21A-4C20-9D18-562DA9326703}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {63F787CA-FC58-4CA0-AB55-E60192A099B9}

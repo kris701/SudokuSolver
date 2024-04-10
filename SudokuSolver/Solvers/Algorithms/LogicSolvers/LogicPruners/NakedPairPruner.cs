@@ -1,6 +1,6 @@
 ﻿using SudokuSolver.Models;
 
-namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
+namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
 {
     public class NakedPairPruner : BasePruner
     {

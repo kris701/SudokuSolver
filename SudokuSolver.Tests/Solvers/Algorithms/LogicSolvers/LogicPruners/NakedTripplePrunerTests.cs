@@ -1,11 +1,11 @@
 ﻿using SudokuSolver.Models;
-using SudokuSolver.Solvers.BacktrackSolvers.Pruners;
+using SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners;
 using SudokuSolver.Solvers.Preprocessors;
 
-namespace SudokuSolver.Tests.Solvers.BacktrackSolvers.Pruners
+namespace SudokuSolver.Tests.Solvers.Algorithms.LogicSolvers.LogicPruners
 {
     [TestClass]
-    public class NakedTripplePrunerTests
+    public class NakedTripplePrunerTests : BaseLogicPrunerTest
     {
         [TestMethod]
         [DataRow("070408029002000004854020007008374200020000000003261700000093612200000403130642070", 12)]
@@ -18,14 +18,13 @@ namespace SudokuSolver.Tests.Solvers.BacktrackSolvers.Pruners
                 values.Add(byte.Parse($"{c}"));
             var context = Preprocessor.Preprocess(new SudokuBoard(values.ToArray()));
             IPruner pruner1 = new NakedTripplePruner();
-            var preCount = context.Cardinalities.Sum(x => x.Possibilities);
+            var preCount = GetCardinality(context.Candidates);
 
             // ACT
             while (pruner1.Prune(context)) { }
-            context.Cardinalities = Preprocessor.GenerateCardinalities(context.Board, context.Candidates);
 
             // ASSERT
-            Assert.AreEqual(expectedChange, preCount - context.Cardinalities.Sum(x => x.Possibilities));
+            Assert.AreEqual(expectedChange, preCount - GetCardinality(context.Candidates));
         }
     }
 }

@@ -1,17 +1,52 @@
-﻿using SudokuSolver.Solvers.BacktrackSolvers;
+﻿using SudokuSolver.Solvers.Algorithms;
+using SudokuSolver.Solvers.Algorithms.BacktrackSolvers;
+using SudokuSolver.Solvers.Algorithms.LogicSolvers;
+using SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners;
 
 namespace SudokuSolver.Solvers
 {
     [Flags]
-    public enum SolverOptions { None, BackTrack }
+    public enum SolverOptions { BruteForceBacktrack, CardinalityBacktrack, Logical, LogicalWithCardinalityBacktrack }
 
     public static class SolverBuilder
     {
-        private static readonly Dictionary<SolverOptions, Func<ISolver>> _solvers = new Dictionary<SolverOptions, Func<ISolver>>()
+        private static readonly Dictionary<SolverOptions, Func<SolverContainer>> _solvers = new Dictionary<SolverOptions, Func<SolverContainer>>()
         {
-            { SolverOptions.BackTrack, () => new BacktrackSolver() },
+            { SolverOptions.BruteForceBacktrack, () => new SolverContainer(new List<IAlgorithm>()
+            {
+                new BruteForceBacktrackSolver()
+            }) },
+            { SolverOptions.CardinalityBacktrack, () => new SolverContainer(new List<IAlgorithm>()
+            {
+                new CardinalityBacktrackSolver()
+            }) },
+            { SolverOptions.Logical, () => new SolverContainer(new List<IAlgorithm>()
+            {
+                new LogicSolver(new List<IPruner>()
+                {
+                    new CertainsPruner(),
+                    new NakedPairPruner(),
+                    new NakedTripplePruner(),
+                    new HiddenPairPruner(),
+                    new HiddenTripplePruner(),
+                    new PointingPairsPruner()
+                })
+            }) },
+            { SolverOptions.LogicalWithCardinalityBacktrack, () => new SolverContainer(new List<IAlgorithm>()
+            {
+                new LogicSolver(new List<IPruner>()
+                {
+                    new CertainsPruner(),
+                    new NakedPairPruner(),
+                    new NakedTripplePruner(),
+                    new HiddenPairPruner(),
+                    new HiddenTripplePruner(),
+                    new PointingPairsPruner()
+                }),
+                new CardinalityBacktrackSolver()
+            }) }
         };
 
-        public static ISolver GetSolver(SolverOptions solver) => _solvers[solver]();
+        public static SolverContainer GetSolver(SolverOptions solver) => _solvers[solver]();
     }
 }

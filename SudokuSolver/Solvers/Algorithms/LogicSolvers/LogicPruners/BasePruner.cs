@@ -1,6 +1,6 @@
 ﻿using SudokuSolver.Models;
 
-namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
+namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
 {
     public abstract class BasePruner : IPruner
     {
@@ -23,7 +23,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
         {
             var cellPossibilities = new List<CellAssignment>();
             for (int x = 0; x < SudokuBoard.BoardSize; x++)
-                    cellPossibilities.AddRange(context.Candidates[x, row]);
+                cellPossibilities.AddRange(context.Candidates[x, row]);
             return cellPossibilities;
         }
 

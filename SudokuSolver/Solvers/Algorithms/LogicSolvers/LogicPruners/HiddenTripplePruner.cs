@@ -1,12 +1,6 @@
 ﻿using SudokuSolver.Models;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
+namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
 {
     public class HiddenTripplePruner : BasePruner
     {
@@ -38,7 +32,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
             {
                 var candidates = GetAssignmentsFromColumn(context, column);
                 var removed = 1;
-                while(removed > 0)
+                while (removed > 0)
                 {
                     removed = 0;
                     for (int i = 1; i <= SudokuBoard.BoardSize; i++)
@@ -64,7 +58,7 @@ namespace SudokuSolver.Solvers.BacktrackSolvers.Pruners
             if (assignments.DistinctBy(x => x.Value).Count() != 3)
                 return new List<CellAssignment>();
 
-            for(int i = 1; i <= SudokuBoard.BoardSize; i++)
+            for (int i = 1; i <= SudokuBoard.BoardSize; i++)
             {
                 if (assignments.Any(x => x.Value == i) && assignments.Where(x => x.Value == i).Count() < 2)
                     return new List<CellAssignment>();

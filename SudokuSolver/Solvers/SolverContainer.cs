@@ -1,26 +1,30 @@
 ﻿using SudokuSolver.Models;
+using SudokuSolver.Solvers.Algorithms;
 using SudokuSolver.Solvers.Preprocessors;
 using System.Diagnostics;
 using System.Timers;
 
 namespace SudokuSolver.Solvers
 {
-    public abstract class BaseSolver : ISolver
+    public class SolverContainer
     {
+        public bool Stop { get; internal set; }
         public int Calls { get; internal set; }
         public TimeSpan SearchTime { get; internal set; }
         public TimeSpan Timeout { get; set; } = TimeSpan.Zero;
-        public bool TimedOut { get; internal set; }
-
-        internal bool _stop = false;
+        public List<IAlgorithm> Algorithms { get; }
 
         private int _lastCalls = 0;
         private Stopwatch? _watch;
 
+        public SolverContainer(List<IAlgorithm> algorithms)
+        {
+            Algorithms = algorithms;
+        }
+
         public SudokuBoard? Solve(SudokuBoard board)
         {
-            _stop = false;
-            TimedOut = false;
+            Stop = false;
             Calls = 0;
 
             _watch = new Stopwatch();
@@ -39,31 +43,47 @@ namespace SudokuSolver.Solvers
             logTimer.Interval = 1000;
             logTimer.Start();
 
+            var context = Preprocessor.Preprocess(board);
+
             _watch.Start();
 
-            var preprocessed = Preprocessor.Preprocess(board);
-            var result = Run(preprocessed);
+            foreach (var algorithm in Algorithms)
+            {
+                Console.WriteLine($"Solving with '{algorithm.Name}'");
+                context = algorithm.Solve(context);
+                if (context.Board.IsComplete())
+                    break;
+            }
 
             _watch.Stop();
             logTimer.Stop();
             timeoutTimer.Stop();
 
             SearchTime = _watch.Elapsed;
+            if (context.Board == null)
+                return null;
+            if (!context.Board.IsComplete())
+                return null;
+            Calls = 0;
+            foreach (var algorithm in Algorithms)
+                Calls += algorithm.Calls;
             Console.WriteLine($"Took {Calls} calls and {SearchTime} time to solve");
-            return result;
+            return context.Board;
         }
-
-        public abstract SudokuBoard? Run(SearchContext context);
 
         private void OnTimeout(object? sender, ElapsedEventArgs e)
         {
             Console.WriteLine("Timed out!");
-            TimedOut = true;
-            _stop = true;
+            Stop = true;
+            foreach (var algorithm in Algorithms)
+                algorithm.Stop = true;
         }
 
         private void LogUpdate(object? sender, ElapsedEventArgs e)
         {
+            Calls = 0;
+            foreach (var algorithm in Algorithms)
+                Calls += algorithm.Calls;
             Console.WriteLine($"[t={Math.Round(_watch!.Elapsed.TotalSeconds, 0)}s] Calls: {Calls} [{Calls - _lastCalls}/s]");
             _lastCalls = Calls;
         }

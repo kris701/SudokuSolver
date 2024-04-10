@@ -40,7 +40,7 @@ namespace SudokuSolver
             Console.WriteLine();
             var result = solver.Solve(board);
             Console.WriteLine();
-            if (solver.TimedOut)
+            if (solver.Stop)
             {
                 Console.WriteLine("Solver timed out...");
             }
@@ -51,7 +51,7 @@ namespace SudokuSolver
                 Console.WriteLine(result.ToString());
             }
             else
-                Console.WriteLine("Board is unsolvable!");
+                Console.WriteLine("Board is unsolvable with given solver!");
         }
 
         public static void HandleParseError(IEnumerable<Error> errs)

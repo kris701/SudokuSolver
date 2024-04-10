@@ -1,5 +1,3 @@
-[![Build and Test](https://github.com/kris701/SudokuSolver/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/kris701/SudokuSolver/actions/workflows/dotnet-desktop.yml)
-
 # Sudoku Solver
 This is a simple project about making an automatic Sudoku solver.
 It can be run as a CLI tool, by running:
@@ -16,6 +14,12 @@ Currently, the `BackTrack` solver can solve all the instances in there with a ti
 The experiments can be run by writing `dotnet test --configuration Release`.
 
 # Performance
-| Sudokus Solved | Max Search Time (ms) | Min Search Time (ms) | Average Search Time (ms) |
-| - | - | - | - |
-| 5157 | 719.58 | 0.13 | 2.19 |
+Benchmark is run on 460 different Sudoku boards with a 5s time limit.
+
+
+| Solver | Sudokus Solved | Max Search Time (ms) | Min Search Time (ms) | Average Search Time (ms) |
+| - | - | - | - | - |
+| CardinalityBacktrack | 454 | 4448.65 | 0 | 126.44 |
+| LogicalWithCardinalityBacktrack | 460 | 2461.32 | 0 | 39.01 |
+| Logical | 222 | 14.55 | 0 | 1.83 |
+| BruteForceBacktrack | 0 | 0 | 0 | 0 |

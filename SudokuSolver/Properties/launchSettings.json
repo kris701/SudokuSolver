@@ -2,7 +2,7 @@
   "profiles": {
     "SudokuSolver": {
       "commandName": "Project",
-      "commandLineArgs": "--board 052006800000007020000000600004800900200410000001000008006100380000090006300600109 --solver BackTrack"
+      "commandLineArgs": "--board 850002400720000009004000000000107002305000900040000000000080070017000000000036040 --solver BruteForceBacktrack"
     }
   }
 }
