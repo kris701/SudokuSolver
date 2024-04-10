@@ -14,12 +14,13 @@ Currently, the `BackTrack` solver can solve all the instances in there with a ti
 The experiments can be run by writing `dotnet test --configuration Release`.
 
 # Performance
-Benchmark is run on 460 different Sudoku boards with a 5s time limit.
+Benchmark is run on 1971 different Sudoku boards with a 5s time limit.
 
 
 | Solver | Sudokus Solved | Max Search Time (ms) | Min Search Time (ms) | Average Search Time (ms) |
 | - | - | - | - | - |
-| CardinalityBacktrack | 454 | 4448.65 | 0 | 126.44 |
-| LogicalWithCardinalityBacktrack | 460 | 2461.32 | 0 | 39.01 |
-| Logical | 222 | 14.55 | 0 | 1.83 |
-| BruteForceBacktrack | 0 | 0 | 0 | 0 |
+| BruteForceBacktrack | 1968 | 3386.55 | 0.02 | 29.17 |
+| LogicalWithBruteForceBacktrack | 1971 | 187.54 | 0.1 | 4.87 |
+| CardinalityBacktrack | 1953 | 4137.76 | 0.02 | 125.09 |
+| LogicalWithCardinalityBacktrack | 1966 | 4336.25 | 0.1 | 69.69 |
+| Logical | 913 | 4.88 | 0.1 | 0.72 |

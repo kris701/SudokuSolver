@@ -6,7 +6,7 @@ using SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners;
 namespace SudokuSolver.Solvers
 {
     [Flags]
-    public enum SolverOptions { BruteForceBacktrack, CardinalityBacktrack, Logical, LogicalWithCardinalityBacktrack }
+    public enum SolverOptions { BruteForceBacktrack, CardinalityBacktrack, Logical, LogicalWithBruteForceBacktrack, LogicalWithCardinalityBacktrack }
 
     public static class SolverBuilder
     {
@@ -31,6 +31,19 @@ namespace SudokuSolver.Solvers
                     new HiddenTripplePruner(),
                     new PointingPairsPruner()
                 })
+            }) },
+            { SolverOptions.LogicalWithBruteForceBacktrack, () => new SolverContainer(new List<IAlgorithm>()
+            {
+                new LogicSolver(new List<IPruner>()
+                {
+                    new CertainsPruner(),
+                    new NakedPairPruner(),
+                    new NakedTripplePruner(),
+                    new HiddenPairPruner(),
+                    new HiddenTripplePruner(),
+                    new PointingPairsPruner()
+                }),
+                new BruteForceBacktrackSolver()
             }) },
             { SolverOptions.LogicalWithCardinalityBacktrack, () => new SolverContainer(new List<IAlgorithm>()
             {

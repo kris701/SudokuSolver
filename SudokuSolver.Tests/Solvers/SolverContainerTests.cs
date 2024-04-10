@@ -9,7 +9,11 @@ namespace SudokuSolver.Tests.Solvers
     public class SolverContainerTests
     {
         public static List<SolverOptions> _solvers = new List<SolverOptions>() { 
-            SolverOptions.BruteForceBacktrack
+            SolverOptions.BruteForceBacktrack,
+            SolverOptions.LogicalWithBruteForceBacktrack,
+            SolverOptions.CardinalityBacktrack,
+            SolverOptions.LogicalWithCardinalityBacktrack,
+            SolverOptions.Logical
         };
         public static IEnumerable<object[]> Data() => BaseTests.TestCases(_solvers);
 
@@ -31,7 +35,7 @@ namespace SudokuSolver.Tests.Solvers
                 if (!_solved.ContainsKey(solverOption))
                     _solved.Add(solverOption, 0);
                 if (!_searchTimes.ContainsKey(solverOption))
-                    _searchTimes.Add(solverOption, new List<double>() { 0 });
+                    _searchTimes.Add(solverOption, new List<double>());
             }
         }
 
@@ -48,13 +52,14 @@ namespace SudokuSolver.Tests.Solvers
             var result = solver.Solve(board);
 
             // ASSERT
-            if (!solver.Stop && result != null && result.IsComplete())
+            if (solver.Stop)
+                Assert.Inconclusive();
+
+            if (result != null && result.IsComplete())
             {
                 _solved[solverOption]++;
                 _searchTimes[solverOption].Add(solver.SearchTime.TotalMilliseconds);
             }
-            else
-                Assert.Inconclusive();
         }
 
         [ClassCleanup]

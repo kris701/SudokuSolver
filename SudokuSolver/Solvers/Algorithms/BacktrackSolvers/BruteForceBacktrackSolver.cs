@@ -16,35 +16,58 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
             return context;
         }
 
-        private SudokuBoard? BacktrackSolve(SearchContext context, int bestOffset = 0)
+        private SudokuBoard? BacktrackSolve(SearchContext context, byte xOffset = 0, byte yOffset = 0)
         {
             if (Stop)
                 return null;
-            if (context.Board.IsComplete())
-                return context.Board;
+
+            if (yOffset == SudokuBoard.BoardSize)
+            {
+                if (context.Board.IsComplete())
+                    return context.Board;
+                else
+                    return null;
+            }
 
             Calls++;
 
-            for (byte x = 0; x < SudokuBoard.BoardSize; x++)
+            // Get next free cell
+            while (context.Board[xOffset, yOffset] != SudokuBoard.BlankNumber)
             {
-                for (byte y = 0; y < SudokuBoard.BoardSize; y++)
+                xOffset++;
+                if (xOffset >= SudokuBoard.BoardSize)
                 {
-                    if (context.Board[x, y] != SudokuBoard.BlankNumber)
-                        continue;
-                    foreach (var possible in context.Candidates[x, y])
-                    {
-                        if (possible.IsLegal(context.Board))
-                        {
-                            possible.Apply(context.Board);
-                            var result = BacktrackSolve(context, bestOffset + 1);
-                            if (result != null)
-                                return result;
-                            possible.UnApply(context.Board);
-                        }
-                    }
+                    xOffset = 0;
+                    yOffset++;
+                }
+
+                if (yOffset == SudokuBoard.BoardSize)
+                {
+                    if (context.Board.IsComplete())
+                        return context.Board;
+                    else
+                        return null;
                 }
             }
-
+            // Check candidates for cell
+            foreach (var possible in context.Candidates[xOffset, yOffset])
+            {
+                if (possible.IsLegal(context.Board))
+                {
+                    possible.Apply(context.Board);
+                    var newX = (byte)(xOffset + 1);
+                    var newY = yOffset;
+                    if (newX >= SudokuBoard.BoardSize)
+                    {
+                        newX = 0;
+                        newY++;
+                    }
+                    var result = BacktrackSolve(context, newX, newY);
+                    if (result != null)
+                        return result;
+                    possible.UnApply(context.Board);
+                }
+            }
             return null;
         }
     }
