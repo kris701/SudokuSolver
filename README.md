@@ -14,3 +14,8 @@ Where:
 There are some benchmark sudokus that can be found in the Benchmark folder.
 Currently, the `BackTrack` solver can solve all the instances in there with a time limit of 10 seconds (though most are solved way before that).
 The experiments can be run by writing `dotnet test --configuration Release`.
+
+# Performance
+| Sudokus Solved | Max Search Time (ms) | Min Search Time (ms) | Average Search Time (ms) |
+| - | - | - | - |
+| 5153 | 6392.02 | 0.27 | 12.84 |
