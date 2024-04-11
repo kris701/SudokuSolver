@@ -19,8 +19,8 @@ Benchmark is run on 1971 different Sudoku boards with a 5s time limit.
 
 | Solver | Sudokus Solved | Max Search Time (ms) | Min Search Time (ms) | Average Search Time (ms) | Max Calls | Min Calls | Average Calls |
 | - | - | - | - | - | - | - | - |
-| BruteForceBacktrack | 1968 | 3202.37 | 0.02 | 27.84 | 82811709 | 43 | 483057.07 |
-| LogicalWithBruteForceBacktrack | 1971 | 175.8 | 0.1 | 4.76 | 3467757 | 2 | 56147.83 |
-| CardinalityBacktrack | 1953 | 4878.51 | 0.02 | 128.79 | 117278932 | 42 | 3516241.68 |
-| LogicalWithCardinalityBacktrack | 1966 | 4586.75 | 0.09 | 70.96 | 121007670 | 2 | 1835779.05 |
-| Logical | 906 | 17.58 | 0.22 | 2.01 | 21 | 0 | 1.97 |
+| BruteForceBacktrack | 1968 | 2686.53 | 0.01 | 22.09 | 85713756 | 43 | 507968.93 |
+| LogicalWithBruteForceBacktrack | 1971 | 156.58 | 0.11 | 3.64 | 3467757 | 2 | 48381.09 |
+| CardinalityBacktrack | 1957 | 4916.15 | 0.02 | 113.86 | 144169437 | 42 | 3726145.61 |
+| LogicalWithCardinalityBacktrack | 1968 | 4700.23 | 0.11 | 62.66 | 143331310 | 2 | 1853831.48 |
+| Logical | 980 | 6.05 | 0.11 | 0.71 | 21 | 0 | 2.31 |

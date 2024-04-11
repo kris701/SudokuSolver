@@ -2,7 +2,7 @@
   "profiles": {
     "SudokuSolver": {
       "commandName": "Project",
-      "commandLineArgs": "--board 800000000003600000070090200050007000000045700000100030001000068008500010090000400 --solver CardinalityBacktrack"
+      "commandLineArgs": "--board 016007803090800000870001060048000300650009082039000650060900020080002936924600510 --solver LogicalWithCardinalityBacktrack"
     }
   }
 }

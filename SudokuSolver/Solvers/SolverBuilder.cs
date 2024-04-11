@@ -29,7 +29,8 @@ namespace SudokuSolver.Solvers
                     new NakedTripplePruner(),
                     new HiddenPairPruner(),
                     new HiddenTripplePruner(),
-                    new PointingPairsPruner()
+                    new PointingPairsPruner(),
+                    new BoxLineReductionPruner()
                 })
             }) },
             { SolverOptions.LogicalWithBruteForceBacktrack, () => new SolverContainer(new List<IAlgorithm>()
@@ -41,7 +42,8 @@ namespace SudokuSolver.Solvers
                     new NakedTripplePruner(),
                     new HiddenPairPruner(),
                     new HiddenTripplePruner(),
-                    new PointingPairsPruner()
+                    new PointingPairsPruner(),
+                    new BoxLineReductionPruner()
                 }),
                 new BruteForceBacktrackSolver()
             }) },
@@ -54,7 +56,8 @@ namespace SudokuSolver.Solvers
                     new NakedTripplePruner(),
                     new HiddenPairPruner(),
                     new HiddenTripplePruner(),
-                    new PointingPairsPruner()
+                    new PointingPairsPruner(),
+                    new BoxLineReductionPruner()
                 }),
                 new CardinalityBacktrackSolver()
             }) }
