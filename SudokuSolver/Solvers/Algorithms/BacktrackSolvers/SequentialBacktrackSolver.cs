@@ -2,9 +2,9 @@
 
 namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
 {
-    public class BruteForceBacktrackSolver : BaseAlgorithm
+    public class SequentialBacktrackSolver : BaseAlgorithm
     {
-        public BruteForceBacktrackSolver() : base("Brute Force Backtrack Solver")
+        public SequentialBacktrackSolver() : base("Sequential Backtrack Solver")
         {
         }
 
@@ -48,6 +48,9 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
                     else
                         return null;
                 }
+
+                if (Stop)
+                    return null;
             }
             // Check candidates for cell
             foreach (var possible in context.Candidates[xOffset, yOffset])

@@ -4,14 +4,14 @@
 [assembly: Parallelize(Workers = 12, Scope = ExecutionScope.MethodLevel)]
 #endif
 #if RELEASE
-[assembly: Parallelize(Workers = 2, Scope = ExecutionScope.MethodLevel)]
+[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
 #endif
 
 namespace SudokuSolver.Tests
 {
     public static class BaseTests
     {
-        public static readonly TimeSpan Timeout = TimeSpan.FromSeconds(5);
+        public static readonly TimeSpan Timeout = TimeSpan.FromSeconds(2);
         private static readonly List<string> _benchmarks = new List<string>()
         {
             "../../../../Benchmarks/David-Carmel/11puzzles.txt",

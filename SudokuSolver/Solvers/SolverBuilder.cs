@@ -6,19 +6,31 @@ using SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners;
 namespace SudokuSolver.Solvers
 {
     [Flags]
-    public enum SolverOptions { BruteForceBacktrack, CardinalityBacktrack, Logical, LogicalWithBruteForceBacktrack, LogicalWithCardinalityBacktrack }
+    public enum SolverOptions { 
+        SequentialBacktrack, 
+        CardinalityBacktrack, 
+        RandomBacktrack,
+        Logical, 
+        LogicalWithSequentialBacktrack, 
+        LogicalWithCardinalityBacktrack,
+        LogicalWithRandomBacktrack    
+    }
 
     public static class SolverBuilder
     {
         private static readonly Dictionary<SolverOptions, Func<SolverContainer>> _solvers = new Dictionary<SolverOptions, Func<SolverContainer>>()
         {
-            { SolverOptions.BruteForceBacktrack, () => new SolverContainer(new List<IAlgorithm>()
+            { SolverOptions.SequentialBacktrack, () => new SolverContainer(new List<IAlgorithm>()
             {
-                new BruteForceBacktrackSolver()
+                new SequentialBacktrackSolver()
             }) },
             { SolverOptions.CardinalityBacktrack, () => new SolverContainer(new List<IAlgorithm>()
             {
                 new CardinalityBacktrackSolver()
+            }) },
+            { SolverOptions.RandomBacktrack, () => new SolverContainer(new List<IAlgorithm>()
+            {
+                new RandomBacktrackSolver()
             }) },
             { SolverOptions.Logical, () => new SolverContainer(new List<IAlgorithm>()
             {
@@ -33,7 +45,7 @@ namespace SudokuSolver.Solvers
                     new BoxLineReductionPruner()
                 })
             }) },
-            { SolverOptions.LogicalWithBruteForceBacktrack, () => new SolverContainer(new List<IAlgorithm>()
+            { SolverOptions.LogicalWithSequentialBacktrack, () => new SolverContainer(new List<IAlgorithm>()
             {
                 new LogicSolver(new List<IPruner>()
                 {
@@ -45,7 +57,7 @@ namespace SudokuSolver.Solvers
                     new PointingPairsPruner(),
                     new BoxLineReductionPruner()
                 }),
-                new BruteForceBacktrackSolver()
+                new SequentialBacktrackSolver()
             }) },
             { SolverOptions.LogicalWithCardinalityBacktrack, () => new SolverContainer(new List<IAlgorithm>()
             {
@@ -60,6 +72,20 @@ namespace SudokuSolver.Solvers
                     new BoxLineReductionPruner()
                 }),
                 new CardinalityBacktrackSolver()
+            }) },
+            { SolverOptions.LogicalWithRandomBacktrack, () => new SolverContainer(new List<IAlgorithm>()
+            {
+                new LogicSolver(new List<IPruner>()
+                {
+                    new CertainsPruner(),
+                    new NakedPairPruner(),
+                    new NakedTripplePruner(),
+                    new HiddenPairPruner(),
+                    new HiddenTripplePruner(),
+                    new PointingPairsPruner(),
+                    new BoxLineReductionPruner()
+                }),
+                new RandomBacktrackSolver()
             }) }
         };
 

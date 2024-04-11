@@ -8,19 +8,16 @@ Where:
 * `BOARD` has to be a string of rows in the sudoku (total of 81 numbers), where 0 represents a blank space
 * `SOLVER` is the solver you want. The CLI tool will tell you what options are available
 
-# Experiments
-There are some benchmark sudokus that can be found in the Benchmark folder.
-Currently, the `BackTrack` solver can solve all the instances in there with a time limit of 10 seconds (though most are solved way before that).
-The experiments can be run by writing `dotnet test --configuration Release`.
-
 # Performance
-Benchmark is run on 1971 different Sudoku boards with a 5s time limit.
+Benchmark is run on 1971 different Sudoku boards with a 2s time limit.
 
 
 | Solver | Sudokus Solved | Max Search Time (ms) | Min Search Time (ms) | Average Search Time (ms) | Max Calls | Min Calls | Average Calls |
 | - | - | - | - | - | - | - | - |
-| BruteForceBacktrack | 1968 | 2686.53 | 0.01 | 22.09 | 85713756 | 43 | 507968.93 |
-| LogicalWithBruteForceBacktrack | 1971 | 156.58 | 0.11 | 3.64 | 3467757 | 2 | 48381.09 |
-| CardinalityBacktrack | 1957 | 4916.15 | 0.02 | 113.86 | 144169437 | 42 | 3726145.61 |
-| LogicalWithCardinalityBacktrack | 1968 | 4700.23 | 0.11 | 62.66 | 143331310 | 2 | 1853831.48 |
-| Logical | 980 | 6.05 | 0.11 | 0.71 | 21 | 0 | 2.31 |
+| SequentialBacktrack | 1967 | 1561.8 | 0.02 | 19.66 | 39587512 | 43 | 431681.88 |
+| LogicalWithSequentialBacktrack | 1971 | 361.49 | 0.11 | 3.87 | 3467757 | 2 | 48381.09 |
+| CardinalityBacktrack | 1927 | 1988.3 | 0.02 | 76.32 | 59060525 | 0 | 2825560.58 |
+| LogicalWithCardinalityBacktrack | 1954 | 1970.47 | 0.11 | 42.2 | 60083725 | 2 | 1527805.23 |
+| Logical | 980 | 6.52 | 0.11 | 0.68 | 21 | 0 | 2.31 |
+| RandomBacktrack | 202 | 1958.63 | 0.07 | 433.67 | 21840169 | 0 | 16689656.29 |
+| LogicalWithRandomBacktrack | 1295 | 1989.25 | 0.11 | 40.31 | 21498951 | 0 | 6720735.16 |
