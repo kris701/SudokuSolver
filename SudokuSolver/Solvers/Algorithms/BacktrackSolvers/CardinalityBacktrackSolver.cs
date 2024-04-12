@@ -4,11 +4,11 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
 {
     public class CardinalityBacktrackSolver : BaseAlgorithm
     {
-        public List<CellPosition> Cardinalities { get; set; }
+        public List<CardinalityCellPosition> Cardinalities { get; set; }
 
         public CardinalityBacktrackSolver() : base("Cardinality Backtrack Solver")
         {
-            Cardinalities = new List<CellPosition>();
+            Cardinalities = new List<CardinalityCellPosition>();
         }
 
         public override SearchContext Solve(SearchContext context)
@@ -22,9 +22,9 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
             return context;
         }
 
-        private List<CellPosition> GenerateCardinalities(SudokuBoard board, List<CellAssignment>[,] candidates)
+        private List<CardinalityCellPosition> GenerateCardinalities(SudokuBoard board, List<CellAssignment>[,] candidates)
         {
-            var cardinalities = new List<CellPosition>();
+            var cardinalities = new List<CardinalityCellPosition>();
             var rowCardinalities = new Dictionary<int, int>();
             for (byte y = 0; y < SudokuBoard.BoardSize; y++)
             {
@@ -33,7 +33,7 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
                 {
                     if (board[x, y] != SudokuBoard.BlankNumber)
                         continue;
-                    cardinalities.Add(new CellPosition(x, y, candidates[x, y].Count));
+                    cardinalities.Add(new CardinalityCellPosition(x, y, candidates[x, y].Count));
                     rowCardinalities[y] += candidates[x, y].Count;
                 }
             }
@@ -75,16 +75,12 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
             return null;
         }
 
-        public class CellPosition
+        public class CardinalityCellPosition : CellPosition
         {
-            public byte X;
-            public byte Y;
             public int Possibilities;
 
-            public CellPosition(byte x, byte y, int possibilities)
+            public CardinalityCellPosition(byte x, byte y, int possibilities) : base(x,y)
             {
-                X = x;
-                Y = y;
                 Possibilities = possibilities;
             }
 

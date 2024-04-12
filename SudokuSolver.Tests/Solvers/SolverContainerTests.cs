@@ -9,10 +9,10 @@ namespace SudokuSolver.Tests.Solvers
     public class SolverContainerTests
     {
         public static List<SolverOptions> _solvers = new List<SolverOptions>() {
-            //SolverOptions.SequentialBacktrack,
-            //SolverOptions.LogicalWithSequentialBacktrack,
-            SolverOptions.CardinalityBacktrack,
-            SolverOptions.LogicalWithCardinalityBacktrack,
+            SolverOptions.SequentialBacktrack,
+            SolverOptions.LogicalWithSequentialBacktrack,
+            //SolverOptions.CardinalityBacktrack,
+            //SolverOptions.LogicalWithCardinalityBacktrack,
             //SolverOptions.Logical,
             //SolverOptions.RandomBacktrack,
             //SolverOptions.LogicalWithRandomBacktrack
