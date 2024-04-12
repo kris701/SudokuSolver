@@ -35,21 +35,23 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
             return cellPossibilities;
         }
 
-        internal int PruneValueCandidatesFromRow(SearchContext context, List<CellAssignment> ignore, byte value)
+        internal int PruneValueCandidatesFromRows(SearchContext context, List<CellAssignment> ignore, byte value)
         {
             var pruned = 0;
+            var rows = ignore.DistinctBy(x => x.Y).Select(x => x.Y).ToList();
             for (int x = 0; x < SudokuBoard.BoardSize; x++)
-                if (!ignore.Any(z => z.X == x))
-                    pruned += context.Candidates[x, ignore[0].Y].RemoveAll(v => v.Value == value);
+                foreach (var y in rows)
+                    pruned += context.Candidates[x, y].RemoveAll(v => !ignore.Contains(v) && v.Value == value);
             return pruned;
         }
 
-        internal int PruneValueCandidatesFromColumn(SearchContext context, List<CellAssignment> ignore, byte value)
+        internal int PruneValueCandidatesFromColumns(SearchContext context, List<CellAssignment> ignore, byte value)
         {
             var pruned = 0;
+            var columns = ignore.DistinctBy(x => x.X).Select(x => x.X).ToList();
             for (int y = 0; y < SudokuBoard.BoardSize; y++)
-                if (!ignore.Any(z => z.Y == y))
-                    pruned += context.Candidates[ignore[0].X, y].RemoveAll(v => v.Value == value);
+                foreach (var x in columns)
+                    pruned += context.Candidates[x, y].RemoveAll(v => !ignore.Contains(v) && v.Value == value);
             return pruned;
         }
 

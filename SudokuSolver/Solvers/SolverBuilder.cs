@@ -19,6 +19,19 @@ namespace SudokuSolver.Solvers
 
     public static class SolverBuilder
     {
+        private static readonly List<IPruner> _baseLogicSet = new List<IPruner>()
+        {
+            new CertainsPruner(),
+            new NakedPairPruner(),
+            new NakedTripplePruner(),
+            new HiddenPairPruner(),
+            new HiddenTripplePruner(),
+            new PointingPairsPruner(),
+            new BoxLineReductionPruner(),
+
+            new XWingPruner()
+        };
+
         private static readonly Dictionary<SolverOptions, Func<SolverContainer>> _solvers = new Dictionary<SolverOptions, Func<SolverContainer>>()
         {
             { SolverOptions.SequentialBacktrack, () => new SolverContainer(new List<IAlgorithm>()
@@ -35,57 +48,21 @@ namespace SudokuSolver.Solvers
             }) },
             { SolverOptions.Logical, () => new SolverContainer(new List<IAlgorithm>()
             {
-                new LogicSolver(new List<IPruner>()
-                {
-                    new CertainsPruner(),
-                    new NakedPairPruner(),
-                    new NakedTripplePruner(),
-                    new HiddenPairPruner(),
-                    new HiddenTripplePruner(),
-                    new PointingPairsPruner(),
-                    new BoxLineReductionPruner()
-                })
+                new LogicSolver(_baseLogicSet)
             }) },
             { SolverOptions.LogicalWithSequentialBacktrack, () => new SolverContainer(new List<IAlgorithm>()
             {
-                new LogicSolver(new List<IPruner>()
-                {
-                    new CertainsPruner(),
-                    new NakedPairPruner(),
-                    new NakedTripplePruner(),
-                    new HiddenPairPruner(),
-                    new HiddenTripplePruner(),
-                    new PointingPairsPruner(),
-                    new BoxLineReductionPruner()
-                }),
+                new LogicSolver(_baseLogicSet),
                 new SequentialBacktrackSolver()
             }) },
             { SolverOptions.LogicalWithCardinalityBacktrack, () => new SolverContainer(new List<IAlgorithm>()
             {
-                new LogicSolver(new List<IPruner>()
-                {
-                    new CertainsPruner(),
-                    new NakedPairPruner(),
-                    new NakedTripplePruner(),
-                    new HiddenPairPruner(),
-                    new HiddenTripplePruner(),
-                    new PointingPairsPruner(),
-                    new BoxLineReductionPruner()
-                }),
+                new LogicSolver(_baseLogicSet),
                 new CardinalityBacktrackSolver()
             }) },
             { SolverOptions.LogicalWithRandomBacktrack, () => new SolverContainer(new List<IAlgorithm>()
             {
-                new LogicSolver(new List<IPruner>()
-                {
-                    new CertainsPruner(),
-                    new NakedPairPruner(),
-                    new NakedTripplePruner(),
-                    new HiddenPairPruner(),
-                    new HiddenTripplePruner(),
-                    new PointingPairsPruner(),
-                    new BoxLineReductionPruner()
-                }),
+                new LogicSolver(_baseLogicSet),
                 new RandomBacktrackSolver()
             }) }
         };

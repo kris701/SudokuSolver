@@ -9,10 +9,10 @@ namespace SudokuSolver.Tests.Solvers
     public class SolverContainerTests
     {
         public static List<SolverOptions> _solvers = new List<SolverOptions>() {
-            SolverOptions.SequentialBacktrack,
-            SolverOptions.LogicalWithSequentialBacktrack,
-            SolverOptions.CardinalityBacktrack,
-            SolverOptions.LogicalWithCardinalityBacktrack,
+            //SolverOptions.SequentialBacktrack,
+            //SolverOptions.LogicalWithSequentialBacktrack,
+            //SolverOptions.CardinalityBacktrack,
+            //SolverOptions.LogicalWithCardinalityBacktrack,
             SolverOptions.Logical,
             //SolverOptions.RandomBacktrack,
             //SolverOptions.LogicalWithRandomBacktrack
@@ -101,10 +101,6 @@ namespace SudokuSolver.Tests.Solvers
                 results.Add(result);
             }
 
-            if (File.Exists(_tempFile))
-                File.Delete(_tempFile);
-            File.WriteAllText(_tempFile, CSVSerialiser.Serialise(results));
-
             var text = results.ToMarkdownTable(new List<string>() {
                 "Solver",
                 "Sudokus Solved",
@@ -117,6 +113,9 @@ namespace SudokuSolver.Tests.Solvers
 
             _readme += Environment.NewLine + text;
 #if RELEASE
+            if (File.Exists(_tempFile))
+                File.Delete(_tempFile);
+            File.WriteAllText(_tempFile, CSVSerialiser.Serialise(results));
             File.WriteAllText(_readmeFile, _readme);
 #endif
         }

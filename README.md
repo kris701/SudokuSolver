@@ -20,4 +20,4 @@ Benchmark is run on 1971 different Sudoku boards with a 2s time limit.
 | LogicalWithSequentialBacktrack | 1971 | 206.77 | 0.13 | 4.92 | 3467757 | 2 | 48398.96 |
 | CardinalityBacktrack | 1970 | 1534.58 | 0.03 | 14.05 | 27894422 | 42 | 201274.26 |
 | LogicalWithCardinalityBacktrack | 1971 | 341.35 | 0.13 | 3.79 | 4286183 | 2 | 30773.05 |
-| Logical | 980 | 6.91 | 0.12 | 1.13 | 21 | 0 | 2.31 |
+| Logical | 982 | 17.43 | 0.31 | 2.54 | 21 | 0 | 2.33 |

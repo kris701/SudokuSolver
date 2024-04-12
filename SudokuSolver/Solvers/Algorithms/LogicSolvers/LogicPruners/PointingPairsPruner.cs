@@ -18,9 +18,9 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
                     {
                         var valueAssignments = cellPossibilities.Where(x => x.Value == i).ToList();
                         if (IsRowAlligned(valueAssignments))
-                            pruned += PruneValueCandidatesFromColumn(context, valueAssignments, i);
+                            pruned += PruneValueCandidatesFromColumns(context, valueAssignments, i);
                         else if (IsColumnAlligned(valueAssignments))
-                            pruned += PruneValueCandidatesFromRow(context, valueAssignments, i);
+                            pruned += PruneValueCandidatesFromRows(context, valueAssignments, i);
                     }
                 }
             }

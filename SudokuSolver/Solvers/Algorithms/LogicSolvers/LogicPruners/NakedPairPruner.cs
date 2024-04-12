@@ -25,7 +25,7 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
                             all.AddRange(values);
 
                         foreach (var value in all)
-                            pruned += PruneValueCandidatesFromColumn(context, all, value.Value);
+                            pruned += PruneValueCandidatesFromColumns(context, all, value.Value);
                     }
                 }
             }
@@ -48,7 +48,7 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
                             all.AddRange(values);
 
                         foreach (var value in all)
-                            pruned += PruneValueCandidatesFromRow(context, all, value.Value);
+                            pruned += PruneValueCandidatesFromRows(context, all, value.Value);
                     }
                 }
             }

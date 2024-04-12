@@ -32,7 +32,7 @@ namespace SudokuSolver.Models
         private readonly unsafe bool[] _columns;
         private readonly unsafe byte[] _blockRefs;
 
-        public SudokuBoard()
+        internal SudokuBoard()
         {
             _values = new byte[BoardSize * BoardSize];
             _blockRefs = new byte[BoardSize * BoardSize];
@@ -44,6 +44,8 @@ namespace SudokuSolver.Models
 
         public SudokuBoard(string board) : this()
         {
+            if (board.Length != BoardSize * BoardSize)
+                throw new Exception("Board values should be 81!");
             byte[] values = new byte[BoardSize * BoardSize];
             for (int i = 0; i < BoardSize * BoardSize; i++)
                 values[i] = byte.Parse($"{board[i]}");
@@ -57,6 +59,8 @@ namespace SudokuSolver.Models
 
         private void Fill(byte[] values)
         {
+            if (values.Length != BoardSize * BoardSize)
+                throw new Exception("Board values should be 81!");
             for (byte x = 0; x < BoardSize; x++)
             {
                 for (byte y = 0; y < BoardSize; y++)
