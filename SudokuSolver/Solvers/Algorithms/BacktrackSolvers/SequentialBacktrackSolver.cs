@@ -13,10 +13,11 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
 
         public override SearchContext Solve(SearchContext context)
         {
-            SearchOrder = Order(context);
-            var board = BacktrackSolve(context.Copy());
+            var cpy = context.Copy();
+            SearchOrder = Order(cpy);
+            var board = BacktrackSolve(cpy);
             if (board != null)
-                context.Board = board;
+                return cpy;
             return context;
         }
 

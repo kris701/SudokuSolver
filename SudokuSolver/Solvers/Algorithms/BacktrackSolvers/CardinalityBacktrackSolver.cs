@@ -4,25 +4,25 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
 {
     public class CardinalityBacktrackSolver : BaseAlgorithm
     {
-        public List<CardinalityCellPosition> Cardinalities { get; set; }
+        public List<CardinalityCellPosition> SearchOrder { get; set; }
 
         public CardinalityBacktrackSolver() : base("Cardinality Backtrack Solver")
         {
-            Cardinalities = new List<CardinalityCellPosition>();
+            SearchOrder = new List<CardinalityCellPosition>();
         }
 
         public override SearchContext Solve(SearchContext context)
         {
             var cpy = context.Copy();
-            Cardinalities = GenerateCardinalities(cpy.Board, cpy.Candidates);
-            Console.WriteLine($"Total possible cell assignments: {Cardinalities.Sum(x => x.Possibilities)}");
+            SearchOrder = Order(cpy);
+            Console.WriteLine($"Total possible cell assignments: {SearchOrder.Sum(x => x.Possibilities)}");
             var board = BacktrackSolve(cpy);
             if (board != null)
-                context.Board = board;
+                return cpy;
             return context;
         }
 
-        private List<CardinalityCellPosition> GenerateCardinalities(SudokuBoard board, List<CellAssignment>[,] candidates)
+        private List<CardinalityCellPosition> Order(SearchContext context)
         {
             var cardinalities = new List<CardinalityCellPosition>();
             var rowCardinalities = new Dictionary<int, int>();
@@ -31,10 +31,10 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
                 rowCardinalities.Add(y,0);
                 for (byte x = 0; x < SudokuBoard.BoardSize; x++)
                 {
-                    if (board[x, y] != SudokuBoard.BlankNumber)
+                    if (context.Board[x, y] != SudokuBoard.BlankNumber)
                         continue;
-                    cardinalities.Add(new CardinalityCellPosition(x, y, candidates[x, y].Count));
-                    rowCardinalities[y] += candidates[x, y].Count;
+                    cardinalities.Add(new CardinalityCellPosition(x, y, context.Candidates[x, y].Count));
+                    rowCardinalities[y] += context.Candidates[x, y].Count;
                 }
             }
             if (cardinalities.Any(x => x.Possibilities == 0))
@@ -49,7 +49,7 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
             if (Stop)
                 return null;
 
-            if (bestOffset >= Cardinalities.Count)
+            if (bestOffset >= SearchOrder.Count)
             {
                 if (context.Board.IsComplete())
                     return context.Board;
@@ -58,7 +58,7 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
 
             Calls++;
 
-            var loc = Cardinalities[bestOffset];
+            var loc = SearchOrder[bestOffset];
             var possibilities = context.Candidates[loc.X, loc.Y];
             var count = possibilities.Count;
             for (int i = 0; i < count; i++)
