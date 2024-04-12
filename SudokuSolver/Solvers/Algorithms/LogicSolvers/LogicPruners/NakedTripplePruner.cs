@@ -79,7 +79,7 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
             }
 
             if (pruned > 0)
-                Console.WriteLine($"Removed {pruned} candidates because of naked tripples");
+                Console.WriteLine($"\t\tRemoved {pruned} candidates because of naked tripples");
             return pruned > 0;
         }
     }

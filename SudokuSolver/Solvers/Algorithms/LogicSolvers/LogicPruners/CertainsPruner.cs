@@ -28,7 +28,7 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
                 }
             }
             if (pruned > 0)
-                Console.WriteLine($"Removed {pruned} certains");
+                Console.WriteLine($"\t\tRemoved {pruned} certains");
             return pruned > 0;
         }
 

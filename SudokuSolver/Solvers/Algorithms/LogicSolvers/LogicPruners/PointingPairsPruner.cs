@@ -26,7 +26,7 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
             }
 
             if (pruned > 0)
-                Console.WriteLine($"Removed {pruned} candidates because of pointing pairs");
+                Console.WriteLine($"\t\tRemoved {pruned} candidates because of pointing pairs");
             return pruned > 0;
         }
     }

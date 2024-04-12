@@ -49,22 +49,8 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
             }
 
             if (pruned > 0)
-                Console.WriteLine($"Removed {pruned} candidates because of hidden tripples");
+                Console.WriteLine($"\t\tRemoved {pruned} candidates because of hidden tripples");
             return pruned > 0;
-        }
-
-        private List<CellAssignment> LegalTripple(List<CellAssignment> assignments)
-        {
-            if (assignments.DistinctBy(x => x.Value).Count() != 3)
-                return new List<CellAssignment>();
-
-            for (int i = 1; i <= SudokuBoard.BoardSize; i++)
-            {
-                if (assignments.Any(x => x.Value == i) && assignments.Where(x => x.Value == i).Count() < 2)
-                    return new List<CellAssignment>();
-            }
-
-            return assignments;
         }
     }
 }

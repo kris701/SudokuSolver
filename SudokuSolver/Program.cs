@@ -28,21 +28,17 @@ namespace SudokuSolver
             Console.WriteLine("Initial board:");
             Console.WriteLine(board.ToString());
             Console.WriteLine();
-            Console.WriteLine($"Solving with '{Enum.GetName(typeof(SolverOptions), opts.Solver)}' solver");
+            Console.WriteLine($"Solver: {Enum.GetName(typeof(SolverOptions), opts.Solver)}");
             var solver = SolverBuilder.GetSolver(opts.Solver);
             if (opts.TimeOutS != -1)
             {
-                Console.WriteLine($"\tTimeout set to {opts.TimeOutS}s");
+                Console.WriteLine($"Timeout set to {opts.TimeOutS}s");
                 solver.Timeout = TimeSpan.FromSeconds(opts.TimeOutS);
             }
             Console.WriteLine("Starting...");
-            Console.WriteLine();
             var result = solver.Solve(board);
-            Console.WriteLine();
             if (solver.Stop)
-            {
-                Console.WriteLine("Solver timed out...");
-            }
+                Console.WriteLine("Board was not solved within time limit...");
             else if (result != null)
             {
                 Console.WriteLine("Board solved!");

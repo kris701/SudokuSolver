@@ -44,12 +44,14 @@ namespace SudokuSolver.Solvers
             logTimer.Start();
 
             var context = Preprocessor.Preprocess(board);
+            Console.WriteLine($"\tSolver has {Algorithms.Count} stage(s)");
 
             _watch.Start();
 
+            int count = 1;
             foreach (var algorithm in Algorithms)
             {
-                Console.WriteLine($"Solving with '{algorithm.Name}'");
+                Console.WriteLine($"\tStage '{algorithm.Name}' started ({count++}/{Algorithms.Count})");
                 context = algorithm.Solve(context);
                 if (context.Board.IsComplete())
                     break;
@@ -60,20 +62,20 @@ namespace SudokuSolver.Solvers
             timeoutTimer.Stop();
 
             SearchTime = _watch.Elapsed;
+            Calls = 0;
+            foreach (var algorithm in Algorithms)
+                Calls += algorithm.Calls;
             if (context.Board == null)
                 return null;
             if (!context.Board.IsComplete())
                 return null;
-            Calls = 0;
-            foreach (var algorithm in Algorithms)
-                Calls += algorithm.Calls;
-            Console.WriteLine($"Took {Calls} calls and {SearchTime} time to solve");
+            Console.WriteLine($"\tTook {Calls} calls and {SearchTime} time to solve");
             return context.Board;
         }
 
         private void OnTimeout(object? sender, ElapsedEventArgs e)
         {
-            Console.WriteLine("Timed out!");
+            Console.WriteLine("\tTimed out!");
             Stop = true;
             foreach (var algorithm in Algorithms)
                 algorithm.Stop = true;
@@ -84,7 +86,7 @@ namespace SudokuSolver.Solvers
             Calls = 0;
             foreach (var algorithm in Algorithms)
                 Calls += algorithm.Calls;
-            Console.WriteLine($"[t={Math.Round(_watch!.Elapsed.TotalSeconds, 0)}s] Calls: {Calls} [{Calls - _lastCalls}/s]");
+            Console.WriteLine($"\t[t={Math.Round(_watch!.Elapsed.TotalSeconds, 0)}s] Calls: {Calls} [{Calls - _lastCalls}/s]");
             _lastCalls = Calls;
         }
     }

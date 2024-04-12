@@ -39,7 +39,7 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
             }
 
             if (pruned > 0)
-                Console.WriteLine($"Removed {pruned} candidates because of box line reductions");
+                Console.WriteLine($"\t\tRemoved {pruned} candidates because of box line reductions");
             return pruned > 0;
         }
     }

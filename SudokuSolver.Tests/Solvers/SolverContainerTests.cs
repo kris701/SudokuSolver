@@ -13,9 +13,9 @@ namespace SudokuSolver.Tests.Solvers
             SolverOptions.LogicalWithSequentialBacktrack,
             //SolverOptions.CardinalityBacktrack,
             SolverOptions.LogicalWithCardinalityBacktrack,
-            //SolverOptions.Logical,
+            SolverOptions.Logical,
             //SolverOptions.RandomBacktrack,
-            SolverOptions.LogicalWithRandomBacktrack
+            //SolverOptions.LogicalWithRandomBacktrack
         };
         public static IEnumerable<object[]> Data() => BaseTests.TestCases(_solvers);
 
@@ -32,6 +32,7 @@ namespace SudokuSolver.Tests.Solvers
             _readme = File.ReadAllText(_readmeFile);
             _readme = _readme.Substring(0, _readme.IndexOf("# Performance") + "# Performance".Length) + Environment.NewLine;
             _readme += $"Benchmark is run on {BaseTests.BenchmarkCount()} different Sudoku boards with a {BaseTests.Timeout.TotalSeconds}s time limit.{Environment.NewLine}";
+            _readme += "The results are ordered by solved instances, then by lowest average search time and finally by average calls.";
             _readme += Environment.NewLine;
             foreach (SolverOptions solverOption in _solvers)
             {
@@ -101,17 +102,18 @@ namespace SudokuSolver.Tests.Solvers
                 results.Add(result);
             }
 
-            var text = results.ToMarkdownTable(new List<string>() {
-                "Solver",
-                "Sudokus Solved",
-                "Max Search Time (ms)",
-                "Min Search Time (ms)",
-                "Average Search Time (ms)",
-                "Max Calls",
-                "Min Calls",
-                "Average Calls"});
+            results = results.OrderByDescending(x => x.Solved).ThenBy(y => y.AvgTime).ThenByDescending(x => x.AvgCalls).ToList();
 
-            _readme += Environment.NewLine + text;
+            var resultsText = results.ToMarkdownTable(new List<string>() {
+                "Solver",
+                "Solved".ToMarkdown(ToMarkdownExtensions.StringStyle.Bold),
+                "Avg Search (ms)".ToMarkdown(ToMarkdownExtensions.StringStyle.Bold),
+                "Avg Calls".ToMarkdown(ToMarkdownExtensions.StringStyle.Bold),
+                "Max Search (ms)",
+                "Min Search (ms)",
+                "Max Calls",
+                "Min Calls"});
+            _readme += Environment.NewLine + resultsText;
 #if RELEASE
             if (File.Exists(_tempFile))
                 File.Delete(_tempFile);
@@ -126,20 +128,20 @@ namespace SudokuSolver.Tests.Solvers
             public string Solver { get; set; } = "";
             [CSVColumn("solved")]
             public int Solved { get; set; } = 0;
+            [CSVColumn("avgtime")]
+            public double AvgTime { get; set; } = -1;
+            [CSVColumn("avgcalls")]
+            public double AvgCalls { get; set; } = -1;
 
             [CSVColumn("maxtime")]
             public double MaxTime { get; set; } = -1;
             [CSVColumn("mintime")]
             public double MinTime { get; set; } = -1;
-            [CSVColumn("avgtime")]
-            public double AvgTime { get; set; } = -1;
 
             [CSVColumn("maxcall")]
             public double MaxCalls { get; set; } = -1;
             [CSVColumn("mincalls")]
             public double MinCalls { get; set; } = -1;
-            [CSVColumn("avgcalls")]
-            public double AvgCalls { get; set; } = -1;
         }
     }
 }
