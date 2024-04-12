@@ -15,7 +15,6 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
         {
             var cpy = context.Copy();
             SearchOrder = Order(cpy);
-            Console.WriteLine($"Total possible cell assignments: {SearchOrder.Sum(x => x.Possibilities)}");
             var board = BacktrackSolve(cpy);
             if (board != null)
                 return cpy;
