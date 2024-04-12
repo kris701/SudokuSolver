@@ -1,10 +1,5 @@
 ﻿using SudokuSolver.Helpers;
 using SudokuSolver.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
 {
@@ -33,7 +28,7 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
             for (byte y = 0; y < SudokuBoard.BoardSize; y++)
                 for (byte x = 0; x < SudokuBoard.BoardSize; x++)
                     if (context.Board[x, y] == SudokuBoard.BlankNumber)
-                        order.Add(new CellPosition(x,y));
+                        order.Add(new CellPosition(x, y));
 
             order.Shuffle();
 

@@ -6,14 +6,15 @@ using SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners;
 namespace SudokuSolver.Solvers
 {
     [Flags]
-    public enum SolverOptions { 
-        SequentialBacktrack, 
-        CardinalityBacktrack, 
+    public enum SolverOptions
+    {
+        SequentialBacktrack,
+        CardinalityBacktrack,
         RandomBacktrack,
-        Logical, 
-        LogicalWithSequentialBacktrack, 
+        Logical,
+        LogicalWithSequentialBacktrack,
         LogicalWithCardinalityBacktrack,
-        LogicalWithRandomBacktrack    
+        LogicalWithRandomBacktrack
     }
 
     public static class SolverBuilder

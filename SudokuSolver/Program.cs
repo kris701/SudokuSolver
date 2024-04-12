@@ -17,14 +17,13 @@ namespace SudokuSolver
 
         public static void Run(Options opts)
         {
-            var values = new List<byte>();
-            foreach (var c in opts.Board)
-                values.Add(byte.Parse($"{c}"));
-
-            if (values.Count != 81)
+            if (opts.Board.Length != 81)
                 throw new Exception("Board values must be exactly 81 characters long");
 
-            var board = new SudokuBoard(values.ToArray());
+            var board = new SudokuBoard(opts.Board);
+
+            if (opts.SolutionFile != "" && File.Exists(opts.SolutionFile))
+                File.Delete(opts.SolutionFile);
 
             Console.WriteLine("Initial board:");
             Console.WriteLine(board.ToString());
@@ -49,6 +48,8 @@ namespace SudokuSolver
                 Console.WriteLine("Board solved!");
                 Console.WriteLine("Solved board:");
                 Console.WriteLine(result.ToString());
+                if (opts.SolutionFile != "")
+                    File.WriteAllText(opts.SolutionFile, result.GetBoard());
             }
             else
                 Console.WriteLine("Board is unsolvable with given solver!");

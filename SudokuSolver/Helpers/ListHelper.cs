@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SudokuSolver.Helpers
+﻿namespace SudokuSolver.Helpers
 {
     public static class ListHelper
     {
-        private static Random _rnd = new Random();
+        private static readonly Random _rnd = new Random();
         public static void Shuffle<T>(this IList<T> list)
         {
             int n = list.Count;

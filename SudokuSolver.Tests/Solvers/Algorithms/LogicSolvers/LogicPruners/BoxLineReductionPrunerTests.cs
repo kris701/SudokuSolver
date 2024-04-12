@@ -1,11 +1,6 @@
 ﻿using SudokuSolver.Models;
 using SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners;
 using SudokuSolver.Solvers.Preprocessors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SudokuSolver.Tests.Solvers.Algorithms.LogicSolvers.LogicPruners
 {
@@ -18,10 +13,7 @@ namespace SudokuSolver.Tests.Solvers.Algorithms.LogicSolvers.LogicPruners
         public void Can_PruneCorrectly(string board, int expectedChange)
         {
             // ARRANGE
-            var values = new List<byte>();
-            foreach (var c in board)
-                values.Add(byte.Parse($"{c}"));
-            var context = Preprocessor.Preprocess(new SudokuBoard(values.ToArray()));
+            var context = Preprocessor.Preprocess(new SudokuBoard(board));
             IPruner pruner1 = new BoxLineReductionPruner();
             var preCount = GetCardinality(context.Candidates);
 

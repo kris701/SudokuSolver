@@ -46,10 +46,10 @@ namespace SudokuSolver.Tests.Solvers
 
         [TestMethod]
         [DynamicData(nameof(Data), DynamicDataSourceType.Method)]
-        public void Can_Solve(string dataset, string boardStr, SolverOptions solverOption, List<byte> boardValues)
+        public void Can_Solve(string dataset, string boardStr, SolverOptions solverOption)
         {
             // ARRANGE
-            var board = new SudokuBoard(boardValues.ToArray());
+            var board = new SudokuBoard(boardStr);
             var solver = SolverBuilder.GetSolver(solverOption);
             solver.Timeout = BaseTests.Timeout;
 

@@ -28,7 +28,7 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
             var rowCardinalities = new Dictionary<int, int>();
             for (byte y = 0; y < SudokuBoard.BoardSize; y++)
             {
-                rowCardinalities.Add(y,0);
+                rowCardinalities.Add(y, 0);
                 for (byte x = 0; x < SudokuBoard.BoardSize; x++)
                 {
                     if (context.Board[x, y] != SudokuBoard.BlankNumber)
@@ -79,7 +79,7 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
         {
             public int Possibilities;
 
-            public CardinalityCellPosition(byte x, byte y, int possibilities) : base(x,y)
+            public CardinalityCellPosition(byte x, byte y, int possibilities) : base(x, y)
             {
                 Possibilities = possibilities;
             }

@@ -10,7 +10,9 @@ namespace SudokuSolver
         [Option("solver", Required = true, HelpText = "What solver to use.")]
         public SolverOptions Solver { get; set; }
 
-        [Option("timeout", Required = false, HelpText = "How many seconds should the search be allowed to use.")]
+        [Option("timeout", Required = false, HelpText = "How many seconds should the search be allowed to use.", Default = -1)]
         public int TimeOutS { get; set; } = -1;
+        [Option("solution", Required = false, HelpText = "The file to output the solution to. Empty means no file will be made.")]
+        public string SolutionFile { get; set; } = "";
     }
 }

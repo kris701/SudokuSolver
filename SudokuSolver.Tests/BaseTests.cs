@@ -39,15 +39,11 @@ namespace SudokuSolver.Tests
                 var fileName = file.Name.Replace(file.Extension, "");
                 foreach (var line in File.ReadAllLines(benchmark))
                 {
-                    var values = new List<byte>();
-                    foreach (var c in line)
-                        values.Add(byte.Parse($"{c}"));
-                    foreach(SolverOptions solverOption in solvers)
+                    foreach (SolverOptions solverOption in solvers)
                         yield return new object[] {
                             fileName,
                             line,
-                            solverOption,
-                            values
+                            solverOption
                         };
                 }
             }

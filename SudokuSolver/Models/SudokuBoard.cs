@@ -32,7 +32,7 @@ namespace SudokuSolver.Models
         private readonly unsafe bool[] _columns;
         private readonly unsafe byte[] _blockRefs;
 
-        public SudokuBoard(byte[] values)
+        public SudokuBoard()
         {
             _values = new byte[BoardSize * BoardSize];
             _blockRefs = new byte[BoardSize * BoardSize];
@@ -40,7 +40,23 @@ namespace SudokuSolver.Models
             _blocks = new bool[Blocks * Blocks * (BoardSize + 1)];
             _rows = new bool[(BoardSize + 1) * (BoardSize + 1)];
             _columns = new bool[(BoardSize + 1) * (BoardSize + 1)];
+        }
 
+        public SudokuBoard(string board) : this()
+        {
+            byte[] values = new byte[BoardSize * BoardSize];
+            for (int i = 0; i < BoardSize * BoardSize; i++)
+                values[i] = byte.Parse($"{board[i]}");
+            Fill(values);
+        }
+
+        public SudokuBoard(byte[] values) : this()
+        {
+            Fill(values);
+        }
+
+        private void Fill(byte[] values)
+        {
             for (byte x = 0; x < BoardSize; x++)
             {
                 for (byte y = 0; y < BoardSize; y++)
@@ -62,21 +78,18 @@ namespace SudokuSolver.Models
 
         public bool IsComplete()
         {
+            // Check if there are no empty cells
             for (int i = 0; i < BoardSize * BoardSize; i++)
                 if (_values[i] == BlankNumber)
                     return false;
-            return IsLegal();
-        }
 
-        public bool IsLegal()
-        {
+            // Check if rows and columns are legal
             for (byte x = 0; x < BoardSize; x++)
                 if (!GetColumn(ref x).IsUnique())
                     return false;
             for (byte y = 0; y < BoardSize; y++)
                 if (!GetRow(ref y).IsUnique())
                     return false;
-
             return true;
         }
 
@@ -143,6 +156,16 @@ namespace SudokuSolver.Models
             }
 
             return sb.ToString();
+        }
+
+        public string GetBoard()
+        {
+            var result = "";
+
+            foreach (var value in _values)
+                result += $"{value}";
+
+            return result;
         }
     }
 }
