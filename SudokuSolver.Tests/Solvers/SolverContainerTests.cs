@@ -10,12 +10,12 @@ namespace SudokuSolver.Tests.Solvers
     {
         public static List<SolverOptions> _solvers = new List<SolverOptions>() {
             //SolverOptions.SequentialBacktrack,
-            //SolverOptions.LogicalWithSequentialBacktrack,
+            SolverOptions.LogicalWithSequentialBacktrack,
             //SolverOptions.CardinalityBacktrack,
-            //SolverOptions.LogicalWithCardinalityBacktrack,
-            SolverOptions.Logical,
+            SolverOptions.LogicalWithCardinalityBacktrack,
+            //SolverOptions.Logical,
             //SolverOptions.RandomBacktrack,
-            //SolverOptions.LogicalWithRandomBacktrack
+            SolverOptions.LogicalWithRandomBacktrack
         };
         public static IEnumerable<object[]> Data() => BaseTests.TestCases(_solvers);
 
