@@ -25,18 +25,21 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
         private List<CellPosition> GenerateCardinalities(SudokuBoard board, List<CellAssignment>[,] candidates)
         {
             var cardinalities = new List<CellPosition>();
-            for (byte x = 0; x < SudokuBoard.BoardSize; x++)
+            var rowCardinalities = new Dictionary<int, int>();
+            for (byte y = 0; y < SudokuBoard.BoardSize; y++)
             {
-                for (byte y = 0; y < SudokuBoard.BoardSize; y++)
+                rowCardinalities.Add(y,0);
+                for (byte x = 0; x < SudokuBoard.BoardSize; x++)
                 {
                     if (board[x, y] != SudokuBoard.BlankNumber)
                         continue;
                     cardinalities.Add(new CellPosition(x, y, candidates[x, y].Count));
+                    rowCardinalities[y] += candidates[x, y].Count;
                 }
             }
             if (cardinalities.Any(x => x.Possibilities == 0))
                 throw new Exception("Invalid preprocessing");
-            cardinalities = cardinalities.OrderBy(x => x.Possibilities).ToList();
+            cardinalities = cardinalities.OrderBy(x => rowCardinalities[x.Y]).ThenBy(x => x.Possibilities).ToList();
 
             return cardinalities;
         }
@@ -83,6 +86,11 @@ namespace SudokuSolver.Solvers.Algorithms.BacktrackSolvers
                 X = x;
                 Y = y;
                 Possibilities = possibilities;
+            }
+
+            public override string ToString()
+            {
+                return $"{X},{Y}:{Possibilities}";
             }
         }
     }
