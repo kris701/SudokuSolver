@@ -63,3 +63,6 @@ The results are ordered by solved instances, then by lowest average search time 
 | LogicalWithRandomBacktrack | 1377 | 68.56 | 15148498.02 | 1970.49 | 0.15 | 56647667 | 2 |
 | Logical | 978 | 2.13 | 4.41 | 17.96 | 0.27 | 21 | 1 |
 | RandomBacktrack | 363 | 417.95 | 34942615.26 | 2005.2 | 0.05 | 51983571 | 185 |
+
+# Credits
+I would like to give a special thanks to Andrew Stuart, the owner of the [SudokuWiki.org](https://www.sudokuwiki.org/) website, for giving a bunch of great description of the different strategies that are involved in solving sudokus!
