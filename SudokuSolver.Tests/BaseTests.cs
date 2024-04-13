@@ -4,7 +4,7 @@
 [assembly: Parallelize(Workers = 12, Scope = ExecutionScope.MethodLevel)]
 #endif
 #if RELEASE
-[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
+[assembly: Parallelize(Workers = 2, Scope = ExecutionScope.MethodLevel)]
 #endif
 
 namespace SudokuSolver.Tests
