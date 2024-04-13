@@ -66,14 +66,13 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
                     if (context.Board.GetBlockValues(ref blockX, ref blockY).Count == SudokuBoard.BlockSize * SudokuBoard.BlockSize - 3)
                     {
                         var cellPossibilities = GetAssignmentsFromBlock(context, blockX, blockY);
-                        for (byte i = 1; i <= SudokuBoard.BoardSize; i++)
-                        {
-                            var valueAssignments = cellPossibilities.Where(x => x.Value == i).ToList();
-                            if (IsRowAlligned(valueAssignments))
-                                pruned += PruneValueCandidatesFromColumns(context, valueAssignments, i);
-                            else if (IsColumnAlligned(valueAssignments))
-                                pruned += PruneValueCandidatesFromRows(context, valueAssignments, i);
-                        }
+                        var indexes = cellPossibilities.Select(x => x.Value).Distinct();
+                        if (IsRowAlligned(cellPossibilities))
+                            foreach(var i in indexes)
+                                pruned += PruneValueCandidatesFromColumns(context, cellPossibilities, i);
+                        else if (IsColumnAlligned(cellPossibilities))
+                            foreach (var i in indexes)
+                                pruned += PruneValueCandidatesFromRows(context, cellPossibilities, i);
                     }
                 }
             }
