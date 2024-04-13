@@ -21,6 +21,7 @@ Sequential backtrack selects cells sequentially, column by row.
 It can also be visualised in the following example, where the sequence is from A until the end of the board (thanks to [SudokuWiki.org](https://www.sudokuwiki.org/) for the image)
 
 ![image](https://github.com/kris701/SudokuSolver/assets/22596587/5cc714bf-0cae-4809-8050-a074cde1d6ee)
+
 Where it will try and assign all legal values to the A cell first, then to the B cell, etc.
 If a cell becomes impossible to assign to, we backtrack to the previous cell.
 
