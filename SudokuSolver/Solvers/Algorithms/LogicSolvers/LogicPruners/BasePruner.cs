@@ -19,6 +19,20 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
             return cellPossibilities;
         }
 
+        internal List<CellPosition> GetFreePositionsFromBlock(SearchContext context, byte blockX, byte blockY)
+        {
+            var fromX = blockX * SudokuBoard.Blocks;
+            var toX = (blockX + 1) * SudokuBoard.Blocks;
+            var fromY = blockY * SudokuBoard.Blocks;
+            var toY = (blockY + 1) * SudokuBoard.Blocks;
+            var cellPossibilities = new List<CellPosition>();
+            for (byte x = (byte)fromX; x < toX; x++)
+                for (byte y = (byte)fromY; y < toY; y++)
+                    if (context.Candidates[x,y].Count > 0)
+                        cellPossibilities.Add(new CellPosition(x,y));
+            return cellPossibilities;
+        }
+
         internal List<CellAssignment> GetAssignmentsFromRow(SearchContext context, byte row)
         {
             var cellPossibilities = new List<CellAssignment>();

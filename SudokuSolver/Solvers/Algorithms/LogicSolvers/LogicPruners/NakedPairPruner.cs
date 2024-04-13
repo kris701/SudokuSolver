@@ -1,4 +1,6 @@
 ﻿using SudokuSolver.Models;
+using System.Collections.Generic;
+using System.Text;
 
 namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
 {
@@ -10,84 +12,56 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
             // Prune from columns
             for (int column = 0; column < SudokuBoard.BoardSize; column++)
             {
-                var cellPossibilities = new List<List<CellAssignment>>();
+                var cellPositions = new List<CellPosition>();
                 for (int row = 0; row < SudokuBoard.BoardSize; row++)
-                    cellPossibilities.Add(GetBinaryAssignments(context, column, row));
-
-                if (cellPossibilities.Count(x => x.Count == 2) > 0)
+                    if (context.Candidates[column, row].Count == 2)
+                        cellPositions.Add(new CellPosition((byte)column, (byte)row));
+                var binaries = GetBinaryCellsFromPositions(context, cellPositions);
+                foreach (var binary in binaries)
                 {
-                    cellPossibilities = RemoveUnpaired(cellPossibilities, SudokuBoard.BoardSize);
-
-                    if (cellPossibilities.Any(x => x.Count > 0))
-                    {
-                        var all = new List<CellAssignment>();
-                        foreach (var values in cellPossibilities)
-                            all.AddRange(values);
-
-                        foreach (var value in all)
-                            pruned += PruneValueCandidatesFromColumns(context, all, value.Value);
-                    }
+                    var indexes = binary.Assignments.Select(x => x.Value).Distinct();
+                    foreach (var i in indexes)
+                        pruned += PruneValueCandidatesFromColumns(context, binary.Assignments, i);
+                    if (context.Board.BlockX(ref binary.Location1.X) == context.Board.BlockX(ref binary.Location2.X) &&
+                        context.Board.BlockY(ref binary.Location1.Y) == context.Board.BlockY(ref binary.Location2.Y))
+                        foreach (var i in indexes)
+                            pruned += PruneValueCandidatesFromBlock(context, context.Board.BlockX(ref binary.Location1.X), context.Board.BlockY(ref binary.Location1.Y), binary.Assignments, i);
                 }
             }
 
             // Prune from rows
             for (int row = 0; row < SudokuBoard.BoardSize; row++)
             {
-                var cellPossibilities = new List<List<CellAssignment>>();
+                var cellPositions = new List<CellPosition>();
                 for (int column = 0; column < SudokuBoard.BoardSize; column++)
-                    cellPossibilities.Add(GetBinaryAssignments(context, column, row));
-
-                if (cellPossibilities.Count(x => x.Count == 2) > 0)
+                    if (context.Candidates[column, row].Count == 2)
+                        cellPositions.Add(new CellPosition((byte)column, (byte)row));
+                var binaries = GetBinaryCellsFromPositions(context, cellPositions);
+                foreach (var binary in binaries)
                 {
-                    cellPossibilities = RemoveUnpaired(cellPossibilities, SudokuBoard.BoardSize);
-
-                    if (cellPossibilities.Any(x => x.Count > 0))
-                    {
-                        var all = new List<CellAssignment>();
-                        foreach (var values in cellPossibilities)
-                            all.AddRange(values);
-
-                        foreach (var value in all)
-                            pruned += PruneValueCandidatesFromRows(context, all, value.Value);
-                    }
+                    var indexes = binary.Assignments.Select(x => x.Value).Distinct();
+                    foreach (var i in indexes)
+                        pruned += PruneValueCandidatesFromRows(context, binary.Assignments, i);
+                    if (context.Board.BlockX(ref binary.Location1.X) == context.Board.BlockX(ref binary.Location2.X) &&
+                        context.Board.BlockY(ref binary.Location1.Y) == context.Board.BlockY(ref binary.Location2.Y))
+                        foreach (var i in indexes)
+                            pruned += PruneValueCandidatesFromBlock(context, context.Board.BlockX(ref binary.Location1.X), context.Board.BlockY(ref binary.Location1.Y), binary.Assignments, i);
                 }
             }
 
             // Prune from blocks
-            for (int blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
+            for (byte blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
             {
-                for (int blockY = 0; blockY < SudokuBoard.Blocks; blockY++)
+                for (byte blockY = 0; blockY < SudokuBoard.Blocks; blockY++)
                 {
-                    var fromX = blockX * SudokuBoard.Blocks;
-                    var toX = (blockX + 1) * SudokuBoard.Blocks;
-                    var fromY = blockY * SudokuBoard.Blocks;
-                    var toY = (blockY + 1) * SudokuBoard.Blocks;
-                    var cellPossibilities = new List<List<CellAssignment>>();
-                    for (int i = 0; i < SudokuBoard.BoardSize; i++)
-                        cellPossibilities.Add(new List<CellAssignment>());
-
-                    int offset = 0;
-                    for (int x = fromX; x < toX; x++)
+                    var cellPositions = GetFreePositionsFromBlock(context, blockX, blockY);
+                    cellPositions.RemoveAll(x => context.Candidates[x.X, x.Y].Count != 2);
+                    var binaries = GetBinaryCellsFromPositions(context, cellPositions);
+                    foreach(var binary in binaries)
                     {
-                        for (int y = fromY; y < toY; y++)
-                        {
-                            if (context.Candidates[x, y].Count == 2)
-                                cellPossibilities[offset] = new List<CellAssignment>(context.Candidates[x, y]);
-                            offset++;
-                        }
-                    }
-
-                    cellPossibilities = RemoveUnpaired(cellPossibilities, SudokuBoard.BoardSize);
-
-                    if (cellPossibilities.Any(x => x.Count > 0))
-                    {
-                        var all = new List<CellAssignment>();
-                        foreach (var possibles in cellPossibilities)
-                            all.AddRange(possibles);
-
-                        var values = all.Select(x => x.Value).Distinct();
-                        foreach (var value in values)
-                            PruneValueCandidatesFromBlock(context, (byte)blockX, (byte)blockY, all, value);
+                        var indexes = binary.Assignments.Select(x => x.Value).Distinct();
+                        foreach (var i in indexes)
+                            pruned += PruneValueCandidatesFromBlock(context, context.Board.BlockX(ref binary.Location1.X), context.Board.BlockY(ref binary.Location1.Y), binary.Assignments, i);
                     }
                 }
             }
@@ -97,39 +71,53 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
             return pruned > 0;
         }
 
-        private List<CellAssignment> GetBinaryAssignments(SearchContext context, int column, int row)
+        private List<BinaryCells> GetBinaryCellsFromPositions(SearchContext context, List<CellPosition> cellPositions)
         {
-            var result = new List<CellAssignment>();
-            if (context.Candidates[column, row].Count == 2)
-                result.AddRange(context.Candidates[column, row]);
-            return result;
+            var results = new List<BinaryCells>();
+            while (cellPositions.Count > 0)
+            {
+                var loc = cellPositions[0];
+                var loc2 = cellPositions[0];
+                var assignments = context.Candidates[loc.X, loc.Y];
+                var assignments2 = context.Candidates[loc2.X, loc2.Y];
+                bool found = false;
+                for (int i = 1; !found && i < cellPositions.Count; i++)
+                {
+                    loc2 = cellPositions[i];
+                    assignments2 = context.Candidates[loc2.X, loc2.Y];
+                    if (assignments.All(x => assignments2.Any(y => x.Value == y.Value)))
+                        found = true;
+                }
+                if (!found)
+                {
+                    cellPositions.RemoveAt(0);
+                    continue;
+                }
+                else
+                {
+                    var all = new List<CellAssignment>();
+                    all.AddRange(assignments);
+                    all.AddRange(assignments2);
+                    results.Add(new BinaryCells(loc, loc2, all));
+                    cellPositions.Remove(loc);
+                    cellPositions.Remove(loc2);
+                }
+            }
+            return results;
         }
 
-        private List<List<CellAssignment>> RemoveUnpaired(List<List<CellAssignment>> cellPossibilities, int boardSize)
+        private class BinaryCells
         {
-            for (int i = 0; i < boardSize; i++)
+            public CellPosition Location1 { get; set; }
+            public CellPosition Location2 { get; set; }
+            public List<CellAssignment> Assignments { get; set; }
+
+            public BinaryCells(CellPosition location1, CellPosition location2, List<CellAssignment> assignments)
             {
-                bool remove = true;
-                if (cellPossibilities[i].Count > 0)
-                {
-                    for (int j = 0; j < boardSize; j++)
-                    {
-                        if (i == j)
-                            continue;
-                        if (cellPossibilities[j].Count > 0)
-                        {
-                            if (cellPossibilities[j].All(x => cellPossibilities[i].Any(y => y.Value == x.Value)))
-                            {
-                                remove = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (remove)
-                    cellPossibilities[i].Clear();
+                Location1 = location1;
+                Location2 = location2;
+                Assignments = assignments;
             }
-            return cellPossibilities;
         }
     }
 }
