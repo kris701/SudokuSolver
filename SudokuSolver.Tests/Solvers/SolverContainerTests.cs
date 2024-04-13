@@ -1,6 +1,7 @@
 ﻿using CSVToolsSharp;
 using SudokuSolver.Models;
 using SudokuSolver.Solvers;
+using System.Text;
 using ToMarkdown;
 
 namespace SudokuSolver.Tests.Solvers
@@ -24,16 +25,11 @@ namespace SudokuSolver.Tests.Solvers
         private static readonly Dictionary<SolverOptions, int> _solved = new Dictionary<SolverOptions, int>();
         private static readonly string _readmeFile = "../../../../README.md";
         private static readonly string _tempFile = "benchmarkRes.csv";
-        private static string _readme = "";
+        private static string _autogenComment = "<!-- This section is auto generated. -->";
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
-            _readme = File.ReadAllText(_readmeFile);
-            _readme = _readme.Substring(0, _readme.IndexOf("# Performance") + "# Performance".Length) + Environment.NewLine;
-            _readme += $"Benchmark is run on {BaseTests.BenchmarkCount()} different Sudoku boards with a {BaseTests.Timeout.TotalSeconds}s time limit.{Environment.NewLine}";
-            _readme += "The results are ordered by solved instances, then by lowest average search time and finally by average calls.";
-            _readme += Environment.NewLine;
             foreach (SolverOptions solverOption in _solvers)
             {
                 if (!_solved.ContainsKey(solverOption))
@@ -104,6 +100,9 @@ namespace SudokuSolver.Tests.Solvers
 
             results = results.OrderByDescending(x => x.Solved).ThenBy(y => y.AvgTime).ThenByDescending(x => x.AvgCalls).ToList();
 
+            var autogenText = $"Benchmark is run on {BaseTests.BenchmarkCount()} different Sudoku boards with a {BaseTests.Timeout.TotalSeconds}s time limit.{Environment.NewLine}";
+            autogenText += "The results are ordered by solved instances, then by lowest average search time and finally by average calls.";
+            autogenText += Environment.NewLine;
             var resultsText = results.ToMarkdownTable(new List<string>() {
                 "Solver",
                 "Solved".ToMarkdown(ToMarkdownExtensions.StringStyle.Bold),
@@ -113,12 +112,20 @@ namespace SudokuSolver.Tests.Solvers
                 "Min Search (ms)",
                 "Max Calls",
                 "Min Calls"});
-            _readme += Environment.NewLine + resultsText;
+            autogenText += Environment.NewLine + resultsText;
 #if RELEASE
+            var readme = File.ReadAllText(_readmeFile);
+            var readmeStart = readme.Substring(0, readme.IndexOf(_autogenComment) + _autogenComment.Length) + Environment.NewLine;
+            var readmeEnd = readme.Substring(readme.LastIndexOf(_autogenComment)) + Environment.NewLine;
+            var sb = new StringBuilder();
+            sb.AppendLine(readmeStart);
+            sb.AppendLine(autogenText);
+            sb.AppendLine(readmeEnd);
+
             if (File.Exists(_tempFile))
                 File.Delete(_tempFile);
             File.WriteAllText(_tempFile, CSVSerialiser.Serialise(results));
-            File.WriteAllText(_readmeFile, _readme);
+            File.WriteAllText(_readmeFile, sb.ToString());
 #endif
         }
 
