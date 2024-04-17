@@ -16,6 +16,22 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
                         if (context.Candidates[x, y].Count == 1)
                             pruned += RemoveCandidate(context, context.Candidates[x, y][0]);
 
+                for(byte row = 0;  row < SudokuBoard.BoardSize; row++)
+                {
+                    var cellPossibilities = GetAssignmentsFromRow(context, row);
+                    for (byte i = 1; i <= SudokuBoard.BoardSize; i++)
+                        if (cellPossibilities.Count(x => x.Value == i) == 1)
+                            pruned += RemoveCandidate(context, cellPossibilities.First(x => x.Value == i));
+                }
+
+                for (byte column = 0; column < SudokuBoard.BoardSize; column++)
+                {
+                    var cellPossibilities = GetAssignmentsFromColumn(context, column);
+                    for (byte i = 1; i <= SudokuBoard.BoardSize; i++)
+                        if (cellPossibilities.Count(x => x.Value == i) == 1)
+                            pruned += RemoveCandidate(context, cellPossibilities.First(x => x.Value == i));
+                }
+
                 for (byte blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
                 {
                     for (byte blockY = 0; blockY < SudokuBoard.Blocks; blockY++)
@@ -28,7 +44,10 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
                 }
             }
             if (pruned > 0)
-                Console.WriteLine($"\t\tRemoved {pruned} certains");
+            {
+                PrunedCandidates += pruned;
+                Console.WriteLine($"\t\tPlaced {pruned} certains");
+            }
             return pruned > 0;
         }
 
@@ -40,9 +59,9 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
             pruned++;
 
             for (byte x2 = 0; x2 < SudokuBoard.BoardSize; x2++)
-                pruned += context.Candidates[x2, cell.Y].RemoveAll(z => z.Value == cell.Value);
+                context.Candidates[x2, cell.Y].RemoveAll(z => z.Value == cell.Value);
             for (byte y2 = 0; y2 < SudokuBoard.BoardSize; y2++)
-                pruned += context.Candidates[cell.X, y2].RemoveAll(z => z.Value == cell.Value);
+                context.Candidates[cell.X, y2].RemoveAll(z => z.Value == cell.Value);
 
             var blockX = context.Board.BlockX(ref cell.X);
             var blockY = context.Board.BlockY(ref cell.Y);
@@ -53,7 +72,7 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
 
             for (byte x = (byte)fromX; x < toX; x++)
                 for (byte y = (byte)fromY; y < toY; y++)
-                    pruned += context.Candidates[x, y].RemoveAll(z => z.Value == cell.Value);
+                    context.Candidates[x, y].RemoveAll(z => z.Value == cell.Value);
             return pruned;
         }
     }

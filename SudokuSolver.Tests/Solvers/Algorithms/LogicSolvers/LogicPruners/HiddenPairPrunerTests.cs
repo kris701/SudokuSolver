@@ -1,11 +1,12 @@
 ﻿using SudokuSolver.Models;
+using SudokuSolver.Solvers.Algorithms.LogicSolvers;
 using SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners;
 using SudokuSolver.Solvers.Preprocessors;
 
 namespace SudokuSolver.Tests.Solvers.Algorithms.LogicSolvers.LogicPruners
 {
     [TestClass]
-    public class HiddenPairPrunerTests : BaseLogicPrunerTest
+    public class HiddenPairPrunerTests
     {
         [TestMethod]
         [DataRow("000000000904607000076804100309701080708000301051308702007502610005403208000000000", 9)]
@@ -15,13 +16,25 @@ namespace SudokuSolver.Tests.Solvers.Algorithms.LogicSolvers.LogicPruners
             // ARRANGE
             var context = Preprocessor.Preprocess(new SudokuBoard(board));
             IPruner pruner1 = new HiddenPairPruner();
-            var preCount = GetCardinality(context.Candidates);
+            var solver = new LogicSolver(new List<IPruner>()
+            {
+                new CertainsPruner(),
+                new NakedPairPruner(),
+                new NakedTripplePruner(),
+                pruner1,
+                new HiddenTripplePruner(),
+                new PointingPairsPruner(),
+                new BoxLineReductionPruner(),
+
+                new XWingPruner(),
+                new SingleChainsPruner()
+            });
 
             // ACT
-            while (pruner1.Prune(context)) { }
+            solver.Solve(context);
 
             // ASSERT
-            Assert.AreEqual(expectedChange, preCount - GetCardinality(context.Candidates));
+            Assert.AreEqual(expectedChange, pruner1.PrunedCandidates);
         }
     }
 }

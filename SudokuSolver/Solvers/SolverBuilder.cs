@@ -29,7 +29,8 @@ namespace SudokuSolver.Solvers
             new PointingPairsPruner(),
             new BoxLineReductionPruner(),
 
-            new XWingPruner()
+            new XWingPruner(),
+            new SingleChainsPruner()
         };
 
         private static readonly Dictionary<SolverOptions, Func<SolverContainer>> _solvers = new Dictionary<SolverOptions, Func<SolverContainer>>()

@@ -4,6 +4,7 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
 {
     public abstract class BasePruner : IPruner
     {
+        public int PrunedCandidates { get; set; } = 0;
         public abstract bool Prune(SearchContext context);
 
         internal List<CellAssignment> GetAssignmentsFromBlock(SearchContext context, byte blockX, byte blockY)

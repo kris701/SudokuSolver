@@ -49,7 +49,10 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
             }
 
             if (pruned > 0)
+            {
+                PrunedCandidates += pruned;
                 Console.WriteLine($"\t\tRemoved {pruned} candidates because of hidden tripples");
+            }
             return pruned > 0;
         }
     }

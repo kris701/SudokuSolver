@@ -11,7 +11,10 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
             pruned += PruneFromColumn(context);
 
             if (pruned > 0)
+            {
+                PrunedCandidates += pruned;
                 Console.WriteLine($"\t\tRemoved {pruned} candidates because of X Wings");
+            }
             return pruned > 0;
         }
 
