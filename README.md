@@ -48,6 +48,7 @@ The set of logical strategies that this solver currently implements are:
 * [Pointing Pairs/Tripples](https://www.sudokuwiki.org/Intersection_Removal)
 * [Box Line Reduction](https://www.sudokuwiki.org/Intersection_Removal)
 * [X-Wings](https://www.sudokuwiki.org/X_Wing_Strategy)
+* [Singles Chain](https://www.sudokuwiki.org/Singles_Chains)
 
 Many of the boards cant be solved by logical deduction (at least with the current strategies) but paired with any of the backtrack solvers makes a powerful solver.
 
