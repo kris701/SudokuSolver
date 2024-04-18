@@ -64,13 +64,15 @@ The results are ordered by solved instances, then by lowest average search time 
 | LogicalWithSequentialBacktrack | 1971 | 5.3 | 43340.56 | 210.07 | 0.19 | 1903421 | 2 |
 | CardinalityBacktrack | 1971 | 11.6 | 203805.84 | 1889.73 | 0.02 | 32884160 | 42 |
 | SequentialBacktrack | 1967 | 22.48 | 421545.84 | 1834.6 | 0.02 | 34058393 | 43 |
-| LogicalWithRandomBacktrack | 1372 | 60.58 | 15919082.6 | 2006.83 | 0.11 | 59626445 | 2 |
+| LogicalWithRandomBacktrack | 1383 | 61.89 | 17299889.9 | 1999.05 | 0.16 | 63162086 | 2 |
 | Logical | 1043 | 1.27 | 3.23 | 14.63 | 0.18 | 19 | 1 |
 | RandomBacktrack | 390 | 460.34 | 41259946.14 | 2001.87 | 0.02 | 62526698 | 73 |
 
 <!-- This section is auto generated. -->
 # Credits
 I would like to give a special thanks to Andrew Stuart, the owner of the [SudokuWiki.org](https://www.sudokuwiki.org/) website, for giving a bunch of great description of the different strategies that are involved in solving sudokus!
+
+
 
 
 
