@@ -10,6 +10,7 @@ namespace SudokuSolver.Tests.Solvers.Algorithms.LogicSolvers.LogicPruners
     {
         [TestMethod]
         [DataRow("009600010000000023100070400004008000030040600600900008000004009010030000800100700", 5)]
+        [DataRow("200041006400602010016090004300129640142060590069504001584216379920408165601900482", 5)]
         public void Can_PruneCorrectly(string board, int expectedChange)
         {
             // ARRANGE

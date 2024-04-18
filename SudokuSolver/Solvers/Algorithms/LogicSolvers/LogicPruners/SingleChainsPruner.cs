@@ -20,6 +20,7 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
                 if (possibles.Count == 0)
                     continue;
                 pruned += PruneFor2NdRule(context, possibles);
+                pruned += PruneFor4thRule(context, possibles);
             }
 
             if (pruned > 0)
@@ -81,54 +82,73 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
             return pruned;
         }
 
+        private int PruneFor4thRule(SearchContext context, HashSet<ChainCell> possiblities)
+        {
+            var pruned = 0;
+
+            var checkedCells = new HashSet<ChainCell>();
+            foreach(var possible in possiblities)
+            {
+                if (checkedCells.Contains(possible))
+                    continue;
+                var fullChain = possible.GetFullChain().ToList();
+                checkedCells.AddRange(fullChain);
+
+                for(int i = 0; i < fullChain.Count; i++)
+                {
+                    for (int j = 0; j < fullChain.Count; j++)
+                    {
+                        if (fullChain[i].Color == fullChain[j].Color)
+                            continue;
+                        var intersected = Intersection(context, fullChain[i].Cell, fullChain[j].Cell);
+                        foreach (var inter in intersected)
+                            if (context.Candidates[inter.X, inter.Y].Remove(inter))
+                                pruned++;
+                    }
+                }
+            }
+
+            return pruned;
+        }
+
+        private List<CellAssignment> Intersection(SearchContext context, CellAssignment a, CellAssignment b)
+        {
+            if (a.X == b.X)
+                return GetAssignmentsFromColumn(context, a.X).Where(x => x.Value == a.Value).Except(new List<CellAssignment>() { a,b }).ToList();
+            else if (a.Y == b.Y)
+                return GetAssignmentsFromRow(context, a.Y).Where(x => x.Value == a.Value).Except(new List<CellAssignment>() { a, b }).ToList();
+            else
+            {
+                var result = new List<CellAssignment>();
+                result.AddRange(context.Candidates[a.X, b.Y].Where(x => x.Value == a.Value));
+                result.AddRange(context.Candidates[b.X, a.Y].Where(x => x.Value == a.Value));
+                return result;
+            }
+        }
+
         private HashSet<ChainCell> GetChainAssignments(SearchContext context, int value)
         {
             var possibles = new HashSet<ChainCell>();
 
+            // Row connections
             for(byte row = 0; row < SudokuBoard.BoardSize; row++)
             {
                 var assignments = GetAssignmentsFromRow(context, row);
                 var ofValue = assignments.Where(x => x.Value == value).ToList();
                 if (ofValue.Count == 2)
-                {
-                    var from = new ChainCell(ofValue[0]);
-                    var to = new ChainCell(ofValue[1]);
-                    if (possibles.Contains(to))
-                        to = possibles.First(x => x.Equals(to));
-                    else
-                        possibles.Add(to);
-                    if (possibles.Contains(from))
-                        from = possibles.First(x => x.Equals(from));
-                    else
-                        possibles.Add(from);
-
-                    from.To.Add(to);
-                    to.From.Add(from);
-                }
+                    InsertNewChainCells(ofValue[0], ofValue[1], possibles);
             }
 
+            // Column connections
             for (byte column = 0; column < SudokuBoard.BoardSize; column++)
             {
                 var assignments = GetAssignmentsFromColumn(context, column);
                 var ofValue = assignments.Where(x => x.Value == value).ToList();
                 if (ofValue.Count == 2)
-                {
-                    var from = new ChainCell(ofValue[0]);
-                    var to = new ChainCell(ofValue[1]);
-                    if (possibles.Contains(to))
-                        to = possibles.First(x => x.Equals(to));
-                    else
-                        possibles.Add(to);
-                    if (possibles.Contains(from))
-                        from = possibles.First(x => x.Equals(from));
-                    else
-                        possibles.Add(from);
-
-                    from.To.Add(to);
-                    to.From.Add(from);
-                }
+                    InsertNewChainCells(ofValue[0], ofValue[1], possibles);
             }
 
+            // Intra-block connections
             for (byte blockX = 0; blockX < SudokuBoard.Blocks; blockX++)
             {
                 for (byte blockY = 0; blockY < SudokuBoard.Blocks; blockY++)
@@ -136,24 +156,11 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
                     var assignments = GetAssignmentsFromBlock(context, blockX, blockY);
                     var ofValue = assignments.Where(x => x.Value == value).ToList();
                     if (ofValue.Count == 2)
-                    {
-                        var from = new ChainCell(ofValue[0]);
-                        var to = new ChainCell(ofValue[1]);
-                        if (possibles.Contains(to))
-                            to = possibles.First(x => x.Equals(to));
-                        else
-                            possibles.Add(to);
-                        if (possibles.Contains(from))
-                            from = possibles.First(x => x.Equals(from));
-                        else
-                            possibles.Add(from);
-
-                        from.To.Add(to);
-                        to.From.Add(from);
-                    }
+                        InsertNewChainCells(ofValue[0], ofValue[1], possibles);
                 }
             }
 
+            // Assign switching colors to all cells
             foreach(var possible in possibles)
             {
                 if (possible.Color != Color.NotSet)
@@ -161,6 +168,7 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
                 possible.SetColor(Color.On);
             }
 
+            // Check to make sure there is no invalid connections
             foreach(var possible in possibles)
             {
                 var invColor = Color.NotSet;
@@ -168,13 +176,28 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
                     invColor = Color.Off;
                 else
                     invColor = Color.On;
-                if (possible.From.Any(x => x.Color != invColor))
-                    throw new Exception("From list had invalid colors!");
-                if (possible.To.Any(x => x.Color != invColor))
-                    throw new Exception("To list had invalid colors!");
+                if (possible.Connected.Any(x => x.Color != invColor))
+                    throw new Exception("Connected list had invalid colors!");
             }
 
             return possibles;
+        }
+
+        private void InsertNewChainCells(CellAssignment fromCell, CellAssignment toCell, HashSet<ChainCell> possibles)
+        {
+            var from = new ChainCell(fromCell);
+            var to = new ChainCell(toCell);
+            if (possibles.Contains(to))
+                to = possibles.First(x => x.Equals(to));
+            else
+                possibles.Add(to);
+            if (possibles.Contains(from))
+                from = possibles.First(x => x.Equals(from));
+            else
+                possibles.Add(from);
+
+            from.Connected.Add(to);
+            to.Connected.Add(from);
         }
 
  
@@ -182,17 +205,15 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
 
         private class ChainCell
         {
-            public HashSet<ChainCell> From { get; set; }
             public CellAssignment Cell { get; set; }
             public Color Color { get; set; }
-            public HashSet<ChainCell> To { get; set; }
+            public HashSet<ChainCell> Connected { get; set; }
 
             public ChainCell(CellAssignment cell)
             {
-                From = new HashSet<ChainCell>();
                 Cell = cell;
                 Color = Color.NotSet;
-                To = new HashSet<ChainCell>();
+                Connected = new HashSet<ChainCell>();
             }
 
             public bool IsInChain(CellAssignment cell) => IsInChain(cell, new HashSet<CellAssignment>());
@@ -204,10 +225,7 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
 
                 if (Cell.Equals(cell))
                     return true;
-                foreach (var from in From)
-                    if (from.IsInChain(cell, checkedCells))
-                        return true;
-                foreach (var to in To)
+                foreach (var to in Connected)
                     if (to.IsInChain(cell, checkedCells))
                         return true;
                 return false;
@@ -224,9 +242,7 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
                     invColor = Color.Off;
                 else
                     invColor = Color.On;
-                foreach (var from in From)
-                    from.SetColor(invColor);
-                foreach (var to in To)
+                foreach (var to in Connected)
                     to.SetColor(invColor);
             }
 
@@ -240,13 +256,25 @@ namespace SudokuSolver.Solvers.Algorithms.LogicSolvers.LogicPruners
                 var cells = new HashSet<CellAssignment>();
                 if (Color == color)
                     cells.Add(Cell);
-                foreach (var from in From)
-                    cells.AddRange(from.GetCellsOfColor(color, checkedCells));
-                foreach (var to in To)
+                foreach (var to in Connected)
                     cells.AddRange(to.GetCellsOfColor(color, checkedCells));
 
                 return cells;
             }
+
+            public HashSet<ChainCell> GetFullChain() => GetFullChain(new HashSet<CellAssignment>());
+            private HashSet<ChainCell> GetFullChain(HashSet<CellAssignment> checkedCells)
+            {
+                if (checkedCells.Contains(Cell))
+                    return new HashSet<ChainCell>();
+                checkedCells.Add(Cell);
+
+                var chainCells = new HashSet<ChainCell>() { this };
+                foreach (var con in Connected)
+                    chainCells.AddRange(con.GetFullChain(checkedCells));
+                return chainCells;
+            }
+
 
             public override int GetHashCode()
             {

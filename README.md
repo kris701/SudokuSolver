@@ -60,17 +60,19 @@ The results are ordered by solved instances, then by lowest average search time 
 
 | Solver | **Solved** | **Avg Search (ms)** | **Avg Calls** | Max Search (ms) | Min Search (ms) | Max Calls | Min Calls |
 | - | - | - | - | - | - | - | - |
-| LogicalWithCardinalityBacktrack | 1971 | 2.99 | 28494.86 | 119.4 | 0.18 | 1156304 | 2 |
-| LogicalWithSequentialBacktrack | 1971 | 3.95 | 43804.85 | 118.83 | 0.18 | 1903421 | 2 |
+| LogicalWithCardinalityBacktrack | 1971 | 3.92 | 28287.67 | 145.72 | 0.2 | 1156304 | 2 |
+| LogicalWithSequentialBacktrack | 1971 | 5.3 | 43340.56 | 210.07 | 0.19 | 1903421 | 2 |
 | CardinalityBacktrack | 1971 | 11.6 | 203805.84 | 1889.73 | 0.02 | 32884160 | 42 |
 | SequentialBacktrack | 1967 | 22.48 | 421545.84 | 1834.6 | 0.02 | 34058393 | 43 |
 | LogicalWithRandomBacktrack | 1372 | 60.58 | 15919082.6 | 2006.83 | 0.11 | 59626445 | 2 |
-| Logical | 1024 | 1.56 | 3.12 | 13.43 | 0.34 | 19 | 1 |
+| Logical | 1043 | 1.27 | 3.23 | 14.63 | 0.18 | 19 | 1 |
 | RandomBacktrack | 390 | 460.34 | 41259946.14 | 2001.87 | 0.02 | 62526698 | 73 |
 
 <!-- This section is auto generated. -->
 # Credits
 I would like to give a special thanks to Andrew Stuart, the owner of the [SudokuWiki.org](https://www.sudokuwiki.org/) website, for giving a bunch of great description of the different strategies that are involved in solving sudokus!
+
+
 
 
 
