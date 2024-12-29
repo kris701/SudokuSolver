@@ -1,3 +1,16 @@
+<p align="center">
+    <img src="https://github.com/user-attachments/assets/19d03c66-f882-43d6-8410-4737243aa631" width="200" height="200" />
+</p>
+
+[![Build and Publish](https://github.com/kris701/SudokuSolver/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/kris701/FlashPlanner/actions/workflows/dotnet-desktop.yml)
+![Nuget](https://img.shields.io/nuget/v/FlashPlanner)
+![Nuget](https://img.shields.io/nuget/dt/FlashPlanner)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/kris701/FlashPlanner/main)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/kris701/FlashPlanner)
+![Static Badge](https://img.shields.io/badge/Platform-Windows-blue)
+![Static Badge](https://img.shields.io/badge/Platform-Linux-blue)
+![Static Badge](https://img.shields.io/badge/Framework-dotnet--8.0-green)
+
 # Sudoku Solver
 This is a simple project about making an automatic Sudoku solver.
 It can be run as a CLI tool, by running:
@@ -8,6 +21,14 @@ Where:
 * `BOARD` has to be a string of rows in the sudoku (total of 81 numbers), where 0 represents a blank space
 * `SOLVER` is the solver you want. The CLI tool will tell you what options are available
 * `SOLUTION` is optional. It describes the file you want the solved board to be outputted to. If none is given, no file will be made.
+
+This project is also available as a dotnet tool on the [NuGet Package Manager](https://www.nuget.org/packages/SudokuSolver).
+
+Then you can install it by writing ´dotnet tool install SudokuSolver´ and use it as follows:
+
+`sudokusolver --board {BOARD} --solver {SOLVER} --solution {SOLUTIONFILE}`
+
+Where the arguments means the same as above.
 
 # Solvers
 There are four core solvers in this projects, three brute force (B) and one logical (L).

@@ -2,7 +2,7 @@
   "profiles": {
     "SudokuSolver": {
       "commandName": "Project",
-      "commandLineArgs": "--board 200041006400602010016090004300129640142060590069504001584216379920408165601900482 --solver Logical --solution solved.txt"
+      "commandLineArgs": "--board 200041006400602010016090004300129640142060590069504001584216379920408165601900482 --solver SequentialBacktrack --solution solved.txt"
     }
   }
 }
