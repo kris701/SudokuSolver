@@ -24,7 +24,7 @@ Where:
 
 This project is also available as a dotnet tool on the [NuGet Package Manager](https://www.nuget.org/packages/SudokuSolver).
 
-Then you can install it by writing �dotnet tool install SudokuSolver� and use it as follows:
+Then you can install it by writing `dotnet tool install SudokuSolver` and use it as follows:
 
 `sudokusolver --board {BOARD} --solver {SOLVER} --solution {SOLUTIONFILE}`
 
