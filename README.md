@@ -3,13 +3,13 @@
 </p>
 
 [![Build and Publish](https://github.com/kris701/SudokuSolver/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/kris701/FlashPlanner/actions/workflows/dotnet-desktop.yml)
-![Nuget](https://img.shields.io/nuget/v/FlashPlanner)
-![Nuget](https://img.shields.io/nuget/dt/FlashPlanner)
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/kris701/FlashPlanner/main)
-![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/kris701/FlashPlanner)
+![Nuget](https://img.shields.io/nuget/v/SudokuSolver)
+![Nuget](https://img.shields.io/nuget/dt/SudokuSolver)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/kris701/SudokuSolver/main)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/kris701/SudokuSolver)
 ![Static Badge](https://img.shields.io/badge/Platform-Windows-blue)
 ![Static Badge](https://img.shields.io/badge/Platform-Linux-blue)
-![Static Badge](https://img.shields.io/badge/Framework-dotnet--8.0-green)
+![Static Badge](https://img.shields.io/badge/Framework-dotnet--9.0-green)
 
 # Sudoku Solver
 This is a simple project about making an automatic Sudoku solver.
@@ -24,7 +24,7 @@ Where:
 
 This project is also available as a dotnet tool on the [NuGet Package Manager](https://www.nuget.org/packages/SudokuSolver).
 
-Then you can install it by writing ´dotnet tool install SudokuSolver´ and use it as follows:
+Then you can install it by writing ï¿½dotnet tool install SudokuSolverï¿½ and use it as follows:
 
 `sudokusolver --board {BOARD} --solver {SOLVER} --solution {SOLUTIONFILE}`
 
@@ -81,17 +81,19 @@ The results are ordered by solved instances, then by lowest average search time 
 
 | Solver | **Solved** | **Avg Search (ms)** | **Avg Calls** | Max Search (ms) | Min Search (ms) | Max Calls | Min Calls |
 | - | - | - | - | - | - | - | - |
-| LogicalWithCardinalityBacktrack | 1971 | 3.92 | 28287.67 | 145.72 | 0.2 | 1156304 | 2 |
-| LogicalWithSequentialBacktrack | 1971 | 5.3 | 43340.56 | 210.07 | 0.19 | 1903421 | 2 |
-| CardinalityBacktrack | 1971 | 11.6 | 203805.84 | 1889.73 | 0.02 | 32884160 | 42 |
-| SequentialBacktrack | 1967 | 22.48 | 421545.84 | 1834.6 | 0.02 | 34058393 | 43 |
-| LogicalWithRandomBacktrack | 1383 | 61.89 | 17299889.9 | 1999.05 | 0.16 | 63162086 | 2 |
-| Logical | 1043 | 1.27 | 3.23 | 14.63 | 0.18 | 19 | 1 |
-| RandomBacktrack | 390 | 460.34 | 41259946.14 | 2001.87 | 0.02 | 62526698 | 73 |
+| LogicalWithCardinalityBacktrack | 1971 | 2.65 | 28287.67 | 67.45 | 0.13 | 1156304 | 2 |
+| LogicalWithSequentialBacktrack | 1971 | 3.67 | 43340.56 | 143.25 | 0.13 | 1903421 | 2 |
+| CardinalityBacktrack | 1970 | 11.49 | 203634.19 | 1284.8 | 0.03 | 32545851 | 42 |
+| SequentialBacktrack | 1967 | 22.08 | 424353.67 | 1888.97 | 0.02 | 34359357 | 43 |
+| LogicalWithRandomBacktrack | 1376 | 55.64 | 14892574.54 | 2001.76 | 0.13 | 82421544 | 2 |
+| Logical | 1043 | 0.58 | 3.23 | 4.58 | 0.14 | 19 | 1 |
+| RandomBacktrack | 367 | 420.29 | 38631112.87 | 1972.91 | 0.03 | 57641799 | 176 |
 
 <!-- This section is auto generated. -->
 # Credits
 I would like to give a special thanks to Andrew Stuart, the owner of the [SudokuWiki.org](https://www.sudokuwiki.org/) website, for giving a bunch of great description of the different strategies that are involved in solving sudokus!
+
+
 
 
 

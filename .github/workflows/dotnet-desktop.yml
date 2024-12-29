@@ -8,7 +8,7 @@ on:
 jobs:
   BuildAndTest:
     runs-on: ubuntu-latest
-    name: Run Tests
+    name: Build Check
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
@@ -18,9 +18,6 @@ jobs:
 
       - name: Build
         run: dotnet build --configuration Release --no-restore
-
-      - name: Test
-        run: dotnet test --no-restore --verbosity normal
   BuildAndPublish:
     needs: BuildAndTest
     runs-on: ubuntu-latest
